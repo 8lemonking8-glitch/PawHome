@@ -50,7 +50,7 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
             binding.tvDetails.setText(pet.getType() + " • " + pet.getBreed());
             binding.tvStatus.setText(pet.getStatus());
             
-            if ("Available".equals(pet.getStatus())) {
+            if ("AVAILABLE".equals(pet.getStatus())) {
                 binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
             } else {
                 binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));

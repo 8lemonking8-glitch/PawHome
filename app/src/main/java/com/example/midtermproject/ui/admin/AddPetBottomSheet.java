@@ -16,10 +16,77 @@ import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.BottomSheetAddPetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import android.net.Uri;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import android.graphics.Bitmap;
+
 public class AddPetBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetAddPetBinding binding;
     private PetRepository petRepository;
+    private String selectedImageUri = null;
+
+    private final ActivityResultLauncher<String> pickImageLauncher = 
+        registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri != null) {
+                try {
+                    InputStream is = requireContext().getContentResolver().openInputStream(uri);
+                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, len);
+                    }
+                    fos.close();
+                    is.close();
+                    
+                    selectedImageUri = Uri.fromFile(file).toString();
+                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
+                    binding.layoutImageHint.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    private final ActivityResultLauncher<Void> takePhotoLauncher = 
+        registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
+            if (bitmap != null) {
+                try {
+                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                    fos.close();
+                    
+                    selectedImageUri = Uri.fromFile(file).toString();
+                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
+                    binding.layoutImageHint.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Failed to save photo", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    private void showImagePickerDialog() {
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Select Image")
+            .setItems(new CharSequence[]{"Take Photo", "Choose from Gallery"}, (dialog, which) -> {
+                if (which == 0) {
+                    takePhotoLauncher.launch(null);
+                } else {
+                    pickImageLauncher.launch("image/*");
+                }
+            })
+            .show();
+    }
 
     @Nullable
     @Override
@@ -36,6 +103,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
 
         setupSpinners();
 
+        binding.cardImagePicker.setOnClickListener(v -> showImagePickerDialog());
         binding.btnSave.setOnClickListener(v -> savePet());
     }
 
@@ -78,11 +146,15 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         pet.setGender(gender);
         pet.setSize(size);
         pet.setDescription(description);
-        pet.setStatus("Available");
-        // Set a default image based on type
-        if ("DOG".equals(dbType)) pet.setImageResId(R.drawable.img_dog);
-        else if ("CAT".equals(dbType)) pet.setImageResId(R.drawable.img_cat);
-        else pet.setImageResId(R.drawable.img_bird);
+        pet.setStatus("AVAILABLE");
+        if (selectedImageUri != null) {
+            pet.setImageResIds("[\"" + selectedImageUri + "\"]");
+            pet.setImageResId(0);
+        } else {
+            if ("DOG".equals(dbType)) pet.setImageResId(R.drawable.img_dog);
+            else if ("CAT".equals(dbType)) pet.setImageResId(R.drawable.img_cat);
+            else pet.setImageResId(R.drawable.img_bird);
+        }
         pet.setCreatedAt(System.currentTimeMillis());
 
         petRepository.insert(pet);

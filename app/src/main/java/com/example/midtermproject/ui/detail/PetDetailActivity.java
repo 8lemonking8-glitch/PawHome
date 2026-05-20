@@ -41,7 +41,7 @@ public class PetDetailActivity extends AppCompatActivity {
         loadPetDetails();
         
         binding.fabAdopt.setOnClickListener(v -> {
-            if (currentPet != null && "Available".equals(currentPet.getStatus())) {
+            if (currentPet != null && "AVAILABLE".equals(currentPet.getStatus())) {
                 AdoptionBottomSheet bottomSheet = new AdoptionBottomSheet(petId, () -> {
                     Toast.makeText(this, "Adoption request sent successfully!", Toast.LENGTH_SHORT).show();
                     finish();
@@ -84,6 +84,17 @@ public class PetDetailActivity extends AppCompatActivity {
                 if (pet.getImageResId() != 0) {
                     binding.ivPetImage.setImageResource(pet.getImageResId());
                     binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+                } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
+                    try {
+                        org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
+                        if (array.length() > 0) {
+                            String uriStr = array.getString(0);
+                            binding.ivPetImage.setImageURI(android.net.Uri.parse(uriStr));
+                            binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     if ("DOG".equals(pet.getType())) {
                         binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
@@ -94,7 +105,7 @@ public class PetDetailActivity extends AppCompatActivity {
                     }
                 }
                 
-                if (!"Available".equals(pet.getStatus())) {
+                if (!"AVAILABLE".equals(pet.getStatus())) {
                     binding.fabAdopt.setEnabled(false);
                     binding.fabAdopt.setText(pet.getStatus());
                     binding.fabAdopt.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.divider)));

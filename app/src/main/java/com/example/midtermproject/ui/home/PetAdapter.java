@@ -119,6 +119,17 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
             if (pet.getImageResId() != 0) {
                 binding.ivPetImage.setImageResource(pet.getImageResId());
                 binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+            } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
+                try {
+                    org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
+                    if (array.length() > 0) {
+                        String uriStr = array.getString(0);
+                        binding.ivPetImage.setImageURI(android.net.Uri.parse(uriStr));
+                        binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 if ("DOG".equals(pet.getType())) {
                     binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
@@ -129,7 +140,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                 }
             }
             
-            if ("Available".equals(pet.getStatus())) {
+            if ("AVAILABLE".equals(pet.getStatus())) {
                 binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge); 
             } else {
                 binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));

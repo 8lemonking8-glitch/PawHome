@@ -57,6 +57,8 @@ public class FavoritesFragment extends Fragment {
             startActivity(intent);
         });
         
+        adapter.setFavoriteManager(favoriteManager);
+        
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         binding.rvFavorites.setLayoutManager(layoutManager);
@@ -83,25 +85,39 @@ public class FavoritesFragment extends Fragment {
         }).attachToRecyclerView(binding.rvFavorites);
     }
 
-    private void loadFavorites() {
-        Set<String> favIds = favoriteManager.getFavoriteIds();
-        if (favIds.isEmpty()) {
-            favoritePets.clear();
-            adapter.setPets(new ArrayList<>());
-            updateEmptyState();
-            return;
-        }
+    private List<PetEntity> allPetsList = new ArrayList<>();
 
+    private void loadFavorites() {
         petRepository.getAllPets().observe(getViewLifecycleOwner(), allPets -> {
-            favoritePets.clear();
-            for (PetEntity pet : allPets) {
+            this.allPetsList = allPets;
+            updateFavoriteList();
+        });
+    }
+
+    private void updateFavoriteList() {
+        if (allPetsList == null || favoriteManager == null) return;
+        
+        Set<String> favIds = favoriteManager.getFavoriteIds();
+        favoritePets.clear();
+        
+        if (!favIds.isEmpty()) {
+            for (PetEntity pet : allPetsList) {
                 if (favIds.contains(String.valueOf(pet.getId()))) {
                     favoritePets.add(pet);
                 }
             }
-            adapter.setPets(favoritePets);
-            updateEmptyState();
-        });
+        }
+        
+        if (adapter != null) {
+            adapter.setPets(new ArrayList<>(favoritePets));
+        }
+        updateEmptyState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateFavoriteList();
     }
 
     private void updateEmptyState() {
