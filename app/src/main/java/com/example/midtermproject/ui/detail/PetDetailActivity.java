@@ -73,7 +73,7 @@ public class PetDetailActivity extends AppCompatActivity {
                 currentPet = pet;
                 binding.tvName.setText(pet.getName());
                 binding.tvBreed.setText(pet.getBreed());
-                binding.tvAge.setText(pet.getAge() + " Years");
+                binding.tvAge.setText(pet.getAge());
                 binding.tvGender.setText(pet.getGender());
                 binding.tvSize.setText(pet.getSize());
                 binding.tvDescription.setText(pet.getDescription());
@@ -81,12 +81,17 @@ public class PetDetailActivity extends AppCompatActivity {
                 binding.collapsingToolbar.setTitle(pet.getName());
                 
                 // Color coding placeholder
-                if ("Dogs".equals(pet.getType())) {
-                    binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
-                } else if ("Cats".equals(pet.getType())) {
-                    binding.ivPetImage.setBackgroundColor(0xFFA78BDB); 
+                if (pet.getImageResId() != 0) {
+                    binding.ivPetImage.setImageResource(pet.getImageResId());
+                    binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
                 } else {
-                    binding.ivPetImage.setBackgroundColor(0xFF5CB8A5); 
+                    if ("DOG".equals(pet.getType())) {
+                        binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
+                    } else if ("CAT".equals(pet.getType())) {
+                        binding.ivPetImage.setBackgroundColor(0xFFA78BDB); 
+                    } else {
+                        binding.ivPetImage.setBackgroundColor(0xFF5CB8A5); 
+                    }
                 }
                 
                 if (!"Available".equals(pet.getStatus())) {

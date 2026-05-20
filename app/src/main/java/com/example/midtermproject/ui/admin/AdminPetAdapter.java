@@ -56,9 +56,9 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
                 binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));
             }
             
-            if ("Dogs".equals(pet.getType())) {
+            if ("DOG".equals(pet.getType())) {
                 binding.ivIcon.setBackgroundColor(0xFFE8734A); 
-            } else if ("Cats".equals(pet.getType())) {
+            } else if ("CAT".equals(pet.getType())) {
                 binding.ivIcon.setBackgroundColor(0xFFA78BDB); 
             } else {
                 binding.ivIcon.setBackgroundColor(0xFF5CB8A5); 

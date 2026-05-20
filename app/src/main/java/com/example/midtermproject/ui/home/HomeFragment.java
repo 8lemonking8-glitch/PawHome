@@ -71,9 +71,9 @@ public class HomeFragment extends Fragment {
             int checkedId = checkedIds.get(0);
             
             if (checkedId == R.id.chipAll) currentCategory = "All";
-            else if (checkedId == R.id.chipDogs) currentCategory = "Dogs";
-            else if (checkedId == R.id.chipCats) currentCategory = "Cats";
-            else if (checkedId == R.id.chipBirds) currentCategory = "Birds";
+            else if (checkedId == R.id.chipDogs) currentCategory = "DOG";
+            else if (checkedId == R.id.chipCats) currentCategory = "CAT";
+            else if (checkedId == R.id.chipBirds) currentCategory = "BIRD";
             
             observePets(); // Reload data
         });

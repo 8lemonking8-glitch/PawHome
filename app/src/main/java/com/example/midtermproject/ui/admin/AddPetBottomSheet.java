@@ -70,15 +70,19 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         pet.setName(name);
         pet.setBreed(breed);
         pet.setAge(ageStr + " Years");
-        pet.setType(type);
+        String dbType = "DOG";
+        if ("Cats".equals(type)) dbType = "CAT";
+        else if ("Birds".equals(type)) dbType = "BIRD";
+        
+        pet.setType(dbType);
         pet.setGender(gender);
         pet.setSize(size);
         pet.setDescription(description);
         pet.setStatus("Available");
         // Set a default image based on type
-        if ("Dogs".equals(type)) pet.setImageResId(R.drawable.ic_dog);
-        else if ("Cats".equals(type)) pet.setImageResId(R.drawable.ic_cat);
-        else pet.setImageResId(R.drawable.ic_bird);
+        if ("DOG".equals(dbType)) pet.setImageResId(R.drawable.img_dog);
+        else if ("CAT".equals(dbType)) pet.setImageResId(R.drawable.img_cat);
+        else pet.setImageResId(R.drawable.img_bird);
         pet.setCreatedAt(System.currentTimeMillis());
 
         petRepository.insert(pet);
