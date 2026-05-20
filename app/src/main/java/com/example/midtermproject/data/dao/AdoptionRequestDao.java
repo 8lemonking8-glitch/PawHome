@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.midtermproject.data.entity.AdoptionRequestEntity;
+import com.example.midtermproject.data.entity.AdoptionRequestWithDetails;
 
 import java.util.List;
 
@@ -22,8 +23,16 @@ public interface AdoptionRequestDao {
     @Query("SELECT * FROM adoption_requests ORDER BY createdAt DESC")
     LiveData<List<AdoptionRequestEntity>> getAllRequests();
 
+    @androidx.room.Transaction
+    @Query("SELECT * FROM adoption_requests ORDER BY createdAt DESC")
+    LiveData<List<AdoptionRequestWithDetails>> getAllRequestsWithDetails();
+
     @Query("SELECT * FROM adoption_requests WHERE status = 'PENDING' ORDER BY createdAt DESC")
     LiveData<List<AdoptionRequestEntity>> getPendingRequests();
+
+    @androidx.room.Transaction
+    @Query("SELECT * FROM adoption_requests WHERE status = 'PENDING' ORDER BY createdAt DESC")
+    LiveData<List<AdoptionRequestWithDetails>> getPendingRequestsWithDetails();
 
     @Query("SELECT * FROM adoption_requests WHERE userId = :userId ORDER BY createdAt DESC")
     LiveData<List<AdoptionRequestEntity>> getRequestsByUser(long userId);

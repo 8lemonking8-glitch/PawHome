@@ -8,6 +8,7 @@ import com.example.midtermproject.data.dao.AdoptionRequestDao;
 import com.example.midtermproject.data.dao.PetDao;
 import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.data.entity.AdoptionRequestEntity;
+import com.example.midtermproject.data.entity.AdoptionRequestWithDetails;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -74,8 +75,16 @@ public class AdoptionRepository {
         return adoptionDao.getAllRequests();
     }
 
+    public LiveData<List<AdoptionRequestWithDetails>> getAllRequestsWithDetails() {
+        return adoptionDao.getAllRequestsWithDetails();
+    }
+
     public LiveData<List<AdoptionRequestEntity>> getPendingRequests() {
         return adoptionDao.getPendingRequests();
+    }
+
+    public LiveData<List<AdoptionRequestWithDetails>> getPendingRequestsWithDetails() {
+        return adoptionDao.getPendingRequestsWithDetails();
     }
 
     public LiveData<List<AdoptionRequestEntity>> getRequestsByUser(long userId) {

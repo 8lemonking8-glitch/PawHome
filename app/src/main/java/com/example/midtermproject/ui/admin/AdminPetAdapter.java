@@ -56,12 +56,32 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
                 binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));
             }
             
-            if ("DOG".equals(pet.getType())) {
-                binding.ivIcon.setBackgroundColor(0xFFE8734A); 
-            } else if ("CAT".equals(pet.getType())) {
-                binding.ivIcon.setBackgroundColor(0xFFA78BDB); 
+            if (pet.getImageResId() != 0) {
+                binding.ivIcon.setImageResource(pet.getImageResId());
+                binding.ivIcon.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+                binding.ivIcon.setPadding(0, 0, 0, 0);
+            } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
+                try {
+                    org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
+                    if (array.length() > 0) {
+                        String uriStr = array.getString(0);
+                        binding.ivIcon.setImageURI(android.net.Uri.parse(uriStr));
+                        binding.ivIcon.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+                        binding.ivIcon.setPadding(0, 0, 0, 0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
-                binding.ivIcon.setBackgroundColor(0xFF5CB8A5); 
+                if ("DOG".equals(pet.getType())) {
+                    binding.ivIcon.setBackgroundColor(0xFFE8734A); 
+                } else if ("CAT".equals(pet.getType())) {
+                    binding.ivIcon.setBackgroundColor(0xFFA78BDB); 
+                } else {
+                    binding.ivIcon.setBackgroundColor(0xFF5CB8A5); 
+                }
+                binding.ivIcon.setImageResource(R.drawable.ic_pets);
+                binding.ivIcon.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
             }
         }
     }

@@ -7,13 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.AdoptionRequestEntity;
+import com.example.midtermproject.data.entity.AdoptionRequestWithDetails;
+import com.example.midtermproject.data.entity.UserEntity;
+import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.databinding.ItemAdminRequestCardBinding;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapter.ViewHolder> {
 
-    private List<AdoptionRequestEntity> requests = new ArrayList<>();
+    private List<AdoptionRequestWithDetails> requests = new ArrayList<>();
     private final OnRequestAction onApprove;
     private final OnRequestAction onReject;
 
@@ -26,7 +29,7 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
         this.onReject = onReject;
     }
 
-    public void setRequests(List<AdoptionRequestEntity> requests) {
+    public void setRequests(List<AdoptionRequestWithDetails> requests) {
         this.requests = requests;
         notifyDataSetChanged();
     }
@@ -59,21 +62,28 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             binding.btnApprove.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    onApprove.onAction(requests.get(pos));
+                    onApprove.onAction(requests.get(pos).request);
                 }
             });
             
             binding.btnReject.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    onReject.onAction(requests.get(pos));
+                    onReject.onAction(requests.get(pos).request);
                 }
             });
         }
 
-        public void bind(AdoptionRequestEntity request) {
-            binding.tvUserName.setText("User ID: " + request.getUserId());
-            binding.tvPetName.setText("Pet ID: " + request.getPetId());
+        public void bind(AdoptionRequestWithDetails details) {
+            AdoptionRequestEntity request = details.request;
+            UserEntity user = details.user;
+            PetEntity pet = details.pet;
+            
+            String contact = user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : user.getEmail();
+            if (contact == null || contact.isEmpty()) contact = "No contact info";
+            
+            binding.tvUserName.setText(user.getUsername() + " (" + contact + ")");
+            binding.tvPetName.setText(pet.getName() + " (" + pet.getBreed() + ")");
             binding.tvStatus.setText(request.getStatus());
             
             if ("PENDING".equals(request.getStatus())) {
