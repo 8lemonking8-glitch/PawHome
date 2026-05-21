@@ -2,6 +2,12 @@ package com.example.midtermproject.ui.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.graphics.Insets;
+
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +33,30 @@ public class PetDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPetDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            
+            android.view.ViewGroup.MarginLayoutParams mlp = (android.view.ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+            mlp.topMargin = insets.top;
+            binding.toolbar.setLayoutParams(mlp);
+            
+            android.view.ViewGroup.MarginLayoutParams fabMlp = (android.view.ViewGroup.MarginLayoutParams) binding.fabAdopt.getLayoutParams();
+            fabMlp.bottomMargin = insets.bottom + (int)(32 * getResources().getDisplayMetrics().density);
+            binding.fabAdopt.setLayoutParams(fabMlp);
+            
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         
         petId = getIntent().getLongExtra(EXTRA_PET_ID, -1);
         if (petId == -1) {
             finish();
             return;
         }
+        
+        binding.ivPetImage.setTransitionName("pet_image_" + petId);
 
         petRepository = new PetRepository(getApplication());
         favoriteManager = new FavoriteManager(this);
@@ -55,6 +79,7 @@ public class PetDetailActivity extends AppCompatActivity {
         binding.btnFavorite.setOnClickListener(v -> {
             favoriteManager.toggleFavorite(petId);
             updateFavoriteIcon();
+            binding.btnFavorite.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.scale_bounce));
         });
     }
 

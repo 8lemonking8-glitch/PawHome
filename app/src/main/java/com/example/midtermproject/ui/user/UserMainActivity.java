@@ -1,6 +1,12 @@
 package com.example.midtermproject.ui.user;
 
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.graphics.Insets;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.midtermproject.R;
@@ -18,6 +24,16 @@ public class UserMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityUserMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            if (binding.bottomNavigation != null) {
+                binding.bottomNavigation.setPadding(0, 0, 0, insets.bottom);
+            }
+            return windowInsets;
+        });
+
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;

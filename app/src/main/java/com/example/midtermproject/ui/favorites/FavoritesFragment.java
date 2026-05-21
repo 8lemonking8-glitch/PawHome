@@ -1,6 +1,11 @@
 package com.example.midtermproject.ui.favorites;
 
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.graphics.Insets;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
 import com.example.midtermproject.data.entity.PetEntity;
@@ -43,6 +49,13 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rvFavorites, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(v.getPaddingLeft(), insets.top + (int)(8 * getResources().getDisplayMetrics().density), v.getPaddingRight(), v.getPaddingBottom());
+            return windowInsets;
+        });
+
+
         petRepository = new PetRepository(requireActivity().getApplication());
         favoriteManager = new FavoriteManager(requireContext());
 
@@ -51,10 +64,14 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new PetAdapter(pet -> {
+        adapter = new PetAdapter((pet, sharedImageView) -> {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
-            startActivity(intent);
+            
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    requireActivity(), sharedImageView, "pet_image_" + pet.getId());
+                    
+            startActivity(intent, options.toBundle());
         });
         
         adapter.setFavoriteManager(favoriteManager);

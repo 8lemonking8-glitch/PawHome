@@ -20,6 +20,9 @@
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
 
+        <!-- Typography -->
+        <item name="android:fontFamily">@font/poppins</item>
+
         <!-- Error -->
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/on_error</item>

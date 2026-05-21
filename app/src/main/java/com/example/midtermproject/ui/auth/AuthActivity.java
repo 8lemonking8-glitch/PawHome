@@ -2,6 +2,12 @@ package com.example.midtermproject.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.graphics.Insets;
+
 import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +41,15 @@ public class AuthActivity extends AppCompatActivity {
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, 0, 0, insets.bottom);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+
         setupViewPager();
         playEntryAnimations();
     }
@@ -49,30 +64,11 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void playEntryAnimations() {
-        // Fade in logo
-        binding.ivLogo.setAlpha(0f);
-        binding.ivLogo.animate()
+        // Fade in background slightly
+        binding.ivLoginBg.setAlpha(0f);
+        binding.ivLoginBg.animate()
                 .alpha(1f)
                 .setDuration(800)
-                .setStartDelay(200)
-                .start();
-
-        // Fade in title
-        binding.tvAppName.setAlpha(0f);
-        binding.tvAppName.animate()
-                .alpha(1f)
-                .translationY(0)
-                .setDuration(800)
-                .setStartDelay(400)
-                .start();
-        binding.tvAppName.setTranslationY(20);
-
-        // Fade in subtitle
-        binding.tvSubtitle.setAlpha(0f);
-        binding.tvSubtitle.animate()
-                .alpha(1f)
-                .setDuration(600)
-                .setStartDelay(600)
                 .start();
 
         // Slide up card
@@ -82,8 +78,16 @@ public class AuthActivity extends AppCompatActivity {
                 .alpha(1f)
                 .translationY(0)
                 .setDuration(800)
-                .setStartDelay(500)
+                .setStartDelay(200)
                 .start();
+    }
+
+    public void switchToLoginTab() {
+        binding.viewPager.setCurrentItem(0, true);
+    }
+
+    public void switchToRegisterTab() {
+        binding.viewPager.setCurrentItem(1, true);
     }
 
     public void navigateToMain() {

@@ -1,6 +1,12 @@
 package com.example.midtermproject.ui.admin;
 
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.graphics.Insets;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -16,6 +22,16 @@ public class AdminMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAdminMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            if (binding.adminBottomNavigation != null) {
+                binding.adminBottomNavigation.setPadding(0, 0, 0, insets.bottom);
+            }
+            return windowInsets;
+        });
+
 
         binding.adminBottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;

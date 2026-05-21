@@ -1,6 +1,11 @@
 package com.example.midtermproject.ui.home;
 
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.graphics.Insets;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.core.app.ActivityOptionsCompat;
 import android.content.Intent;
 import com.example.midtermproject.R;
 import com.example.midtermproject.data.repository.PetRepository;
@@ -36,6 +42,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.tvGreeting, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            android.view.ViewGroup.MarginLayoutParams mlp = (android.view.ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            mlp.topMargin = insets.top;
+            v.setLayoutParams(mlp);
+            return windowInsets;
+        });
+
+
         petRepository = new PetRepository(requireActivity().getApplication());
         SessionManager sessionManager = new SessionManager(requireContext());
         
@@ -50,10 +65,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new PetAdapter(pet -> {
+        adapter = new PetAdapter((pet, sharedImageView) -> {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
-            startActivity(intent);
+            
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    requireActivity(), sharedImageView, "pet_image_" + pet.getId());
+            
+            startActivity(intent, options.toBundle());
         });
         
         FavoriteManager favoriteManager = new FavoriteManager(requireContext());

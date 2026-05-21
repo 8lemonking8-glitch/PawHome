@@ -40,7 +40,7 @@
                     android:text="User Name"
                     android:textColor="@color/on_primary"
                     android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:fontFamily="@font/poppins" />
                     
                 <TextView
                     android:id="@+id/tvUsername"
@@ -106,7 +106,7 @@
                             android:text="Contact Information"
                             android:textColor="@color/text_primary"
                             android:textSize="18sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:fontFamily="@font/poppins" />
                             
                         <ImageView
                             android:id="@+id/btnEditProfile"
@@ -175,7 +175,7 @@
                 android:text="@string/adoption_history"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
-                android:fontFamily="sans-serif-medium" />
+                android:fontFamily="@font/poppins" />
                 
             <!-- RecyclerView for History -->
             <!-- In a real app we would use a RecyclerView here. For simplicity, we can use a nested recycler or dynamically add views -->

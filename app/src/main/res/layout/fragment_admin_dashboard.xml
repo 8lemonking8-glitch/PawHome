@@ -20,7 +20,7 @@
                 android:text="Admin Dashboard"
                 android:textSize="20sp"
                 android:textColor="@color/on_primary"
-                android:fontFamily="sans-serif-medium" />
+                android:fontFamily="@font/poppins" />
                 
             <ImageView
                 android:id="@+id/btnLogout"
@@ -50,7 +50,7 @@
                 android:text="Overview"
                 android:textSize="18sp"
                 android:textColor="@color/text_primary"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/poppins"
                 android:layout_marginBottom="16dp" />
                 
             <GridLayout
@@ -87,7 +87,7 @@
                             android:text="-"
                             android:textColor="#3D2C22"
                             android:textSize="32sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:fontFamily="@font/poppins" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -119,7 +119,7 @@
                             android:text="-"
                             android:textColor="#1B5E20"
                             android:textSize="32sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:fontFamily="@font/poppins" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -151,7 +151,7 @@
                             android:text="-"
                             android:textColor="#B71C1C"
                             android:textSize="32sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:fontFamily="@font/poppins" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -183,7 +183,7 @@
                             android:text="-"
                             android:textColor="#0D47A1"
                             android:textSize="32sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:fontFamily="@font/poppins" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 

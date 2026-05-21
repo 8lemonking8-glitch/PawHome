@@ -22,7 +22,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     private FavoriteManager favoriteManager;
 
     public interface OnPetClickListener {
-        void onPetClick(PetEntity pet);
+        void onPetClick(PetEntity pet, View sharedImageView);
     }
 
     public PetAdapter(OnPetClickListener listener) {
@@ -36,11 +36,8 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     public void setPets(List<PetEntity> pets) {
         this.pets = pets;
         
-        // Generate random heights for staggered grid effect
-        heightList.clear();
-        for (int i = 0; i < pets.size(); i++) {
-            heightList.add(160 + random.nextInt(80)); // 160dp to 240dp
-        }
+        // Deterministic heights will be assigned in onBindViewHolder
+        // using the pet's ID as seed to avoid jitter
         
         notifyDataSetChanged();
     }
@@ -57,10 +54,11 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
         PetEntity pet = pets.get(position);
         
-        // Apply random height for staggered grid
+        // Apply deterministic random height for staggered grid
+        int randomHeight = 180 + new java.util.Random(pet.getId()).nextInt(80);
         ViewGroup.LayoutParams layoutParams = holder.binding.ivPetImage.getLayoutParams();
         float density = holder.itemView.getContext().getResources().getDisplayMetrics().density;
-        layoutParams.height = (int) (heightList.get(position) * density);
+        layoutParams.height = (int) (randomHeight * density);
         holder.binding.ivPetImage.setLayoutParams(layoutParams);
         
         holder.bind(pet);
@@ -81,14 +79,14 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
             itemView.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    listener.onPetClick(pets.get(pos));
+                    listener.onPetClick(pets.get(pos), binding.ivPetImage);
                 }
             });
             
             binding.btnAdopt.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    listener.onPetClick(pets.get(pos));
+                    listener.onPetClick(pets.get(pos), binding.ivPetImage);
                 }
             });
             
@@ -101,11 +99,14 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                     boolean isFav = favoriteManager.isFavorite(pet.getId());
                     binding.btnFavorite.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
                     binding.btnFavorite.setColorFilter(isFav ? itemView.getContext().getColor(R.color.error) : itemView.getContext().getColor(R.color.text_primary));
+                    // Bounce Animation
+                    binding.btnFavorite.startAnimation(android.view.animation.AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_bounce));
                 }
             });
         }
 
         public void bind(PetEntity pet) {
+            binding.ivPetImage.setTransitionName("pet_image_" + pet.getId());
             binding.tvName.setText(pet.getName());
             binding.tvBreed.setText(pet.getBreed());
             binding.tvStatus.setText(pet.getStatus());

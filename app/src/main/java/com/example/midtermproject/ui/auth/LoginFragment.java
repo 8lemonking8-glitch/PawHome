@@ -41,6 +41,11 @@ public class LoginFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
 
         binding.btnLogin.setOnClickListener(v -> attemptLogin());
+        binding.cardRegisterLink.setOnClickListener(v -> {
+            if (getActivity() instanceof AuthActivity) {
+                ((AuthActivity) getActivity()).switchToRegisterTab();
+            }
+        });
     }
 
     private void attemptLogin() {

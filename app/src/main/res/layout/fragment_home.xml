@@ -33,7 +33,7 @@
                     android:text="Hello, Adopter!"
                     android:textSize="28sp"
                     android:textColor="@color/on_primary"
-                    android:fontFamily="sans-serif-medium" />
+                    android:fontFamily="@font/poppins" />
 
                 <TextView
                     android:layout_width="wrap_content"

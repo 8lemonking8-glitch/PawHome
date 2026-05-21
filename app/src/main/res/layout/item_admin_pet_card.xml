@@ -31,7 +31,7 @@
             android:text="Bella"
             android:textSize="16sp"
             android:textColor="@color/text_primary"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/poppins"
             app:layout_constraintTop_toTopOf="@id/ivIcon"
             app:layout_constraintStart_toEndOf="@id/ivIcon"
             app:layout_constraintEnd_toStartOf="@id/tvStatus" />
@@ -59,7 +59,7 @@
             android:text="Available"
             android:textColor="@color/on_primary"
             android:textSize="12sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/poppins"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

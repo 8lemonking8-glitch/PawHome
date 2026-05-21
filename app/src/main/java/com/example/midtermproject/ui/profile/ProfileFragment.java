@@ -2,6 +2,11 @@ package com.example.midtermproject.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.graphics.Insets;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +36,18 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.ivAvatar, (v, windowInsets) -> {
+            androidx.core.graphics.Insets insets = windowInsets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
+            android.view.View targetView = v;
+            android.view.ViewGroup.MarginLayoutParams mlp = (android.view.ViewGroup.MarginLayoutParams) targetView.getLayoutParams();
+            mlp.topMargin = insets.top;
+            targetView.setLayoutParams(mlp);
+            return windowInsets;
+        });
+
+
+
 
         sessionManager = new SessionManager(requireContext());
         userRepository = new UserRepository(requireActivity().getApplication());

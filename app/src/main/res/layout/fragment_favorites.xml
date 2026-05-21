@@ -23,7 +23,7 @@
                 android:text="@string/nav_favorites"
                 android:textSize="20sp"
                 android:textColor="@color/text_primary"
-                android:fontFamily="sans-serif-medium" />
+                android:fontFamily="@font/poppins" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
