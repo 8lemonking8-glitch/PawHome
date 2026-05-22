@@ -10,18 +10,33 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_gradient_header">
+        android:background="@drawable/bg_gradient_header"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
-            <TextView
+            
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin Dashboard"
-                android:textSize="20sp"
-                android:textColor="@color/on_primary"
-                android:fontFamily="@font/poppins" />
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PawHome Admin"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_primary"
+                    android:fontFamily="@font/poppins_bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="System Control Center"
+                    android:textSize="11sp"
+                    android:textColor="@color/secondary_light"
+                    android:fontFamily="@font/poppins" />
+            </LinearLayout>
                 
             <ImageView
                 android:id="@+id/btnLogout"
@@ -37,6 +52,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         
         <LinearLayout
@@ -48,47 +64,66 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overview"
+                android:text="Overview Indicators"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:fontFamily="@font/poppins"
-                android:layout_marginBottom="16dp" />
+                android:fontFamily="@font/poppins_bold"
+                android:layout_marginBottom="12dp" />
                 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:rowCount="2">
+                android:rowCount="2"
+                android:alignmentMode="alignMargins"
+                android:columnOrderPreserved="false">
                 
                 <!-- Total Pets Card -->
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="100dp"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    android:layout_margin="6dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/admin_card_pets_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Total Pets"
-                            android:textColor="@color/admin_card_pets_text"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvTotalPets"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="-"
-                            android:textSize="24sp"
-                            android:textColor="@color/admin_card_pets_text"
-                            android:fontFamily="@font/poppins_bold" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Pets"
+                                android:textColor="@color/admin_card_pets_text"
+                                android:textSize="13sp"
+                                android:fontFamily="@font/poppins" />
+                            <TextView
+                                android:id="@+id/tvTotalPets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="-"
+                                android:textSize="26sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/admin_card_pets_text"
+                                android:fontFamily="@font/poppins_bold" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_pets"
+                            app:tint="@color/admin_card_pets_text"
+                            android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -96,31 +131,47 @@
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="100dp"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    android:layout_margin="6dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/admin_card_available_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Available"
-                            android:textColor="@color/admin_card_available_text"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvAvailablePets"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="-"
-                            android:textColor="@color/admin_card_available_text"
-                            android:textSize="32sp"
-                            android:fontFamily="@font/poppins" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Available"
+                                android:textColor="@color/admin_card_available_text"
+                                android:textSize="13sp"
+                                android:fontFamily="@font/poppins" />
+                            <TextView
+                                android:id="@+id/tvAvailablePets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="-"
+                                android:textSize="26sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/admin_card_available_text"
+                                android:fontFamily="@font/poppins_bold" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/admin_card_available_text"
+                            android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -128,31 +179,47 @@
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="100dp"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    android:layout_margin="6dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/admin_card_pending_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Pending Requests"
-                            android:textColor="@color/admin_card_pending_text"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvPendingRequests"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="-"
-                            android:textColor="@color/admin_card_pending_text"
-                            android:textSize="32sp"
-                            android:fontFamily="@font/poppins" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pending Req"
+                                android:textColor="@color/admin_card_pending_text"
+                                android:textSize="13sp"
+                                android:fontFamily="@font/poppins" />
+                            <TextView
+                                android:id="@+id/tvPendingRequests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="-"
+                                android:textSize="26sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/admin_card_pending_text"
+                                android:fontFamily="@font/poppins_bold" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_history"
+                            app:tint="@color/admin_card_pending_text"
+                            android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -160,35 +227,328 @@
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="100dp"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    android:layout_margin="6dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="3dp"
                     app:cardBackgroundColor="@color/admin_card_adopted_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Adopted Pets"
-                            android:textColor="#0D47A1"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvAdoptedPets"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="-"
-                            android:textColor="#0D47A1"
-                            android:textSize="32sp"
-                            android:fontFamily="@font/poppins" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Adopted"
+                                android:textColor="@color/admin_card_adopted_text"
+                                android:textSize="13sp"
+                                android:fontFamily="@font/poppins" />
+                            <TextView
+                                android:id="@+id/tvAdoptedPets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="-"
+                                android:textSize="26sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/admin_card_adopted_text"
+                                android:fontFamily="@font/poppins_bold" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_favorite"
+                            app:tint="@color/admin_card_adopted_text"
+                            android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
             </GridLayout>
+
+            <!-- Quick Management Panel -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.PawHome.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/surface">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Quick Console"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Frequently used administrative tools"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins" />
+                        
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+                        
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnQuickAddPet"
+                            style="@style/Widget.Material3.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:text="Add Pet"
+                            app:icon="@drawable/ic_add"
+                            app:iconTint="@color/on_primary"
+                            app:backgroundTint="@color/primary"
+                            android:textColor="@color/on_primary"
+                            app:cornerRadius="24dp"
+                            android:fontFamily="@font/poppins"
+                            android:textSize="13sp" />
+                            
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnQuickManageRequests"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="Requests"
+                            app:icon="@drawable/ic_assignment"
+                            app:iconTint="@color/primary"
+                            app:backgroundTint="@color/surface_variant"
+                            android:textColor="@color/primary"
+                            app:cornerRadius="24dp"
+                            android:fontFamily="@font/poppins"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Recent Activities Section -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.PawHome.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="140dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/surface">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recent Adoption Activities"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Live status of pet adoption applications"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins" />
+                        
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/divider" />
+                        
+                    <!-- Activity Item 1 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+                        
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/img_dog"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="@color/divider" />
+                            
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Luna (Husky)"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins_bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Applied by cccsh"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp"
+                                android:fontFamily="@font/poppins" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="APPROVED"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/on_success"
+                            android:background="@drawable/bg_status_badge"
+                            android:backgroundTint="@color/status_available"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp" />
+                    </LinearLayout>
+                    
+                    <!-- Activity Item 2 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+                        
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/img_cat"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="@color/divider" />
+                            
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mochi (Shiba Inu)"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins_bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Applied by Chen"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp"
+                                android:fontFamily="@font/poppins" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PENDING"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/on_secondary"
+                            android:background="@drawable/bg_status_badge"
+                            android:backgroundTint="@color/status_pending"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp" />
+                    </LinearLayout>
+                    
+                    <!-- Activity Item 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/img_bird"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="@color/divider" />
+                            
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Buddy (Parrot)"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins_bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Applied by Adopter"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp"
+                                android:fontFamily="@font/poppins" />
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PENDING"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/on_secondary"
+                            android:background="@drawable/bg_status_badge"
+                            android:backgroundTint="@color/status_pending"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

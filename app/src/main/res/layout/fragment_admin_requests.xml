@@ -10,18 +10,32 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface">
+        android:background="@drawable/bg_gradient_header"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Adoption Requests"
-                android:textSize="20sp"
-                android:textColor="@color/text_primary"
-                android:fontFamily="@font/poppins" />
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Adoption Requests"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_primary"
+                    android:fontFamily="@font/poppins_bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Review and manage pet adoption requests"
+                    android:textSize="11sp"
+                    android:textColor="@color/secondary_light"
+                    android:fontFamily="@font/poppins" />
+            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
         
         <com.google.android.material.tabs.TabLayout
@@ -30,9 +44,10 @@
             android:layout_height="wrap_content"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/primary"
-            app:tabSelectedTextColor="@color/primary"
-            app:tabTextColor="@color/text_secondary" />
+            app:tabIndicatorColor="@color/on_primary"
+            app:tabSelectedTextColor="@color/on_primary"
+            app:tabTextColor="@color/secondary_light"
+            android:background="@android:color/transparent" />
             
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,7 +59,7 @@
         android:paddingTop="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:paddingBottom="110dp"
+        android:paddingBottom="140dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <ProgressBar
