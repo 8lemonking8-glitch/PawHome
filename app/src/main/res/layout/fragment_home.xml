@@ -98,7 +98,7 @@
                             android:id="@+id/ivClear"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_close"
+                            android:src="@drawable/ic_cancel"
                             android:visibility="gone"
                             app:tint="@color/text_hint" />
                     </LinearLayout>
