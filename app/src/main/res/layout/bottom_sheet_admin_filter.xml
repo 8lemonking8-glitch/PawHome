@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_rounded_surface"
+    android:padding="24dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter Pets"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Type Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type"
+        android:textSize="12sp"
+        android:textColor="@color/primary"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"
+        app:chipSpacingHorizontal="10dp"
+        app:chipSpacingVertical="4dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterDog"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dogs"
+            app:chipIcon="@drawable/ic_dog"
+            app:chipIconVisible="true"
+            android:checked="true"
+            android:checkable="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterCat"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cats"
+            app:chipIcon="@drawable/ic_cat"
+            app:chipIconVisible="true"
+            android:checked="true"
+            android:checkable="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterBird"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Birds"
+            app:chipIcon="@drawable/ic_bird"
+            app:chipIconVisible="true"
+            android:checked="true"
+            android:checkable="true" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Status Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="12sp"
+        android:textColor="@color/primary"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"
+        app:chipSpacingHorizontal="10dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterAvailable"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available"
+            app:chipIcon="@drawable/ic_pets"
+            app:chipIconVisible="true"
+            android:checkable="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterAdopted"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopted"
+            app:chipIcon="@drawable/ic_favorite"
+            app:chipIconVisible="true"
+            android:checkable="true" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Apply Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApply"
+        style="@style/Widget.PawHome.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Apply Filters" />
+
+</LinearLayout>

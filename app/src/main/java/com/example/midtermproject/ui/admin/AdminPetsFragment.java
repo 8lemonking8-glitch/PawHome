@@ -24,7 +24,9 @@ import com.example.midtermproject.R;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AdminPetsFragment extends Fragment {
 
@@ -33,8 +35,8 @@ public class AdminPetsFragment extends Fragment {
     private PetRepository petRepository;
     private List<PetEntity> petsList = new ArrayList<>();
     private List<PetEntity> allPetsList = new ArrayList<>();
-    private String currentCategory = "All";
-    private String currentStatus = "All";
+    private Set<String> selectedTypes = new HashSet<>();
+    private Set<String> selectedStatuses = new HashSet<>();
     private String currentSearchQuery = "";
 
     @Nullable
@@ -54,15 +56,19 @@ public class AdminPetsFragment extends Fragment {
             return windowInsets;
         });
 
+        // Default: all selected
+        selectedTypes.add("DOG");
+        selectedTypes.add("CAT");
+        selectedTypes.add("BIRD");
+        selectedStatuses.add("AVAILABLE");
+        selectedStatuses.add("ADOPTED");
 
         petRepository = new PetRepository(requireActivity().getApplication());
 
         setupRecyclerView();
 
-        binding.fabAddPet.setOnClickListener(v -> {
-            AddPetBottomSheet bottomSheet = new AddPetBottomSheet();
-            bottomSheet.show(getChildFragmentManager(), "AddPetBottomSheet");
-        });
+        binding.fabAddPet.setOnClickListener(v ->
+            new AddPetBottomSheet().show(getChildFragmentManager(), "AddPetBottomSheet"));
 
         binding.progressBar.setVisibility(View.VISIBLE);
         petRepository.getAllPets().observe(getViewLifecycleOwner(), pets -> {
@@ -71,53 +77,25 @@ public class AdminPetsFragment extends Fragment {
             applyFilter();
         });
 
-        setupChips();
-        setupStatusChips();
+        binding.ivFilter.setOnClickListener(v -> showFilterSheet());
         setupSearch();
     }
 
-    private void setupChips() {
-        binding.chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) return;
-            int checkedId = checkedIds.get(0);
-
-            if (checkedId == R.id.chipAll) currentCategory = "All";
-            else if (checkedId == R.id.chipDogs) currentCategory = "DOG";
-            else if (checkedId == R.id.chipCats) currentCategory = "CAT";
-            else if (checkedId == R.id.chipBirds) currentCategory = "BIRD";
-
+    private void showFilterSheet() {
+        new FilterBottomSheet(selectedTypes, selectedStatuses, (types, statuses) -> {
+            selectedTypes = types;
+            selectedStatuses = statuses;
             applyFilter();
-        });
-    }
-
-    private void setupStatusChips() {
-        binding.chipGroupStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) return;
-            int checkedId = checkedIds.get(0);
-
-            if (checkedId == R.id.chipStatusAll) currentStatus = "All";
-            else if (checkedId == R.id.chipStatusAvailable) currentStatus = "AVAILABLE";
-            else if (checkedId == R.id.chipStatusAdopted) currentStatus = "ADOPTED";
-            else if (checkedId == R.id.chipStatusArchived) currentStatus = "ARCHIVED";
-
-            applyFilter();
-        });
+        }).show(getChildFragmentManager(), "FilterBottomSheet");
     }
 
     private void setupSearch() {
-        binding.ivClear.setOnClickListener(v -> {
-            binding.etSearch.setText("");
-        });
-
         binding.etSearch.addTextChangedListener(new android.text.TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(android.text.Editable s) {
                 currentSearchQuery = s.toString().trim();
-                binding.ivClear.setVisibility(currentSearchQuery.isEmpty() ? View.GONE : View.VISIBLE);
                 applyFilter();
             }
         });
@@ -126,37 +104,18 @@ public class AdminPetsFragment extends Fragment {
     private void applyFilter() {
         List<PetEntity> filteredList = new ArrayList<>();
         for (PetEntity pet : allPetsList) {
-            // Category filter
-            boolean matchesCategory = false;
-            if ("All".equals(currentCategory)) {
-                matchesCategory = true;
-            } else if ("DOG".equals(currentCategory) && "DOG".equals(pet.getType())) {
-                matchesCategory = true;
-            } else if ("CAT".equals(currentCategory) && "CAT".equals(pet.getType())) {
-                matchesCategory = true;
-            } else if ("BIRD".equals(currentCategory) && "BIRD".equals(pet.getType())) {
-                matchesCategory = true;
-            }
+            if (!selectedTypes.contains(pet.getType())) continue;
 
-            // Search filter
-            boolean matchesSearch = false;
-            if (currentSearchQuery.isEmpty()) {
-                matchesSearch = true;
-            } else {
-                String query = currentSearchQuery.toLowerCase();
+            if (!currentSearchQuery.isEmpty()) {
+                String q = currentSearchQuery.toLowerCase();
                 String name = pet.getName() != null ? pet.getName().toLowerCase() : "";
                 String breed = pet.getBreed() != null ? pet.getBreed().toLowerCase() : "";
-                if (name.contains(query) || breed.contains(query)) {
-                    matchesSearch = true;
-                }
+                if (!name.contains(q) && !breed.contains(q)) continue;
             }
 
-            // Status filter
-            boolean matchesStatus = "All".equals(currentStatus) || currentStatus.equals(pet.getStatus());
+            if (!selectedStatuses.contains(pet.getStatus())) continue;
 
-            if (matchesCategory && matchesSearch && matchesStatus) {
-                filteredList.add(pet);
-            }
+            filteredList.add(pet);
         }
 
         petsList = filteredList;
@@ -166,42 +125,33 @@ public class AdminPetsFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AdminPetAdapter();
-        adapter.setOnPetActionListener(pet -> {
-            EditPetBottomSheet bottomSheet = new EditPetBottomSheet(pet, () -> {
-                // Refresh is handled by LiveData
-            });
-            bottomSheet.show(getChildFragmentManager(), "EditPetBottomSheet");
-        });
+        adapter.setOnPetActionListener(pet ->
+            new EditPetBottomSheet(pet, () -> {})
+                .show(getChildFragmentManager(), "EditPetBottomSheet"));
         binding.rvPets.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvPets.setAdapter(adapter);
 
-        // Swipe to archive
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    PetEntity pet = petsList.get(position);
-
-                    new AlertDialog.Builder(requireContext())
-                        .setTitle("Archive Pet")
-                        .setMessage("Archive " + pet.getName() + "? The record will be preserved but hidden from active listings.")
-                        .setPositiveButton("Archive", (dialog, which) -> {
-                            pet.setStatus("ARCHIVED");
-                            petRepository.update(pet);
-                            adapter.notifyItemChanged(position);
-                        })
-                        .setNegativeButton("Cancel", (dialog, which) -> {
-                            adapter.notifyItemChanged(position);
-                        })
-                        .setCancelable(false)
-                        .show();
-                }
+            public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int direction) {
+                int pos = vh.getAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION) return;
+                PetEntity pet = petsList.get(pos);
+                new AlertDialog.Builder(requireContext())
+                    .setTitle("Archive Pet")
+                    .setMessage("Archive " + pet.getName() + "?")
+                    .setPositiveButton("Archive", (d, w) -> {
+                        pet.setStatus("ARCHIVED");
+                        petRepository.update(pet);
+                        adapter.notifyItemChanged(pos);
+                    })
+                    .setNegativeButton("Cancel", (d, w) -> adapter.notifyItemChanged(pos))
+                    .setCancelable(false)
+                    .show();
             }
         }).attachToRecyclerView(binding.rvPets);
     }

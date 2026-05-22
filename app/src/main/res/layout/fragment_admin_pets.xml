@@ -77,135 +77,28 @@
                     android:fontFamily="@font/poppins"
                     android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:layout_marginStart="12dp" />
-                    
+                    android:layout_marginStart="12dp"
+                    android:maxLines="1" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/divider" />
+
                 <ImageView
-                    android:id="@+id/ivClear"
+                    android:id="@+id/ivFilter"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_cancel"
-                    android:visibility="gone"
-                    app:tint="@color/text_hint" />
+                    android:src="@drawable/ic_filter"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:tint="@color/primary" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Filter Chips -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:clipToPadding="false"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="12dp">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"
-                app:chipSpacingHorizontal="8dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAll"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category_all"
-                    app:chipIcon="@drawable/ic_dashboard"
-                    app:chipIconVisible="true"
-                    android:checked="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipDogs"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category_dogs"
-                    app:chipIcon="@drawable/ic_dog"
-                    app:chipIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipCats"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category_cats"
-                    app:chipIcon="@drawable/ic_cat"
-                    app:chipIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipBirds"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category_birds"
-                    app:chipIcon="@drawable/ic_bird"
-                    app:chipIconVisible="true" />
-
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
-
-        <!-- Status Filter Chips -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:clipToPadding="false"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="0dp"
-            android:paddingBottom="12dp">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"
-                app:chipSpacingHorizontal="8dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipStatusAll"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="All"
-                    app:chipIcon="@drawable/ic_dashboard"
-                    app:chipIconVisible="true"
-                    android:checked="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipStatusAvailable"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Available"
-                    app:chipIcon="@drawable/ic_pets"
-                    app:chipIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipStatusAdopted"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Adopted"
-                    app:chipIcon="@drawable/ic_favorite"
-                    app:chipIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipStatusArchived"
-                    style="@style/Widget.PawHome.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Archived"
-                    app:chipIcon="@drawable/ic_history"
-                    app:chipIconVisible="true" />
-
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

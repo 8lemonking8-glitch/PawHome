@@ -96,6 +96,15 @@
     <style name="Widget.PawHome.Chip" parent="Widget.Material3.Chip.Filter">
         <item name="chipCornerRadius">20dp</item>
         <item name="chipBackgroundColor">@color/surface_variant</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
+    <style name="Widget.PawHome.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipBackgroundColor">@color/chip_filter_bg_color</item>
+        <item name="android:textColor">@color/chip_filter_text_color</item>
+        <item name="chipIconTint">@color/chip_filter_text_color</item>
         <item name="checkedIconVisible">false</item>
     </style>
 
@@ -134,5 +143,10 @@
         <item name="cornerSizeTopRight">32dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.PawHome.Image.Rounded12dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
     </style>
 </resources>
