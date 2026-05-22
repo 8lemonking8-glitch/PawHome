@@ -44,11 +44,32 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.tvGreeting, (v, windowInsets) -> {
+        float density = getResources().getDisplayMetrics().density;
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        int extraPadding = (int) (32 * density); // Generous, gorgeous breathing room (32dp)
+        int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (64 * density);
+        binding.headerContainer.setPadding(
+            binding.headerContainer.getPaddingLeft(),
+            defaultTopPadding,
+            binding.headerContainer.getPaddingRight(),
+            binding.headerContainer.getPaddingBottom()
+        );
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            android.view.ViewGroup.MarginLayoutParams mlp = (android.view.ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            mlp.topMargin = insets.top;
-            v.setLayoutParams(mlp);
+            int topInset = insets.top;
+            if (topInset > 0) {
+                binding.headerContainer.setPadding(
+                    binding.headerContainer.getPaddingLeft(),
+                    topInset + extraPadding,
+                    binding.headerContainer.getPaddingRight(),
+                    binding.headerContainer.getPaddingBottom()
+                );
+            }
             return windowInsets;
         });
 

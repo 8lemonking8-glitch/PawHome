@@ -16,15 +16,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.midtermproject.data.repository.UserRepository;
+import com.example.midtermproject.data.repository.AdoptionRepository;
 import com.example.midtermproject.databinding.FragmentProfileBinding;
 import com.example.midtermproject.ui.auth.AuthActivity;
 import com.example.midtermproject.util.SessionManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private SessionManager sessionManager;
     private UserRepository userRepository;
+    private AdoptionRepository adoptionRepository;
+    private AdoptionHistoryAdapter historyAdapter;
 
     @Nullable
     @Override
@@ -37,22 +41,46 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.ivAvatar, (v, windowInsets) -> {
-            androidx.core.graphics.Insets insets = windowInsets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
-            android.view.View targetView = v;
-            android.view.ViewGroup.MarginLayoutParams mlp = (android.view.ViewGroup.MarginLayoutParams) targetView.getLayoutParams();
-            mlp.topMargin = insets.top;
-            targetView.setLayoutParams(mlp);
+        float density = getResources().getDisplayMetrics().density;
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        int extraPadding = (int) (12 * density); // Add extra padding for elegant layout breathing space
+        int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (44 * density);
+        binding.appBarLayout.setPadding(
+            binding.appBarLayout.getPaddingLeft(),
+            defaultTopPadding,
+            binding.appBarLayout.getPaddingRight(),
+            binding.appBarLayout.getPaddingBottom()
+        );
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            int topInset = insets.top;
+            if (topInset > 0) {
+                v.setPadding(
+                    v.getPaddingLeft(),
+                    topInset + extraPadding,
+                    v.getPaddingRight(),
+                    v.getPaddingBottom()
+                );
+            }
             return windowInsets;
         });
 
-
-
-
         sessionManager = new SessionManager(requireContext());
         userRepository = new UserRepository(requireActivity().getApplication());
+        adoptionRepository = new AdoptionRepository(requireActivity().getApplication());
+
+        // Setup RecyclerView
+        historyAdapter = new AdoptionHistoryAdapter();
+        binding.rvAdoptionHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvAdoptionHistory.setAdapter(historyAdapter);
 
         loadUserProfile();
+        loadAdoptionHistory();
 
         binding.btnLogout.setOnClickListener(v -> {
             sessionManager.logout();
@@ -76,6 +104,20 @@ public class ProfileFragment extends Fragment {
                 
                 binding.tvEmail.setText(user.getEmail() != null && !user.getEmail().isEmpty() ? user.getEmail() : "Not provided");
                 binding.tvPhone.setText(user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : "Not provided");
+            }
+        });
+    }
+
+    private void loadAdoptionHistory() {
+        long userId = sessionManager.getUserId();
+        adoptionRepository.getRequestsByUserWithDetails(userId).observe(getViewLifecycleOwner(), requests -> {
+            if (requests == null || requests.isEmpty()) {
+                binding.rvAdoptionHistory.setVisibility(View.GONE);
+                binding.cardEmptyHistory.setVisibility(View.VISIBLE);
+            } else {
+                binding.cardEmptyHistory.setVisibility(View.GONE);
+                binding.rvAdoptionHistory.setVisibility(View.VISIBLE);
+                historyAdapter.setRequests(requests);
             }
         });
     }

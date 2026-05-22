@@ -7,6 +7,7 @@
     android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:background="@drawable/bg_gradient_header">
@@ -39,7 +40,7 @@
                     android:layout_marginTop="12dp"
                     android:text="User Name"
                     android:textColor="@color/on_primary"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:fontFamily="@font/poppins" />
                     
                 <TextView
@@ -81,7 +82,7 @@
             android:paddingTop="16dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="110dp">
+            android:paddingBottom="140dp">
             
             <!-- Contact Info Card -->
             <com.google.android.material.card.MaterialCardView
@@ -108,7 +109,7 @@
                             android:layout_weight="1"
                             android:text="Contact Information"
                             android:textColor="@color/text_primary"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:fontFamily="@font/poppins" />
                             
                         <ImageView
@@ -177,16 +178,24 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/adoption_history"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/poppins" />
                 
             <!-- RecyclerView for History -->
-            <!-- In a real app we would use a RecyclerView here. For simplicity, we can use a nested recycler or dynamically add views -->
-            <!-- Actually let's just add an empty state for now since we don't have adoption flow yet -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdoptionHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <!-- Empty State Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardEmptyHistory"
                 style="@style/Widget.PawHome.Card.Flat"
                 android:layout_width="match_parent"
-                android:layout_height="120dp">
+                android:layout_height="120dp"
+                android:visibility="visible">
                 
                 <LinearLayout
                     android:layout_width="match_parent"

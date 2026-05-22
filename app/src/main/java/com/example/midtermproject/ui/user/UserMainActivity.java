@@ -7,6 +7,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.graphics.Insets;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.midtermproject.R;
@@ -18,10 +19,11 @@ import com.example.midtermproject.ui.profile.ProfileFragment;
 public class UserMainActivity extends AppCompatActivity {
 
     private ActivityUserMainBinding binding;
-    private final HomeFragment homeFragment = new HomeFragment();
-    private final FavoritesFragment favoritesFragment = new FavoritesFragment();
-    private final ProfileFragment profileFragment = new ProfileFragment();
-    private Fragment activeFragment = homeFragment;
+    private HomeFragment homeFragment;
+    private FavoritesFragment favoritesFragment;
+    private ProfileFragment profileFragment;
+    private Fragment activeFragment;
+    private int activeTabId = R.id.nav_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class UserMainActivity extends AppCompatActivity {
                 params.bottomMargin = margin24dp + insets.bottom;
                 binding.bottomNavCard.setLayoutParams(params);
             }
+            for (int i = 0; i < binding.getRoot().getChildCount(); i++) {
+                ViewCompat.dispatchApplyWindowInsets(binding.getRoot().getChildAt(i), windowInsets);
+            }
             return windowInsets;
         });
 
@@ -48,16 +53,46 @@ public class UserMainActivity extends AppCompatActivity {
 
         // Load default fragments
         if (savedInstanceState == null) {
+            homeFragment = new HomeFragment();
+            favoritesFragment = new FavoritesFragment();
+            profileFragment = new ProfileFragment();
+            activeFragment = homeFragment;
+            activeTabId = R.id.nav_home;
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.nav_host_fragment, profileFragment, "3").hide(profileFragment)
                     .add(R.id.nav_host_fragment, favoritesFragment, "2").hide(favoritesFragment)
                     .add(R.id.nav_host_fragment, homeFragment, "1")
                     .commit();
             selectTab(R.id.nav_home);
+        } else {
+            homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("1");
+            favoritesFragment = (FavoritesFragment) getSupportFragmentManager().findFragmentByTag("2");
+            profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("3");
+            
+            activeTabId = savedInstanceState.getInt("activeTabId", R.id.nav_home);
+            if (activeTabId == R.id.nav_home) {
+                activeFragment = homeFragment;
+            } else if (activeTabId == R.id.nav_favorites) {
+                activeFragment = favoritesFragment;
+            } else if (activeTabId == R.id.nav_profile) {
+                activeFragment = profileFragment;
+            }
+            
+            binding.navHome.setSelected(activeTabId == R.id.nav_home);
+            binding.navFavorites.setSelected(activeTabId == R.id.nav_favorites);
+            binding.navProfile.setSelected(activeTabId == R.id.nav_profile);
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("activeTabId", activeTabId);
+    }
+
     private void selectTab(int itemId) {
+        activeTabId = itemId;
         binding.navHome.setSelected(itemId == R.id.nav_home);
         binding.navFavorites.setSelected(itemId == R.id.nav_favorites);
         binding.navProfile.setSelected(itemId == R.id.nav_profile);

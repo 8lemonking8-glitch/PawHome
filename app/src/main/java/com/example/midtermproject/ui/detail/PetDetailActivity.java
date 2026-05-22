@@ -101,6 +101,11 @@ public class PetDetailActivity extends AppCompatActivity {
                 binding.tvBreed.setText(pet.getBreed());
                 binding.tvAge.setText(pet.getAge());
                 binding.tvGender.setText(pet.getGender());
+                if ("Female".equalsIgnoreCase(pet.getGender())) {
+                    binding.tvGender.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_female, 0, 0, 0);
+                } else {
+                    binding.tvGender.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_male, 0, 0, 0);
+                }
                 binding.tvSize.setText(pet.getSize());
                 binding.tvDescription.setText(pet.getDescription());
                 

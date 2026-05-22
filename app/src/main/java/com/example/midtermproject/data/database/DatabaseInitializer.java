@@ -23,7 +23,7 @@ public class DatabaseInitializer {
     public static void initialize(Context context) {
         AppDatabase db = AppDatabase.getInstance(context);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             // Only seed if database is empty
             if (db.petDao().getTotalPetCountSync() > 0) {
                 Log.d(TAG, "Database already initialized, skipping seed.");

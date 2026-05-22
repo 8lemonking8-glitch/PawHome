@@ -65,18 +65,18 @@ public class PetRepository {
     // ===== Write Operations =====
 
     public void insert(PetEntity pet) {
-        Executors.newSingleThreadExecutor().execute(() -> petDao.insert(pet));
+        AppDatabase.databaseExecutor.execute(() -> petDao.insert(pet));
     }
 
     public void update(PetEntity pet) {
-        Executors.newSingleThreadExecutor().execute(() -> petDao.update(pet));
+        AppDatabase.databaseExecutor.execute(() -> petDao.update(pet));
     }
 
     public void delete(PetEntity pet) {
-        Executors.newSingleThreadExecutor().execute(() -> petDao.delete(pet));
+        AppDatabase.databaseExecutor.execute(() -> petDao.delete(pet));
     }
 
     public void updatePetStatus(long petId, String status) {
-        Executors.newSingleThreadExecutor().execute(() -> petDao.updatePetStatus(petId, status));
+        AppDatabase.databaseExecutor.execute(() -> petDao.updatePetStatus(petId, status));
     }
 }

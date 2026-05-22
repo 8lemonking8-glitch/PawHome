@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.FragmentAdminPetsBinding;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,9 @@ public class AdminPetsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rvPets, (v, windowInsets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), insets.top + (int)(8 * getResources().getDisplayMetrics().density), v.getPaddingRight(), v.getPaddingBottom());
+            v.setPadding(v.getPaddingLeft(), insets.top, v.getPaddingRight(), v.getPaddingBottom());
             return windowInsets;
         });
 
@@ -84,8 +85,18 @@ public class AdminPetsFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     PetEntity pet = petsList.get(position);
-                    petRepository.delete(pet);
-                    // LiveData will automatically update the list
+                    
+                    new AlertDialog.Builder(requireContext())
+                        .setTitle("Delete Pet")
+                        .setMessage("Are you sure you want to delete " + pet.getName() + "? This action cannot be undone.")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            petRepository.delete(pet);
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            adapter.notifyItemChanged(position);
+                        })
+                        .setCancelable(false)
+                        .show();
                 }
             }
         }).attachToRecyclerView(binding.rvPets);

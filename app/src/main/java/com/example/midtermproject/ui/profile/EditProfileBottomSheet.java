@@ -14,6 +14,7 @@ import com.example.midtermproject.data.entity.UserEntity;
 import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.BottomSheetEditProfileBinding;
 import com.example.midtermproject.util.SessionManager;
+import com.example.midtermproject.data.database.AppDatabase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.concurrent.Executors;
@@ -64,9 +65,40 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
     private void saveProfile() {
         if (currentUser == null) return;
 
+        binding.tilNickname.setError(null);
+        binding.tilEmail.setError(null);
+        binding.tilPhone.setError(null);
+
         String nickname = binding.etNickname.getText().toString().trim();
         String email = binding.etEmail.getText().toString().trim();
         String phone = binding.etPhone.getText().toString().trim();
+
+        boolean valid = true;
+
+        if (nickname.isEmpty()) {
+            binding.tilNickname.setError("Nickname cannot be empty");
+            valid = false;
+        }
+
+        if (email.isEmpty()) {
+            binding.tilEmail.setError("Email cannot be empty");
+            valid = false;
+        } else if (!email.contains("@")) {
+            binding.tilEmail.setError("Invalid email format (must contain '@')");
+            valid = false;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.tilEmail.setError("Invalid email address format");
+            valid = false;
+        }
+
+        if (!phone.isEmpty()) {
+            if (!phone.matches("^[0-9+\\-]+$")) {
+                binding.tilPhone.setError("Phone must contain only numbers, +, and -");
+                valid = false;
+            }
+        }
+
+        if (!valid) return;
 
         currentUser.setNickname(nickname);
         currentUser.setEmail(email);
@@ -74,7 +106,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
 
         binding.btnSave.setEnabled(false);
         
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             userRepository.update(currentUser);
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {

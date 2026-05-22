@@ -33,7 +33,7 @@ public class UserRepository {
     public UserEntity login(String username, String password) {
         String hashedPassword = PasswordUtils.hashPassword(password);
         try {
-            Future<UserEntity> future = Executors.newSingleThreadExecutor().submit(
+            Future<UserEntity> future = AppDatabase.databaseExecutor.submit(
                 () -> userDao.login(username, hashedPassword)
             );
             return future.get();
@@ -50,7 +50,7 @@ public class UserRepository {
     public long register(String username, String password, String nickname, String email) {
         String hashedPassword = PasswordUtils.hashPassword(password);
         try {
-            Future<Long> future = Executors.newSingleThreadExecutor().submit(() -> {
+            Future<Long> future = AppDatabase.databaseExecutor.submit(() -> {
                 if (userDao.isUsernameExists(username) > 0) {
                     return -1L;
                 }
@@ -69,6 +69,21 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Checks if a username already exists. Runs on a background thread.
+     */
+    public boolean isUsernameExists(String username) {
+        try {
+            Future<Boolean> future = AppDatabase.databaseExecutor.submit(() -> {
+                return userDao.isUsernameExists(username) > 0;
+            });
+            return future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // ===== Read Operations =====
 
     public LiveData<UserEntity> getUserById(long id) {
@@ -77,7 +92,7 @@ public class UserRepository {
 
     public UserEntity getUserByIdSync(long id) {
         try {
-            Future<UserEntity> future = Executors.newSingleThreadExecutor().submit(
+            Future<UserEntity> future = AppDatabase.databaseExecutor.submit(
                 () -> userDao.getUserByIdSync(id)
             );
             return future.get();
@@ -98,6 +113,6 @@ public class UserRepository {
     // ===== Write Operations =====
 
     public void update(UserEntity user) {
-        Executors.newSingleThreadExecutor().execute(() -> userDao.update(user));
+        AppDatabase.databaseExecutor.execute(() -> userDao.update(user));
     }
 }

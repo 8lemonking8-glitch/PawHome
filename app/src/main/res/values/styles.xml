@@ -105,7 +105,7 @@
     <style name="Widget.PawHome.StatusBadge" parent="">
         <item name="android:background">@color/status_available</item>
         <item name="android:textColor">@color/on_success</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingTop">3dp</item>
@@ -114,6 +114,6 @@
 
     <!-- ==================== Tab Text ==================== -->
     <style name="TextAppearance.PawHome.TabText" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

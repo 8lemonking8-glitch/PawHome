@@ -25,6 +25,7 @@ import com.example.midtermproject.databinding.FragmentFavoritesBinding;
 import com.example.midtermproject.ui.detail.PetDetailActivity;
 import com.example.midtermproject.ui.home.PetAdapter;
 import com.example.midtermproject.util.FavoriteManager;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,32 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rvFavorites, (v, windowInsets) -> {
+        float density = getResources().getDisplayMetrics().density;
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        int extraPadding = (int) (32 * density); // Generous, gorgeous breathing room (32dp)
+        int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (64 * density);
+        binding.headerContainer.setPadding(
+            binding.headerContainer.getPaddingLeft(),
+            defaultTopPadding,
+            binding.headerContainer.getPaddingRight(),
+            binding.headerContainer.getPaddingBottom()
+        );
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), insets.top + (int)(8 * getResources().getDisplayMetrics().density), v.getPaddingRight(), v.getPaddingBottom());
+            int topInset = insets.top;
+            if (topInset > 0) {
+                binding.headerContainer.setPadding(
+                    binding.headerContainer.getPaddingLeft(),
+                    topInset + extraPadding,
+                    binding.headerContainer.getPaddingRight(),
+                    binding.headerContainer.getPaddingBottom()
+                );
+            }
             return windowInsets;
         });
 
@@ -93,10 +117,21 @@ public class FavoritesFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && position < favoritePets.size()) {
                     PetEntity pet = favoritePets.get(position);
+                    
+                    // Remove from favorites immediately
                     favoriteManager.toggleFavorite(pet.getId());
                     favoritePets.remove(position);
-                    adapter.setPets(new ArrayList<>(favoritePets)); // Trigger Diff/Update
+                    adapter.setPets(new ArrayList<>(favoritePets));
                     updateEmptyState();
+
+                    Snackbar.make(binding.getRoot(), "Removed " + pet.getName() + " from favorites", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", v -> {
+                            favoriteManager.toggleFavorite(pet.getId());
+                            favoritePets.add(position, pet);
+                            adapter.setPets(new ArrayList<>(favoritePets));
+                            updateEmptyState();
+                        })
+                        .show();
                 }
             }
         }).attachToRecyclerView(binding.rvFavorites);
@@ -137,6 +172,14 @@ public class FavoritesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateFavoriteList();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            updateFavoriteList();
+        }
     }
 
     private void updateEmptyState() {

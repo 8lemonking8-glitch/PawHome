@@ -30,7 +30,7 @@ public class AdoptionRepository {
 
     public long createRequest(long userId, long petId, String signaturePath, long signatureTimestamp) {
         try {
-            Future<Long> future = Executors.newSingleThreadExecutor().submit(() -> {
+            Future<Long> future = AppDatabase.databaseExecutor.submit(() -> {
                 // Check if there's already a pending request
                 AdoptionRequestEntity existing = adoptionDao.getPendingRequestForPet(userId, petId);
                 if (existing != null) {
@@ -56,7 +56,7 @@ public class AdoptionRepository {
     // ===== Admin Actions =====
 
     public void approveRequest(long requestId, long petId) {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             adoptionDao.updateRequestStatus(requestId, "APPROVED", System.currentTimeMillis());
             // Automatically mark pet as adopted
             petDao.updatePetStatus(petId, "ADOPTED");
@@ -64,7 +64,7 @@ public class AdoptionRepository {
     }
 
     public void rejectRequest(long requestId) {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             adoptionDao.updateRequestStatus(requestId, "REJECTED", System.currentTimeMillis());
         });
     }
@@ -91,9 +91,13 @@ public class AdoptionRepository {
         return adoptionDao.getRequestsByUser(userId);
     }
 
+    public LiveData<List<AdoptionRequestWithDetails>> getRequestsByUserWithDetails(long userId) {
+        return adoptionDao.getRequestsByUserWithDetails(userId);
+    }
+
     public List<AdoptionRequestEntity> getRequestsByUserSync(long userId) {
         try {
-            Future<List<AdoptionRequestEntity>> future = Executors.newSingleThreadExecutor().submit(
+            Future<List<AdoptionRequestEntity>> future = AppDatabase.databaseExecutor.submit(
                 () -> adoptionDao.getRequestsByUserSync(userId)
             );
             return future.get();

@@ -14,6 +14,7 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.repository.AdoptionRepository;
 import com.example.midtermproject.databinding.BottomSheetAdoptionBinding;
 import com.example.midtermproject.util.SessionManager;
+import com.example.midtermproject.data.database.AppDatabase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.concurrent.Executors;
@@ -66,7 +67,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         long timestamp = System.currentTimeMillis();
         String signaturePath = "signature_captured_timestamp_" + timestamp;
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             long result = adoptionRepository.createRequest(userId, petId, signaturePath, timestamp);
             
             if (getActivity() != null) {

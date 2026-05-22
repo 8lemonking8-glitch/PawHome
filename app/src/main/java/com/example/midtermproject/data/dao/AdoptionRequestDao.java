@@ -37,6 +37,10 @@ public interface AdoptionRequestDao {
     @Query("SELECT * FROM adoption_requests WHERE userId = :userId ORDER BY createdAt DESC")
     LiveData<List<AdoptionRequestEntity>> getRequestsByUser(long userId);
 
+    @androidx.room.Transaction
+    @Query("SELECT * FROM adoption_requests WHERE userId = :userId ORDER BY createdAt DESC")
+    LiveData<List<AdoptionRequestWithDetails>> getRequestsByUserWithDetails(long userId);
+
     @Query("SELECT * FROM adoption_requests WHERE userId = :userId ORDER BY createdAt DESC")
     List<AdoptionRequestEntity> getRequestsByUserSync(long userId);
 

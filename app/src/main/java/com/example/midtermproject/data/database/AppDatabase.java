@@ -13,6 +13,9 @@ import com.example.midtermproject.data.entity.AdoptionRequestEntity;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.entity.UserEntity;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Database(
     entities = {
         PetEntity.class,
@@ -25,6 +28,10 @@ import com.example.midtermproject.data.entity.UserEntity;
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
+    
+    private static final int NUMBER_OF_THREADS = 4;
+    public static final ExecutorService databaseExecutor =
+        Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public abstract PetDao petDao();
     public abstract UserDao userDao();

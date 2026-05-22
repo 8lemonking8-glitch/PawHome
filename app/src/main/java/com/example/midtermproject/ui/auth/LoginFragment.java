@@ -15,6 +15,7 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.UserEntity;
 import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.FragmentLoginBinding;
+import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.util.SessionManager;
 
 import java.util.concurrent.Executors;
@@ -72,7 +73,7 @@ public class LoginFragment extends Fragment {
         binding.btnLogin.setText(getString(R.string.loading));
 
         // Attempt login on background thread
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             UserEntity user = userRepository.login(username, password);
 
             if (getActivity() != null) {

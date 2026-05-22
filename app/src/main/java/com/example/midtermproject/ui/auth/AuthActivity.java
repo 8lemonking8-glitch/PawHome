@@ -18,6 +18,7 @@ import com.example.midtermproject.databinding.ActivityAuthBinding;
 import com.example.midtermproject.util.SessionManager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -83,11 +84,15 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void switchToLoginTab() {
-        binding.viewPager.setCurrentItem(0, true);
+        if (binding.viewPager.getScrollState() == ViewPager2.SCROLL_STATE_IDLE) {
+            binding.viewPager.setCurrentItem(0, true);
+        }
     }
 
     public void switchToRegisterTab() {
-        binding.viewPager.setCurrentItem(1, true);
+        if (binding.viewPager.getScrollState() == ViewPager2.SCROLL_STATE_IDLE) {
+            binding.viewPager.setCurrentItem(1, true);
+        }
     }
 
     public void navigateToMain() {

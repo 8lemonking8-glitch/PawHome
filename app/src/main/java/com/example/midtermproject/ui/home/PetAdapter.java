@@ -134,8 +134,10 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
             binding.tvStatus.setText(pet.getStatus());
             
             if ("Female".equalsIgnoreCase(pet.getGender())) {
+                binding.ivGender.setImageResource(R.drawable.ic_female);
                 binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.error)); // pink-ish
             } else {
+                binding.ivGender.setImageResource(R.drawable.ic_male);
                 binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.info)); // blue-ish
             }
             

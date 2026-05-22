@@ -7,6 +7,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.graphics.Insets;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -16,10 +17,11 @@ import com.example.midtermproject.databinding.ActivityAdminMainBinding;
 public class AdminMainActivity extends AppCompatActivity {
 
     private ActivityAdminMainBinding binding;
-    private final AdminDashboardFragment dashboardFragment = new AdminDashboardFragment();
-    private final AdminPetsFragment petsFragment = new AdminPetsFragment();
-    private final AdminRequestsFragment requestsFragment = new AdminRequestsFragment();
-    private Fragment activeFragment = dashboardFragment;
+    private AdminDashboardFragment dashboardFragment;
+    private AdminPetsFragment petsFragment;
+    private AdminRequestsFragment requestsFragment;
+    private Fragment activeFragment;
+    private int activeTabId = R.id.nav_dashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class AdminMainActivity extends AppCompatActivity {
                 params.bottomMargin = margin24dp + insets.bottom;
                 binding.adminBottomNavCard.setLayoutParams(params);
             }
+            for (int i = 0; i < binding.getRoot().getChildCount(); i++) {
+                ViewCompat.dispatchApplyWindowInsets(binding.getRoot().getChildAt(i), windowInsets);
+            }
             return windowInsets;
         });
 
@@ -46,16 +51,46 @@ public class AdminMainActivity extends AppCompatActivity {
 
         // Set default fragment
         if (savedInstanceState == null) {
+            dashboardFragment = new AdminDashboardFragment();
+            petsFragment = new AdminPetsFragment();
+            requestsFragment = new AdminRequestsFragment();
+            activeFragment = dashboardFragment;
+            activeTabId = R.id.nav_dashboard;
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.admin_nav_host_fragment, requestsFragment, "3").hide(requestsFragment)
                     .add(R.id.admin_nav_host_fragment, petsFragment, "2").hide(petsFragment)
                     .add(R.id.admin_nav_host_fragment, dashboardFragment, "1")
                     .commit();
             selectTab(R.id.nav_dashboard);
+        } else {
+            dashboardFragment = (AdminDashboardFragment) getSupportFragmentManager().findFragmentByTag("1");
+            petsFragment = (AdminPetsFragment) getSupportFragmentManager().findFragmentByTag("2");
+            requestsFragment = (AdminRequestsFragment) getSupportFragmentManager().findFragmentByTag("3");
+            
+            activeTabId = savedInstanceState.getInt("activeTabId", R.id.nav_dashboard);
+            if (activeTabId == R.id.nav_dashboard) {
+                activeFragment = dashboardFragment;
+            } else if (activeTabId == R.id.nav_pets) {
+                activeFragment = petsFragment;
+            } else if (activeTabId == R.id.nav_requests) {
+                activeFragment = requestsFragment;
+            }
+            
+            binding.navDashboard.setSelected(activeTabId == R.id.nav_dashboard);
+            binding.navPets.setSelected(activeTabId == R.id.nav_pets);
+            binding.navRequests.setSelected(activeTabId == R.id.nav_requests);
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("activeTabId", activeTabId);
+    }
+
     private void selectTab(int itemId) {
+        activeTabId = itemId;
         binding.navDashboard.setSelected(itemId == R.id.nav_dashboard);
         binding.navPets.setSelected(itemId == R.id.nav_pets);
         binding.navRequests.setSelected(itemId == R.id.nav_requests);
