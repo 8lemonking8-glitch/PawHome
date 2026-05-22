@@ -194,18 +194,19 @@ public class AdminDashboardFragment extends Fragment {
         tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
         tvStatus.setPadding((int) (8 * density), (int) (4 * density), (int) (8 * density), (int) (4 * density));
 
+        android.content.Context ctx = requireContext();
         switch (status) {
             case "APPROVED":
-                tvStatus.setTextColor(getResources().getColor(R.color.on_success));
-                tvStatus.getBackground().setTint(getResources().getColor(R.color.status_available));
+                tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, R.color.on_success));
+                tvStatus.getBackground().mutate().setTint(androidx.core.content.ContextCompat.getColor(ctx, R.color.status_available));
                 break;
             case "REJECTED":
-                tvStatus.setTextColor(getResources().getColor(R.color.on_error));
-                tvStatus.getBackground().setTint(getResources().getColor(R.color.error));
+                tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, R.color.on_error));
+                tvStatus.getBackground().mutate().setTint(androidx.core.content.ContextCompat.getColor(ctx, R.color.error));
                 break;
             default:
-                tvStatus.setTextColor(getResources().getColor(R.color.on_secondary));
-                tvStatus.getBackground().setTint(getResources().getColor(R.color.status_pending));
+                tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, R.color.on_secondary));
+                tvStatus.getBackground().mutate().setTint(androidx.core.content.ContextCompat.getColor(ctx, R.color.status_pending));
                 break;
         }
         row.addView(tvStatus);

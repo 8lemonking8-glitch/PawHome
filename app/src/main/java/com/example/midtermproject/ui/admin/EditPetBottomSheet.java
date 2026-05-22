@@ -44,24 +44,26 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
             if (result.isSuccessful()) {
                 Uri croppedUri = result.getUriContent();
                 if (croppedUri != null) {
+                    InputStream is = null;
+                    FileOutputStream fos = null;
                     try {
-                        InputStream is = requireContext().getContentResolver().openInputStream(croppedUri);
+                        is = requireContext().getContentResolver().openInputStream(croppedUri);
                         File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
-                        FileOutputStream fos = new FileOutputStream(file);
+                        fos = new FileOutputStream(file);
                         byte[] buffer = new byte[1024];
                         int len;
                         while ((len = is.read(buffer)) != -1) {
                             fos.write(buffer, 0, len);
                         }
-                        fos.close();
-                        is.close();
-
                         selectedImageUri = Uri.fromFile(file).toString();
                         binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
                         binding.layoutImageHint.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Snackbar.make(requireView(), "Failed to save cropped image", Snackbar.LENGTH_SHORT).show();
+                    } finally {
+                        if (is != null) { try { is.close(); } catch (java.io.IOException ignored) {} }
+                        if (fos != null) { try { fos.close(); } catch (java.io.IOException ignored) {} }
                     }
                 }
             }
@@ -84,15 +86,17 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
     private final ActivityResultLauncher<Void> takePhotoLauncher =
         registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
+                FileOutputStream fos = null;
                 try {
                     File file = new File(requireContext().getFilesDir(), "pet_raw_" + System.currentTimeMillis() + ".jpg");
-                    FileOutputStream fos = new FileOutputStream(file);
+                    fos = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-                    fos.close();
                     launchCrop(Uri.fromFile(file));
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(requireView(), "Failed to save photo", Snackbar.LENGTH_SHORT).show();
+                } finally {
+                    if (fos != null) { try { fos.close(); } catch (java.io.IOException ignored) {} }
                 }
             }
         });
@@ -170,20 +174,8 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
         binding.spinnerGender.setText(pet.getGender(), false);
         binding.spinnerSize.setText(pet.getSize(), false);
 
-        if (pet.getImageResId() != 0) {
-            binding.ivPetPreview.setImageResource(pet.getImageResId());
+        if (com.example.midtermproject.util.PetImageUtils.loadFirstImage(binding.ivPetPreview, pet)) {
             binding.layoutImageHint.setVisibility(View.GONE);
-        } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
-            try {
-                org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
-                if (array.length() > 0) {
-                    String uriStr = array.getString(0);
-                    binding.ivPetPreview.setImageURI(Uri.parse(uriStr));
-                    binding.layoutImageHint.setVisibility(View.GONE);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -214,8 +206,14 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
         pet.setSize(size);
         pet.setDescription(description);
 
+        int cardRes;
+        switch (dbType) {
+            case "CAT": cardRes = R.drawable.bg_carousel_cat; break;
+            case "BIRD": cardRes = R.drawable.bg_carousel_bird; break;
+            default: cardRes = R.drawable.bg_carousel_dog; break;
+        }
         if (selectedImageUri != null) {
-            pet.setImageResIds("[\"" + selectedImageUri + "\"]");
+            pet.setImageResIds("[\"" + selectedImageUri + "\"," + cardRes + "," + cardRes + "]");
             pet.setImageResId(0);
         }
 

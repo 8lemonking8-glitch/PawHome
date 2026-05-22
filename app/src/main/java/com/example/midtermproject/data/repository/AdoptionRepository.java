@@ -10,18 +10,20 @@ import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.data.entity.AdoptionRequestEntity;
 import com.example.midtermproject.data.entity.AdoptionRequestWithDetails;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class AdoptionRepository {
 
     private final AdoptionRequestDao adoptionDao;
     private final PetDao petDao;
+    private final AppDatabase db;
 
     public AdoptionRepository(Application application) {
-        AppDatabase db = AppDatabase.getInstance(application);
+        db = AppDatabase.getInstance(application);
         adoptionDao = db.adoptionRequestDao();
         petDao = db.petDao();
     }
@@ -47,8 +49,11 @@ public class AdoptionRepository {
                 return adoptionDao.insert(request);
             });
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("AdoptionRepository", "Query failed", e);
+            return -1;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return -1;
         }
     }
@@ -57,9 +62,10 @@ public class AdoptionRepository {
 
     public void approveRequest(long requestId, long petId) {
         AppDatabase.databaseExecutor.execute(() -> {
-            adoptionDao.updateRequestStatus(requestId, "APPROVED", System.currentTimeMillis());
-            // Automatically mark pet as adopted
-            petDao.updatePetStatus(petId, "ADOPTED");
+            db.runInTransaction(() -> {
+                adoptionDao.updateRequestStatus(requestId, "APPROVED", System.currentTimeMillis());
+                petDao.updatePetStatus(petId, "ADOPTED");
+            });
         });
     }
 
@@ -101,8 +107,11 @@ public class AdoptionRepository {
                 () -> adoptionDao.getRequestsByUserSync(userId)
             );
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("AdoptionRepository", "Query failed", e);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
     }

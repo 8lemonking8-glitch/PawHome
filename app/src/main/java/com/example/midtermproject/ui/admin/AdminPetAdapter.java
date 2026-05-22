@@ -67,27 +67,22 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
             binding.tvStatus.setText(pet.getStatus());
             
             binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
-            int color = "AVAILABLE".equals(pet.getStatus()) ? 
-                itemView.getContext().getColor(R.color.status_available) : 
-                itemView.getContext().getColor(R.color.status_adopted);
+            int color;
+            switch (pet.getStatus()) {
+                case "AVAILABLE":
+                    color = itemView.getContext().getColor(R.color.status_available);
+                    break;
+                case "ADOPTED":
+                    color = itemView.getContext().getColor(R.color.status_adopted);
+                    break;
+                default:
+                    color = itemView.getContext().getColor(R.color.status_rejected);
+                    break;
+            }
             binding.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
             
-            if (pet.getImageResId() != 0) {
-                binding.ivIcon.setImageResource(pet.getImageResId());
-                binding.ivIcon.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+            if (com.example.midtermproject.util.PetImageUtils.loadFirstImage(binding.ivIcon, pet)) {
                 binding.ivIcon.setPadding(0, 0, 0, 0);
-            } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
-                try {
-                    org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
-                    if (array.length() > 0) {
-                        String uriStr = array.getString(0);
-                        binding.ivIcon.setImageURI(android.net.Uri.parse(uriStr));
-                        binding.ivIcon.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
-                        binding.ivIcon.setPadding(0, 0, 0, 0);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             } else {
                 if ("DOG".equals(pet.getType())) {
                     binding.ivIcon.setBackgroundColor(0xFFE8734A); 

@@ -76,13 +76,14 @@ public class LoginFragment extends Fragment {
         AppDatabase.databaseExecutor.execute(() -> {
             UserEntity user = userRepository.login(username, password);
 
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
+            android.app.Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
                     binding.btnLogin.setEnabled(true);
                     binding.btnLogin.setText(getString(R.string.login));
 
                     if (user != null) {
-                        // Success - save session
                         sessionManager.createSession(
                                 user.getId(),
                                 user.getUsername(),
@@ -90,16 +91,13 @@ public class LoginFragment extends Fragment {
                                 user.getNickname() != null ? user.getNickname() : user.getUsername()
                         );
 
-                        // Navigate to main
-                        if (getActivity() instanceof AuthActivity) {
-                            ((AuthActivity) getActivity()).navigateToMain();
+                        if (activity instanceof AuthActivity) {
+                            ((AuthActivity) activity).navigateToMain();
                         }
                     } else {
-                        // Failed
                         binding.tvError.setText(getString(R.string.login_error));
                         binding.tvError.setVisibility(View.VISIBLE);
 
-                        // Shake animation on error
                         binding.tvError.animate()
                                 .translationX(10)
                                 .setDuration(50)

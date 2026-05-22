@@ -8,6 +8,8 @@ import com.example.midtermproject.data.dao.PetDao;
 import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.data.entity.PetEntity;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -41,8 +43,11 @@ public class PetRepository {
                 () -> petDao.getAvailablePetsSync()
             );
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("PetRepository", "Query failed", e);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
     }
@@ -53,8 +58,11 @@ public class PetRepository {
                 () -> petDao.getAvailablePetsByTypeSync(type)
             );
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("PetRepository", "Query failed", e);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
     }

@@ -80,9 +80,11 @@ public class RegisterFragment extends Fragment {
                     usernameCheckRunnable = () -> {
                         AppDatabase.databaseExecutor.execute(() -> {
                             boolean exists = userRepository.isUsernameExists(username);
-                            if (getActivity() != null) {
-                                getActivity().runOnUiThread(() -> {
-                                    if (binding.etUsername.getText() != null && 
+                            android.app.Activity activity = getActivity();
+                            if (activity != null) {
+                                activity.runOnUiThread(() -> {
+                                    if (binding == null) return;
+                                    if (binding.etUsername.getText() != null &&
                                             binding.etUsername.getText().toString().trim().equals(username)) {
                                         if (exists) {
                                             binding.tilUsername.setError("Username already exists");
@@ -90,7 +92,8 @@ public class RegisterFragment extends Fragment {
                                         } else {
                                             binding.tilUsername.setError(null);
                                             binding.tilUsername.setHelperText("Username is available ✔");
-                                            binding.tilUsername.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.success)));
+                                            binding.tilUsername.setHelperTextColor(ColorStateList.valueOf(
+                                                androidx.core.content.ContextCompat.getColor(requireContext(), R.color.success)));
                                         }
                                     }
                                 });
@@ -218,24 +221,25 @@ public class RegisterFragment extends Fragment {
         AppDatabase.databaseExecutor.execute(() -> {
             long userId = userRepository.register(username, password, username, "");
 
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
+            android.app.Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
                     binding.btnRegister.setEnabled(true);
                     binding.btnRegister.setText(getString(R.string.register));
 
                     if (userId > 0) {
-                        // Success - auto login
                         sessionManager.createSession(userId, username, "USER", username);
 
-                        Snackbar.make(requireView(),
-                                "Account created successfully!", Snackbar.LENGTH_SHORT).show();
+                        if (getView() != null) {
+                            Snackbar.make(getView(),
+                                    "Account created successfully!", Snackbar.LENGTH_SHORT).show();
+                        }
 
-                        // Navigate to main
-                        if (getActivity() instanceof AuthActivity) {
-                            ((AuthActivity) getActivity()).navigateToMain();
+                        if (activity instanceof AuthActivity) {
+                            ((AuthActivity) activity).navigateToMain();
                         }
                     } else {
-                        // Failed - username exists
                         binding.tvError.setText(getString(R.string.register_error));
                         binding.tvError.setVisibility(View.VISIBLE);
                     }

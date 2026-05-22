@@ -111,10 +111,13 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         AppDatabase.databaseExecutor.execute(() -> {
             long result = adoptionRepository.createRequest(userId, petId, signaturePath, timestamp);
 
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
+            android.app.Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
                     if (result > 0) {
-                        Snackbar.make(requireView(), getString(R.string.adoption_submitted), Snackbar.LENGTH_LONG).show();
+                        if (getView() != null) {
+                            Snackbar.make(getView(), getString(R.string.adoption_submitted), Snackbar.LENGTH_LONG).show();
+                        }
                         if (onAdopted != null) {
                             onAdopted.run();
                         }
@@ -122,7 +125,9 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         binding.btnSubmit.setEnabled(true);
                         binding.btnSubmit.setText(getString(R.string.confirm));
-                        Snackbar.make(requireView(), "You already have a pending request for this pet", Snackbar.LENGTH_LONG).show();
+                        if (getView() != null) {
+                            Snackbar.make(getView(), "You already have a pending request for this pet", Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -130,17 +135,19 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
     }
 
     private String saveSignatureToFile(Bitmap bitmap, long userId, long timestamp) {
+        FileOutputStream fos = null;
         try {
             File dir = new File(requireContext().getFilesDir(), "signatures");
             if (!dir.exists()) dir.mkdirs();
             File file = new File(dir, "sig_" + userId + "_" + timestamp + ".png");
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
             return file.getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
             return "signature_captured_timestamp_" + timestamp;
+        } finally {
+            if (fos != null) { try { fos.close(); } catch (java.io.IOException ignored) {} }
         }
     }
 }

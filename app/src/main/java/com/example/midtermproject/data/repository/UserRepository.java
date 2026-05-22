@@ -1,6 +1,7 @@
 package com.example.midtermproject.data.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,9 +11,7 @@ import com.example.midtermproject.data.entity.UserEntity;
 import com.example.midtermproject.util.PasswordUtils;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class UserRepository {
@@ -26,27 +25,25 @@ public class UserRepository {
 
     // ===== Authentication =====
 
-    /**
-     * Attempts to log in a user. Runs on a background thread.
-     * @return UserEntity if credentials are valid, null otherwise.
-     */
     public UserEntity login(String username, String password) {
-        String hashedPassword = PasswordUtils.hashPassword(password);
         try {
-            Future<UserEntity> future = AppDatabase.databaseExecutor.submit(
-                () -> userDao.login(username, hashedPassword)
-            );
+            Future<UserEntity> future = AppDatabase.databaseExecutor.submit(() -> {
+                UserEntity user = userDao.getUserByUsername(username);
+                if (user != null && PasswordUtils.verifyPassword(password, user.getPassword())) {
+                    return user;
+                }
+                return null;
+            });
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("UserRepository", "Login query failed", e);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
     }
 
-    /**
-     * Registers a new user. Runs on a background thread.
-     * @return The new user's ID, or -1 if registration failed (e.g., username exists).
-     */
     public long register(String username, String password, String nickname, String email) {
         String hashedPassword = PasswordUtils.hashPassword(password);
         try {
@@ -63,23 +60,26 @@ public class UserRepository {
                 return userDao.insert(user);
             });
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("UserRepository", "Register failed", e);
+            return -1;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return -1;
         }
     }
 
-    /**
-     * Checks if a username already exists. Runs on a background thread.
-     */
     public boolean isUsernameExists(String username) {
         try {
             Future<Boolean> future = AppDatabase.databaseExecutor.submit(() -> {
                 return userDao.isUsernameExists(username) > 0;
             });
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("UserRepository", "Username check failed", e);
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
     }
@@ -96,8 +96,11 @@ public class UserRepository {
                 () -> userDao.getUserByIdSync(id)
             );
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.e("UserRepository", "Get user failed", e);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return null;
         }
     }

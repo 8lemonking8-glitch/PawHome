@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
+
 import com.example.midtermproject.databinding.ItemPetImageBinding;
 import com.example.midtermproject.data.entity.PetEntity;
 
@@ -33,7 +35,9 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
                         images.add((Integer) val);
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                Log.w("ImagePagerAdapter", "Failed to parse image list", e);
+            }
         }
         if (images.isEmpty() && pet.getImageResId() != 0) {
             images.add(pet.getImageResId());

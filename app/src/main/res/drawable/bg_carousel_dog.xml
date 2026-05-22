@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="#FFF6F0" />
+        </shape>
+    </item>
+    <item android:gravity="center" android:width="180dp" android:height="180dp">
+        <shape android:shape="oval">
+            <solid android:color="#15E8734A" />
+        </shape>
+    </item>
+    <item android:gravity="center" android:width="120dp" android:height="120dp">
+        <shape android:shape="oval">
+            <solid android:color="#20E8734A" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_dog" android:gravity="center" android:width="72dp" android:height="72dp" />
+</layer-list>

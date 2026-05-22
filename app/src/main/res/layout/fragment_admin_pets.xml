@@ -147,6 +147,65 @@
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
+
+        <!-- Status Filter Chips -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="12dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:chipSpacingHorizontal="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusAll"
+                    style="@style/Widget.PawHome.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    app:chipIcon="@drawable/ic_dashboard"
+                    app:chipIconVisible="true"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusAvailable"
+                    style="@style/Widget.PawHome.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available"
+                    app:chipIcon="@drawable/ic_pets"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusAdopted"
+                    style="@style/Widget.PawHome.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Adopted"
+                    app:chipIcon="@drawable/ic_favorite"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusArchived"
+                    style="@style/Widget.PawHome.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Archived"
+                    app:chipIcon="@drawable/ic_history"
+                    app:chipIconVisible="true" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

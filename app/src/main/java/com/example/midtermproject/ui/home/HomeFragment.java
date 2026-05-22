@@ -56,11 +56,23 @@ public class HomeFragment extends Fragment {
         }
         int extraPadding = (int) (32 * density);
         int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (64 * density);
+
+        // Header area: extends into status bar region for edge-to-edge background
         binding.headerContainer.setPadding(
             binding.headerContainer.getPaddingLeft(),
             defaultTopPadding,
             binding.headerContainer.getPaddingRight(),
             binding.headerContainer.getPaddingBottom()
+        );
+
+        // Chips row: when collapsed to top, stay below status bar
+        int chipsBasePadding = binding.chipsScrollView.getPaddingTop();
+        int chipsDefaultTop = chipsBasePadding + (statusBarHeight > 0 ? statusBarHeight : 0);
+        binding.chipsScrollView.setPadding(
+            binding.chipsScrollView.getPaddingLeft(),
+            chipsDefaultTop,
+            binding.chipsScrollView.getPaddingRight(),
+            binding.chipsScrollView.getPaddingBottom()
         );
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
@@ -72,6 +84,12 @@ public class HomeFragment extends Fragment {
                     topInset + extraPadding,
                     binding.headerContainer.getPaddingRight(),
                     binding.headerContainer.getPaddingBottom()
+                );
+                binding.chipsScrollView.setPadding(
+                    binding.chipsScrollView.getPaddingLeft(),
+                    chipsBasePadding + topInset,
+                    binding.chipsScrollView.getPaddingRight(),
+                    binding.chipsScrollView.getPaddingBottom()
                 );
             }
             return windowInsets;
@@ -184,17 +202,21 @@ public class HomeFragment extends Fragment {
             final List<PetEntity> pets = result != null ? result : new ArrayList<>();
             Collections.shuffle(pets);
 
-            requireActivity().runOnUiThread(() -> {
-                binding.progressBar.setVisibility(View.GONE);
-                binding.swipeRefresh.setRefreshing(false);
-                adapter.setPets(pets);
-                boolean empty = pets.isEmpty();
-                binding.layoutEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
-                binding.rvPets.setVisibility(empty ? View.GONE : View.VISIBLE);
-                if (!empty) {
-                    binding.rvPets.scrollToPosition(0);
-                }
-            });
+            android.app.Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    adapter.setPets(pets);
+                    boolean empty = pets.isEmpty();
+                    binding.layoutEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+                    binding.rvPets.setVisibility(empty ? View.GONE : View.VISIBLE);
+                    if (!empty) {
+                        binding.rvPets.scrollToPosition(0);
+                    }
+                });
+            }
         });
     }
 

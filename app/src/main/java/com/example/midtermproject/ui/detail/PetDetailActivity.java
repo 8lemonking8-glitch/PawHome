@@ -42,6 +42,16 @@ public class PetDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Smooth shared-element transition with corner-radius interpolation
+        com.google.android.material.transition.platform.MaterialContainerTransform transform =
+            new com.google.android.material.transition.platform.MaterialContainerTransform();
+        transform.setDuration(350);
+        transform.setScrimColor(android.graphics.Color.TRANSPARENT);
+        transform.setAllContainerColors(getColor(com.google.android.material.R.attr.colorSurface));
+        getWindow().setSharedElementEnterTransition(transform);
+        getWindow().setSharedElementReturnTransition(transform);
+
         binding = ActivityPetDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -146,21 +156,30 @@ public class PetDetailActivity extends AppCompatActivity {
     private void updateDots(int selectedPosition) {
         binding.dotsIndicator.removeAllViews();
         int count = imagePagerAdapter.getRealCount();
-        if (count <= 1) return;
+        if (count <= 1) {
+            binding.dotsIndicator.setVisibility(View.GONE);
+            return;
+        }
+        binding.dotsIndicator.setVisibility(View.VISIBLE);
 
         float density = getResources().getDisplayMetrics().density;
-        int dotSize = (int) (8 * density);
+        int inactiveSize = (int) (6 * density);
+        int activeWidth = (int) (16 * density);
+        int activeHeight = (int) (6 * density);
         int dotMargin = (int) (4 * density);
 
         for (int i = 0; i < count; i++) {
             View dot = new View(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dotSize, dotSize);
-            params.setMargins(dotMargin, 0, dotMargin, 0);
-            dot.setLayoutParams(params);
-            dot.setBackgroundResource(R.drawable.bg_dot);
             if (i == selectedPosition) {
-                dot.setAlpha(1.0f);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(activeWidth, activeHeight);
+                params.setMargins(dotMargin, 0, dotMargin, 0);
+                dot.setLayoutParams(params);
+                dot.setBackgroundResource(R.drawable.bg_dot_active);
             } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(inactiveSize, inactiveSize);
+                params.setMargins(dotMargin, 0, dotMargin, 0);
+                dot.setLayoutParams(params);
+                dot.setBackgroundResource(R.drawable.bg_dot);
                 dot.setAlpha(0.4f);
             }
             binding.dotsIndicator.addView(dot);
@@ -194,8 +213,6 @@ public class PetDetailActivity extends AppCompatActivity {
                 binding.tvSize.setText(pet.getSize());
                 setScaledDrawable(binding.tvSize, R.drawable.ic_pets);
                 binding.tvDescription.setText(pet.getDescription());
-
-                binding.collapsingToolbar.setTitle(pet.getName());
 
                 imagePagerAdapter.setPet(pet);
                 updateDots(0);

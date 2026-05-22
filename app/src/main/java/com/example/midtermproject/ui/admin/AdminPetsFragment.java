@@ -34,6 +34,7 @@ public class AdminPetsFragment extends Fragment {
     private List<PetEntity> petsList = new ArrayList<>();
     private List<PetEntity> allPetsList = new ArrayList<>();
     private String currentCategory = "All";
+    private String currentStatus = "All";
     private String currentSearchQuery = "";
 
     @Nullable
@@ -71,6 +72,7 @@ public class AdminPetsFragment extends Fragment {
         });
 
         setupChips();
+        setupStatusChips();
         setupSearch();
     }
 
@@ -83,6 +85,20 @@ public class AdminPetsFragment extends Fragment {
             else if (checkedId == R.id.chipDogs) currentCategory = "DOG";
             else if (checkedId == R.id.chipCats) currentCategory = "CAT";
             else if (checkedId == R.id.chipBirds) currentCategory = "BIRD";
+
+            applyFilter();
+        });
+    }
+
+    private void setupStatusChips() {
+        binding.chipGroupStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) return;
+            int checkedId = checkedIds.get(0);
+
+            if (checkedId == R.id.chipStatusAll) currentStatus = "All";
+            else if (checkedId == R.id.chipStatusAvailable) currentStatus = "AVAILABLE";
+            else if (checkedId == R.id.chipStatusAdopted) currentStatus = "ADOPTED";
+            else if (checkedId == R.id.chipStatusArchived) currentStatus = "ARCHIVED";
 
             applyFilter();
         });
@@ -135,7 +151,10 @@ public class AdminPetsFragment extends Fragment {
                 }
             }
 
-            if (matchesCategory && matchesSearch) {
+            // Status filter
+            boolean matchesStatus = "All".equals(currentStatus) || currentStatus.equals(pet.getStatus());
+
+            if (matchesCategory && matchesSearch && matchesStatus) {
                 filteredList.add(pet);
             }
         }
@@ -156,7 +175,7 @@ public class AdminPetsFragment extends Fragment {
         binding.rvPets.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvPets.setAdapter(adapter);
 
-        // Swipe to delete
+        // Swipe to archive
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -168,12 +187,14 @@ public class AdminPetsFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     PetEntity pet = petsList.get(position);
-                    
+
                     new AlertDialog.Builder(requireContext())
-                        .setTitle("Delete Pet")
-                        .setMessage("Are you sure you want to delete " + pet.getName() + "? This action cannot be undone.")
-                        .setPositiveButton("Delete", (dialog, which) -> {
-                            petRepository.delete(pet);
+                        .setTitle("Archive Pet")
+                        .setMessage("Archive " + pet.getName() + "? The record will be preserved but hidden from active listings.")
+                        .setPositiveButton("Archive", (dialog, which) -> {
+                            pet.setStatus("ARCHIVED");
+                            petRepository.update(pet);
+                            adapter.notifyItemChanged(position);
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> {
                             adapter.notifyItemChanged(position);

@@ -41,7 +41,12 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="24dp"
                     android:orientation="horizontal"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:background="@drawable/bg_dots_track"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp" />
             </FrameLayout>
                 
             <!-- Gradient Overlay for better text readability -->

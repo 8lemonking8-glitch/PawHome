@@ -32,10 +32,16 @@ public class DatabaseInitializer {
 
             Log.d(TAG, "Seeding database with initial data...");
 
-            // Create admin account
+            // Create admin account with a generated password
+            String adminPassword = generateInitialPassword();
+            Log.i(TAG, "========================================");
+            Log.i(TAG, "  Admin password: " + adminPassword);
+            Log.i(TAG, "  Change after first login!");
+            Log.i(TAG, "========================================");
+
             UserEntity admin = new UserEntity();
             admin.setUsername("admin");
-            admin.setPassword(PasswordUtils.hashPassword("admin123"));
+            admin.setPassword(PasswordUtils.hashPassword(adminPassword));
             admin.setNickname("Administrator");
             admin.setEmail("admin@pawhome.com");
             admin.setPhone("1234567890");
@@ -234,6 +240,16 @@ public class DatabaseInitializer {
         });
     }
 
+    private static String generateInitialPassword() {
+        java.security.SecureRandom rng = new java.security.SecureRandom();
+        String chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+        StringBuilder sb = new StringBuilder(12);
+        for (int i = 0; i < 12; i++) {
+            sb.append(chars.charAt(rng.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+
     private static PetEntity createPet(String name, String type, String breed, String color,
                                         String size, String age, String gender,
                                         String description, int imageResId) {
@@ -247,9 +263,16 @@ public class DatabaseInitializer {
         pet.setGender(gender);
         pet.setDescription(description);
         pet.setImageResId(imageResId);
-        // For carousel, we'll use the same image repeated for now.
-        // Will be updated with real images later.
-        pet.setImageResIds("[" + imageResId + "]");
+
+        // Carousel: photo + 2 decorative type cards
+        int cardRes;
+        switch (type) {
+            case "CAT": cardRes = R.drawable.bg_carousel_cat; break;
+            case "BIRD": cardRes = R.drawable.bg_carousel_bird; break;
+            default: cardRes = R.drawable.bg_carousel_dog; break;
+        }
+        pet.setImageResIds("[" + imageResId + "," + cardRes + "," + cardRes + "]");
+
         pet.setStatus("AVAILABLE");
         pet.setCreatedAt(System.currentTimeMillis());
         return pet;

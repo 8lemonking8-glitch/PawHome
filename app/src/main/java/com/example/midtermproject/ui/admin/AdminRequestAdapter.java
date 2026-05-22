@@ -217,23 +217,9 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
 
             View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pet_detail, null);
 
-            // Pet image — use first image from imageResIds, fallback to imageResId
+            // Pet image
             ImageView ivImage = dialogView.findViewById(R.id.ivDialogPetImage);
-            boolean imageSet = false;
-            String imageResIds = pet.getImageResIds();
-            if (imageResIds != null && !imageResIds.isEmpty()) {
-                try {
-                    org.json.JSONArray arr = new org.json.JSONArray(imageResIds);
-                    if (arr.length() > 0) {
-                        ivImage.setImageResource(arr.getInt(0));
-                        imageSet = true;
-                    }
-                } catch (Exception ignored) {}
-            }
-            if (!imageSet && pet.getImageResId() != 0) {
-                ivImage.setImageResource(pet.getImageResId());
-                imageSet = true;
-            }
+            boolean imageSet = com.example.midtermproject.util.PetImageUtils.loadFirstImage(ivImage, pet);
             if (imageSet) {
                 ivImage.setPadding(0, 0, 0, 0);
                 androidx.core.widget.ImageViewCompat.setImageTintList(ivImage, null);

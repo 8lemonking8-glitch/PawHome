@@ -88,25 +88,28 @@ public class ProfileFragment extends Fragment {
         registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
                 File file = new File(requireContext().getFilesDir(), "avatar_raw_" + System.currentTimeMillis() + ".jpg");
+                FileOutputStream fos = null;
                 try {
-                    FileOutputStream fos = new FileOutputStream(file);
+                    fos = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-                    fos.close();
                     launchAvatarCrop(Uri.fromFile(file));
                 } catch (Exception e) {
                     e.printStackTrace();
                     showSnackbar("Failed to save photo");
+                } finally {
+                    if (fos != null) { try { fos.close(); } catch (java.io.IOException ignored) {} }
                 }
             }
         });
 
     private void saveAvatarFromUri(Uri uri) {
+        InputStream is = null;
+        FileOutputStream fos = null;
         try {
-            InputStream is = requireContext().getContentResolver().openInputStream(uri);
+            is = requireContext().getContentResolver().openInputStream(uri);
             long userId = sessionManager.getUserId();
             File dir = requireContext().getFilesDir();
-            
-            // Delete any existing avatar files for this user to save space
+
             File[] existingAvatars = dir.listFiles((d, name) -> name.startsWith("avatar_" + userId));
             if (existingAvatars != null) {
                 for (File f : existingAvatars) {
@@ -114,20 +117,20 @@ public class ProfileFragment extends Fragment {
                 }
             }
 
-            // Create a unique filename with the current timestamp to bypass ImageView URI caching
             File file = new File(dir, "avatar_" + userId + "_" + System.currentTimeMillis() + ".jpg");
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             byte[] buffer = new byte[1024];
             int len;
             while ((len = is.read(buffer)) != -1) {
                 fos.write(buffer, 0, len);
             }
-            fos.close();
-            is.close();
             updateAvatarUri(Uri.fromFile(file).toString());
         } catch (Exception e) {
             e.printStackTrace();
             showSnackbar("Failed to load image");
+        } finally {
+            if (is != null) { try { is.close(); } catch (java.io.IOException ignored) {} }
+            if (fos != null) { try { fos.close(); } catch (java.io.IOException ignored) {} }
         }
     }
 
@@ -137,11 +140,15 @@ public class ProfileFragment extends Fragment {
             if (user != null) {
                 user.setAvatarUri(uriString);
                 userRepository.update(user);
-                requireActivity().runOnUiThread(() -> {
-                    binding.ivAvatar.setImageURI(null);
-                    binding.ivAvatar.setImageURI(Uri.parse(uriString));
-                    showSnackbar("Avatar updated");
-                });
+                android.app.Activity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        if (binding == null) return;
+                        binding.ivAvatar.setImageURI(null);
+                        binding.ivAvatar.setImageURI(Uri.parse(uriString));
+                        showSnackbar("Avatar updated");
+                    });
+                }
             }
         });
     }

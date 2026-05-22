@@ -177,9 +177,12 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         
         AppDatabase.databaseExecutor.execute(() -> {
             userRepository.update(currentUser);
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Snackbar.make(requireView(), "Profile updated", Snackbar.LENGTH_SHORT).show();
+            android.app.Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (getView() != null) {
+                        Snackbar.make(getView(), "Profile updated", Snackbar.LENGTH_SHORT).show();
+                    }
                     sessionManager.createSession(currentUser.getId(), currentUser.getUsername(), currentUser.getRole(), currentUser.getNickname());
                     if (onProfileUpdated != null) {
                         onProfileUpdated.run();

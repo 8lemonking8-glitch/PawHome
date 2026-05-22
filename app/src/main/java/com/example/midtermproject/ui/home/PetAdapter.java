@@ -115,21 +115,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                 binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.info)); // blue-ish
             }
             
-            if (pet.getImageResId() != 0) {
-                binding.ivPetImage.setImageResource(pet.getImageResId());
-                binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
-            } else if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
-                try {
-                    org.json.JSONArray array = new org.json.JSONArray(pet.getImageResIds());
-                    if (array.length() > 0) {
-                        String uriStr = array.getString(0);
-                        binding.ivPetImage.setImageURI(android.net.Uri.parse(uriStr));
-                        binding.ivPetImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
+            if (!com.example.midtermproject.util.PetImageUtils.loadFirstImage(binding.ivPetImage, pet)) {
                 if ("DOG".equals(pet.getType())) {
                     binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
                 } else if ("CAT".equals(pet.getType())) {
