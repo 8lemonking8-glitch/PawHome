@@ -15,6 +15,11 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.BottomSheetAddPetBinding;
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
@@ -34,41 +39,57 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
     private final Runnable onUpdated;
     private String selectedImageUri = null;
 
-    private final ActivityResultLauncher<String> pickImageLauncher =
-        registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-            if (uri != null) {
-                try {
-                    InputStream is = requireContext().getContentResolver().openInputStream(uri);
-                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    byte[] buffer = new byte[1024];
-                    int len;
-                    while ((len = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, len);
+    private final ActivityResultLauncher<CropImageContractOptions> cropLauncher =
+        registerForActivityResult(new CropImageContract(), result -> {
+            if (result.isSuccessful()) {
+                Uri croppedUri = result.getUriContent();
+                if (croppedUri != null) {
+                    try {
+                        InputStream is = requireContext().getContentResolver().openInputStream(croppedUri);
+                        File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                        FileOutputStream fos = new FileOutputStream(file);
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        is.close();
+
+                        selectedImageUri = Uri.fromFile(file).toString();
+                        binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
+                        binding.layoutImageHint.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Snackbar.make(requireView(), "Failed to save cropped image", Snackbar.LENGTH_SHORT).show();
                     }
-                    fos.close();
-                    is.close();
-                    selectedImageUri = Uri.fromFile(file).toString();
-                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
-                    binding.layoutImageHint.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(requireView(), "Failed to load image", Snackbar.LENGTH_SHORT).show();
                 }
             }
+        });
+
+    private void launchCrop(Uri sourceUri) {
+        CropImageOptions options = new CropImageOptions();
+        options.guidelines = CropImageView.Guidelines.ON;
+        options.fixAspectRatio = false;
+        options.imageSourceIncludeGallery = false;
+        options.imageSourceIncludeCamera = false;
+        cropLauncher.launch(new CropImageContractOptions(sourceUri, options));
+    }
+
+    private final ActivityResultLauncher<String> pickImageLauncher =
+        registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri != null) launchCrop(uri);
         });
 
     private final ActivityResultLauncher<Void> takePhotoLauncher =
         registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
                 try {
-                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                    File file = new File(requireContext().getFilesDir(), "pet_raw_" + System.currentTimeMillis() + ".jpg");
                     FileOutputStream fos = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
                     fos.close();
-                    selectedImageUri = Uri.fromFile(file).toString();
-                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
-                    binding.layoutImageHint.setVisibility(View.GONE);
+                    launchCrop(Uri.fromFile(file));
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(requireView(), "Failed to save photo", Snackbar.LENGTH_SHORT).show();
@@ -112,6 +133,14 @@ public class EditPetBottomSheet extends BottomSheetDialogFragment {
 
         binding.cardImagePicker.setOnClickListener(v -> showImagePickerDialog());
         binding.btnSave.setOnClickListener(v -> savePet());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        View parent = (View) getView().getParent();
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void setupSpinners() {

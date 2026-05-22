@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.imagecropper)
 
     // Room
     implementation(libs.room.runtime)

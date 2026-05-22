@@ -32,6 +32,10 @@
 
         <activity android:name=".MainActivity" />
 
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Theme.CropImage" />
+
     </application>
 
 </manifest>

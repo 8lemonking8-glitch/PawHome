@@ -28,6 +28,10 @@ import com.example.midtermproject.util.SessionManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.midtermproject.data.database.AppDatabase;
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -52,17 +56,47 @@ public class ProfileFragment extends Fragment {
         snackbar.show();
     }
 
+    private final ActivityResultLauncher<CropImageContractOptions> cropLauncher =
+        registerForActivityResult(new CropImageContract(), result -> {
+            if (result.isSuccessful()) {
+                Uri croppedUri = result.getUriContent();
+                if (croppedUri != null) {
+                    saveAvatarFromUri(croppedUri);
+                }
+            }
+        });
+
+    private void launchAvatarCrop(Uri sourceUri) {
+        CropImageOptions options = new CropImageOptions();
+        options.guidelines = CropImageView.Guidelines.ON;
+        options.fixAspectRatio = true;
+        options.aspectRatioX = 1;
+        options.aspectRatioY = 1;
+        options.imageSourceIncludeGallery = false;
+        options.imageSourceIncludeCamera = false;
+        cropLauncher.launch(new CropImageContractOptions(sourceUri, options));
+    }
+
     private final ActivityResultLauncher<String> pickImageLauncher =
         registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) {
-                saveAvatarFromUri(uri);
+                launchAvatarCrop(uri);
             }
         });
 
     private final ActivityResultLauncher<Void> takePhotoLauncher =
         registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
-                saveAvatarFromBitmap(bitmap);
+                File file = new File(requireContext().getFilesDir(), "avatar_raw_" + System.currentTimeMillis() + ".jpg");
+                try {
+                    FileOutputStream fos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                    fos.close();
+                    launchAvatarCrop(Uri.fromFile(file));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showSnackbar("Failed to save photo");
+                }
             }
         });
 
@@ -94,31 +128,6 @@ public class ProfileFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
             showSnackbar("Failed to load image");
-        }
-    }
-
-    private void saveAvatarFromBitmap(Bitmap bitmap) {
-        try {
-            long userId = sessionManager.getUserId();
-            File dir = requireContext().getFilesDir();
-            
-            // Delete any existing avatar files for this user to save space
-            File[] existingAvatars = dir.listFiles((d, name) -> name.startsWith("avatar_" + userId));
-            if (existingAvatars != null) {
-                for (File f : existingAvatars) {
-                    f.delete();
-                }
-            }
-
-            // Create a unique filename with the current timestamp to bypass ImageView URI caching
-            File file = new File(dir, "avatar_" + userId + "_" + System.currentTimeMillis() + ".jpg");
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.close();
-            updateAvatarUri(Uri.fromFile(file).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            showSnackbar("Failed to save photo");
         }
     }
 

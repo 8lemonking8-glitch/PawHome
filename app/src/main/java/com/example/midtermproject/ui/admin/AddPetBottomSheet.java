@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -15,6 +14,11 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.BottomSheetAddPetBinding;
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import android.net.Uri;
@@ -32,43 +36,57 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
     private PetRepository petRepository;
     private String selectedImageUri = null;
 
-    private final ActivityResultLauncher<String> pickImageLauncher = 
-        registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-            if (uri != null) {
-                try {
-                    InputStream is = requireContext().getContentResolver().openInputStream(uri);
-                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    byte[] buffer = new byte[1024];
-                    int len;
-                    while ((len = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, len);
+    private final ActivityResultLauncher<CropImageContractOptions> cropLauncher =
+        registerForActivityResult(new CropImageContract(), result -> {
+            if (result.isSuccessful()) {
+                Uri croppedUri = result.getUriContent();
+                if (croppedUri != null) {
+                    try {
+                        InputStream is = requireContext().getContentResolver().openInputStream(croppedUri);
+                        File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                        FileOutputStream fos = new FileOutputStream(file);
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        is.close();
+
+                        selectedImageUri = Uri.fromFile(file).toString();
+                        binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
+                        binding.layoutImageHint.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Snackbar.make(requireView(), "Failed to save cropped image", Snackbar.LENGTH_SHORT).show();
                     }
-                    fos.close();
-                    is.close();
-                    
-                    selectedImageUri = Uri.fromFile(file).toString();
-                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
-                    binding.layoutImageHint.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(requireView(), "Failed to load image", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
 
-    private final ActivityResultLauncher<Void> takePhotoLauncher = 
+    private void launchCrop(Uri sourceUri) {
+        CropImageOptions options = new CropImageOptions();
+        options.guidelines = CropImageView.Guidelines.ON;
+        options.fixAspectRatio = false;
+        options.imageSourceIncludeGallery = false;
+        options.imageSourceIncludeCamera = false;
+        cropLauncher.launch(new CropImageContractOptions(sourceUri, options));
+    }
+
+    private final ActivityResultLauncher<String> pickImageLauncher =
+        registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri != null) launchCrop(uri);
+        });
+
+    private final ActivityResultLauncher<Void> takePhotoLauncher =
         registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
                 try {
-                    File file = new File(requireContext().getFilesDir(), "pet_" + System.currentTimeMillis() + ".jpg");
+                    File file = new File(requireContext().getFilesDir(), "pet_raw_" + System.currentTimeMillis() + ".jpg");
                     FileOutputStream fos = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
                     fos.close();
-                    
-                    selectedImageUri = Uri.fromFile(file).toString();
-                    binding.ivPetPreview.setImageURI(Uri.parse(selectedImageUri));
-                    binding.layoutImageHint.setVisibility(View.GONE);
+                    launchCrop(Uri.fromFile(file));
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(requireView(), "Failed to save photo", Snackbar.LENGTH_SHORT).show();
@@ -108,15 +126,21 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         binding.btnSave.setOnClickListener(v -> savePet());
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        View parent = (View) getView().getParent();
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
     private void setupSpinners() {
-        // Since we are using hardcoded string arrays in resources, AutoCompleteTextView gets populated via simpleItems in XML.
-        // But some devices require manual adapter setting. Let's make sure it's populated.
         String[] types = getResources().getStringArray(R.array.pet_types);
         binding.spinnerType.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, types));
-        
+
         String[] genders = getResources().getStringArray(R.array.pet_genders);
         binding.spinnerGender.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, genders));
-        
+
         String[] sizes = getResources().getStringArray(R.array.pet_sizes);
         binding.spinnerSize.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, sizes));
     }
@@ -142,7 +166,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         String dbType = "DOG";
         if ("Cats".equals(type)) dbType = "CAT";
         else if ("Birds".equals(type)) dbType = "BIRD";
-        
+
         pet.setType(dbType);
         pet.setGender(gender);
         pet.setSize(size);
