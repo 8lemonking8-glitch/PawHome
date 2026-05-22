@@ -58,7 +58,9 @@ public class AdminPetsFragment extends Fragment {
             bottomSheet.show(getChildFragmentManager(), "AddPetBottomSheet");
         });
 
+        binding.progressBar.setVisibility(View.VISIBLE);
         petRepository.getAllPets().observe(getViewLifecycleOwner(), pets -> {
+            binding.progressBar.setVisibility(View.GONE);
             petsList = pets;
             adapter.setPets(pets);
             binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);

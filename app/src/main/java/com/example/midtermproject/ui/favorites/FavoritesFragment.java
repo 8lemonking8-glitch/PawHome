@@ -105,7 +105,9 @@ public class FavoritesFragment extends Fragment {
     private List<PetEntity> allPetsList = new ArrayList<>();
 
     private void loadFavorites() {
+        binding.progressBar.setVisibility(View.VISIBLE);
         petRepository.getAllPets().observe(getViewLifecycleOwner(), allPets -> {
+            binding.progressBar.setVisibility(View.GONE);
             this.allPetsList = allPets;
             updateFavoriteList();
         });

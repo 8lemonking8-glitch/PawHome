@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,7 +52,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
                     binding.layoutImageHint.setVisibility(View.GONE);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(requireView(), "Failed to load image", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -70,7 +71,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
                     binding.layoutImageHint.setVisibility(View.GONE);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to save photo", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(requireView(), "Failed to save photo", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -130,7 +131,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         String size = binding.spinnerSize.getText().toString();
 
         if (name.isEmpty() || breed.isEmpty() || ageStr.isEmpty() || type.isEmpty() || gender.isEmpty() || size.isEmpty()) {
-            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Snackbar.make(requireView(), "Please fill all fields", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -158,7 +159,7 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         pet.setCreatedAt(System.currentTimeMillis());
 
         petRepository.insert(pet);
-        Toast.makeText(requireContext(), "Pet Added Successfully", Toast.LENGTH_SHORT).show();
+        Snackbar.make(requireView(), "Pet Added Successfully", Snackbar.LENGTH_SHORT).show();
         dismiss();
     }
 }

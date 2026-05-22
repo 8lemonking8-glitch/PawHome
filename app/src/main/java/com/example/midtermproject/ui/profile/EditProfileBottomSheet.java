@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,7 +78,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
             userRepository.update(currentUser);
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(requireView(), "Profile updated", Snackbar.LENGTH_SHORT).show();
                     sessionManager.createSession(currentUser.getId(), currentUser.getUsername(), currentUser.getRole(), currentUser.getNickname());
                     if (onProfileUpdated != null) {
                         onProfileUpdated.run();

@@ -9,6 +9,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.graphics.Insets;
 
 import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -67,12 +68,12 @@ public class PetDetailActivity extends AppCompatActivity {
         binding.fabAdopt.setOnClickListener(v -> {
             if (currentPet != null && "AVAILABLE".equals(currentPet.getStatus())) {
                 AdoptionBottomSheet bottomSheet = new AdoptionBottomSheet(petId, () -> {
-                    Toast.makeText(this, "Adoption request sent successfully!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), "Adoption request sent successfully!", Snackbar.LENGTH_SHORT).show();
                     finish();
                 });
                 bottomSheet.show(getSupportFragmentManager(), "AdoptionBottomSheet");
             } else {
-                Toast.makeText(this, "Pet is no longer available", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Pet is no longer available", Snackbar.LENGTH_SHORT).show();
             }
         });
         

@@ -18,6 +18,10 @@ import com.example.midtermproject.ui.profile.ProfileFragment;
 public class UserMainActivity extends AppCompatActivity {
 
     private ActivityUserMainBinding binding;
+    private final HomeFragment homeFragment = new HomeFragment();
+    private final FavoritesFragment favoritesFragment = new FavoritesFragment();
+    private final ProfileFragment profileFragment = new ProfileFragment();
+    private Fragment activeFragment = homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,36 +32,51 @@ public class UserMainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            if (binding.bottomNavigation != null) {
-                binding.bottomNavigation.setPadding(0, 0, 0, insets.bottom);
+            if (binding.bottomNavCard != null) {
+                android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) binding.bottomNavCard.getLayoutParams();
+                int margin24dp = (int) (24 * getResources().getDisplayMetrics().density);
+                params.bottomMargin = margin24dp + insets.bottom;
+                binding.bottomNavCard.setLayoutParams(params);
             }
             return windowInsets;
         });
 
 
-        binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            int itemId = item.getItemId();
-            if (itemId == R.id.navigation_home) {
-                selectedFragment = new HomeFragment();
-            } else if (itemId == R.id.navigation_favorites) {
-                selectedFragment = new FavoritesFragment();
-            } else if (itemId == R.id.navigation_profile) {
-                selectedFragment = new ProfileFragment();
-            }
-            
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, selectedFragment)
-                        .commit();
-                return true;
-            }
-            return false;
-        });
+        binding.navHome.setOnClickListener(v -> selectTab(R.id.nav_home));
+        binding.navFavorites.setOnClickListener(v -> selectTab(R.id.nav_favorites));
+        binding.navProfile.setOnClickListener(v -> selectTab(R.id.nav_profile));
 
-        // Load default fragment
+        // Load default fragments
         if (savedInstanceState == null) {
-            binding.bottomNavigation.setSelectedItemId(R.id.navigation_home);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.nav_host_fragment, profileFragment, "3").hide(profileFragment)
+                    .add(R.id.nav_host_fragment, favoritesFragment, "2").hide(favoritesFragment)
+                    .add(R.id.nav_host_fragment, homeFragment, "1")
+                    .commit();
+            selectTab(R.id.nav_home);
+        }
+    }
+
+    private void selectTab(int itemId) {
+        binding.navHome.setSelected(itemId == R.id.nav_home);
+        binding.navFavorites.setSelected(itemId == R.id.nav_favorites);
+        binding.navProfile.setSelected(itemId == R.id.nav_profile);
+
+        Fragment selectedFragment = null;
+        if (itemId == R.id.nav_home) {
+            selectedFragment = homeFragment;
+        } else if (itemId == R.id.nav_favorites) {
+            selectedFragment = favoritesFragment;
+        } else if (itemId == R.id.nav_profile) {
+            selectedFragment = profileFragment;
+        }
+        
+        if (selectedFragment != null && selectedFragment != activeFragment) {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(activeFragment)
+                    .show(selectedFragment)
+                    .commit();
+            activeFragment = selectedFragment;
         }
     }
 }

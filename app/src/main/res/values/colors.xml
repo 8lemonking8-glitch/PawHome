@@ -58,4 +58,29 @@
     <color name="tab_dog">#E8734A</color>
     <color name="tab_cat">#A78BDB</color>
     <color name="tab_bird">#5CB8A5</color>
+
+    <!-- Auth & Layout Colors -->
+    <color name="auth_background">#F5A07A</color>
+    <color name="auth_card_bg">#FFFFFF</color>
+    <color name="tab_stroke">#F0F0F0</color>
+    <color name="register_link_bg">#F5A07A</color>
+    <color name="register_link_stroke">#FFF8F5</color>
+    
+    <!-- Nav Bar -->
+    <color name="nav_bar_bg">#E6FFFFFF</color>
+    <color name="nav_bar_stroke">#1A000000</color>
+    
+    <!-- Profile & Home -->
+    <color name="profile_avatar_bg">#EEFFFFFF</color>
+    <color name="home_background">#FFFBF9</color>
+    
+    <!-- Admin Dashboard -->
+    <color name="admin_card_pets_bg">#FFE0B2</color>
+    <color name="admin_card_pets_text">#3D2C22</color>
+    <color name="admin_card_available_bg">#C8E6C9</color>
+    <color name="admin_card_available_text">#1B5E20</color>
+    <color name="admin_card_adopted_bg">#FFCDD2</color>
+    <color name="admin_card_adopted_text">#B71C1C</color>
+    <color name="admin_card_pending_bg">#BBDEFB</color>
+    <color name="admin_card_pending_text">#0D47A1</color>
 </resources>

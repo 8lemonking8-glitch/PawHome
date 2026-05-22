@@ -46,9 +46,9 @@
                     android:id="@+id/tvUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@username"
-                    android:textColor="#EEFFFFFF"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/profile_avatar_bg"
+                    android:layout_marginBottom="24dp" />
             </LinearLayout>
             
             <androidx.appcompat.widget.Toolbar
@@ -78,7 +78,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="110dp">
             
             <!-- Contact Info Card -->
             <com.google.android.material.card.MaterialCardView

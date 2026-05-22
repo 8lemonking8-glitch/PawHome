@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,7 +52,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
 
     private void submitAdoption() {
         if (!binding.signatureView.isSigned()) {
-            Toast.makeText(requireContext(), getString(R.string.signature_required), Toast.LENGTH_SHORT).show();
+            Snackbar.make(requireView(), getString(R.string.signature_required), Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -71,7 +72,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     if (result > 0) {
-                        Toast.makeText(requireContext(), getString(R.string.adoption_submitted), Toast.LENGTH_LONG).show();
+                        Snackbar.make(requireView(), getString(R.string.adoption_submitted), Snackbar.LENGTH_LONG).show();
                         if (onSuccess != null) {
                             onSuccess.run();
                         }
@@ -79,7 +80,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
                     } else {
                         binding.btnSubmit.setEnabled(true);
                         binding.btnSubmit.setText(getString(R.string.confirm));
-                        Toast.makeText(requireContext(), "You already have a pending request for this pet", Toast.LENGTH_LONG).show();
+                        Snackbar.make(requireView(), "You already have a pending request for this pet", Snackbar.LENGTH_LONG).show();
                     }
                 });
             }

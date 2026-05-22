@@ -84,7 +84,9 @@ public class AdminRequestsFragment extends Fragment {
     private void loadPendingRequests() {
         // Remove observers before adding new ones
         adoptionRepository.getAllRequestsWithDetails().removeObservers(getViewLifecycleOwner());
+        binding.progressBar.setVisibility(View.VISIBLE);
         adoptionRepository.getPendingRequestsWithDetails().observe(getViewLifecycleOwner(), requests -> {
+            binding.progressBar.setVisibility(View.GONE);
             adapter.setRequests(requests);
             binding.layoutEmpty.setVisibility(requests.isEmpty() ? View.VISIBLE : View.GONE);
         });
@@ -92,7 +94,9 @@ public class AdminRequestsFragment extends Fragment {
 
     private void loadAllRequests() {
         adoptionRepository.getPendingRequestsWithDetails().removeObservers(getViewLifecycleOwner());
+        binding.progressBar.setVisibility(View.VISIBLE);
         adoptionRepository.getAllRequestsWithDetails().observe(getViewLifecycleOwner(), requests -> {
+            binding.progressBar.setVisibility(View.GONE);
             adapter.setRequests(requests);
             binding.layoutEmpty.setVisibility(requests.isEmpty() ? View.VISIBLE : View.GONE);
         });

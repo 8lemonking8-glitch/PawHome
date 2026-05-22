@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/home_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -17,21 +17,30 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@drawable/user_main_background"
+                app:layout_collapseMode="parallax" />
+
             <LinearLayout
+                android:id="@+id/headerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="32dp"
-                android:paddingBottom="16dp"
-                android:background="@drawable/bg_gradient_header">
+                android:paddingTop="48dp"
+                android:paddingBottom="6dp">
 
                 <TextView
                     android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:text="Hello, Adopter!"
-                    android:textSize="28sp"
+                    android:text="Hello, cccsh!"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
                     android:textColor="@color/on_primary"
                     android:fontFamily="@font/poppins" />
 
@@ -41,18 +50,19 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="4dp"
                     android:text="Ready to meet your new best friend?"
-                    android:textSize="14sp"
-                    android:textColor="#EEFFFFFF" />
+                    android:textSize="15sp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/on_primary" />
 
                 <!-- Search Bar -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="52dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginTop="20dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp"
+                    android:layout_marginTop="24dp"
+                    app:cardCornerRadius="26dp"
+                    app:cardElevation="4dp"
                     app:cardBackgroundColor="@color/surface">
 
                     <LinearLayout
@@ -60,27 +70,37 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:src="@drawable/ic_search"
                             app:tint="@color/text_hint" />
 
                         <EditText
                             android:id="@+id/etSearch"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
                             android:background="@null"
                             android:hint="@string/search_pets"
                             android:textColorHint="@color/text_hint"
                             android:textColor="@color/text_primary"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/poppins"
                             android:inputType="text"
-                            android:imeOptions="actionSearch" />
+                            android:imeOptions="actionSearch"
+                            android:layout_marginStart="12dp" />
+                            
+                        <ImageView
+                            android:id="@+id/ivClear"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            app:tint="@color/text_hint" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -94,7 +114,7 @@
             android:clipToPadding="false"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
             <com.google.android.material.chip.ChipGroup
@@ -102,7 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:singleSelection="true"
-                app:selectionRequired="true">
+                app:selectionRequired="true"
+                app:chipSpacingHorizontal="8dp">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipAll"
@@ -110,6 +131,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/category_all"
+                    app:chipIcon="@drawable/ic_dashboard"
+                    app:chipIconVisible="true"
                     android:checked="true" />
 
                 <com.google.android.material.chip.Chip
@@ -153,7 +176,16 @@
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="8dp"
-        android:paddingBottom="24dp"
+        android:paddingBottom="110dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- Loading State -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!-- Empty State -->
@@ -179,6 +211,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/no_pets"
             android:textColor="@color/text_secondary"
+            android:fontFamily="@font/poppins"
             android:textSize="16sp" />
     </LinearLayout>
 

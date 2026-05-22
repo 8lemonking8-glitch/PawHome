@@ -90,10 +90,15 @@
 
     <!-- ==================== Bottom Navigation ==================== -->
     <style name="Widget.PawHome.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">@color/surface</item>
-        <item name="itemIconTint">@color/primary</item>
-        <item name="itemTextColor">@color/primary</item>
-        <item name="itemRippleColor">@color/ripple</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="itemIconTint">@color/nav_item_color_state</item>
+        <item name="itemTextColor">@color/nav_item_color_state</item>
+        <item name="itemRippleColor">@null</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.PawHome.BottomNavigation.ActiveIndicator</item>
+    </style>
+
+    <style name="Widget.PawHome.BottomNavigation.ActiveIndicator" parent="">
+        <item name="android:color">@android:color/transparent</item>
     </style>
 
     <!-- ==================== Status Badge ==================== -->

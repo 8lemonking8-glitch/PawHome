@@ -65,9 +65,9 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#FFE0B2">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/admin_card_pets_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -77,7 +77,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Pets"
-                            android:textColor="#3D2C22"
+                            android:textColor="@color/admin_card_pets_text"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvTotalPets"
@@ -85,9 +85,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="-"
-                            android:textColor="#3D2C22"
-                            android:textSize="32sp"
-                            android:fontFamily="@font/poppins" />
+                            android:textSize="24sp"
+                            android:textColor="@color/admin_card_pets_text"
+                            android:fontFamily="@font/poppins_bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -97,9 +97,9 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#C8E6C9">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/admin_card_available_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -109,7 +109,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Available"
-                            android:textColor="#1B5E20"
+                            android:textColor="@color/admin_card_available_text"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvAvailablePets"
@@ -117,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="-"
-                            android:textColor="#1B5E20"
+                            android:textColor="@color/admin_card_available_text"
                             android:textSize="32sp"
                             android:fontFamily="@font/poppins" />
                     </LinearLayout>
@@ -129,9 +129,9 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#FFCDD2">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/admin_card_pending_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -141,7 +141,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pending Requests"
-                            android:textColor="#B71C1C"
+                            android:textColor="@color/admin_card_pending_text"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvPendingRequests"
@@ -149,7 +149,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="-"
-                            android:textColor="#B71C1C"
+                            android:textColor="@color/admin_card_pending_text"
                             android:textSize="32sp"
                             android:fontFamily="@font/poppins" />
                     </LinearLayout>
@@ -161,9 +161,9 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#BBDEFB">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/admin_card_adopted_bg">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

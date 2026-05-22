@@ -30,6 +30,8 @@ public class HomeFragment extends Fragment {
     private PetAdapter adapter;
     private PetRepository petRepository;
     private String currentCategory = "All";
+    private android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     @Nullable
     @Override
@@ -99,34 +101,52 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupSearch() {
-        binding.etSearch.addTextChangedListener(new TextWatcher() {
+        binding.ivClear.setOnClickListener(v -> {
+            binding.etSearch.setText("");
+        });
+        
+        binding.etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(android.text.Editable s) {
                 String query = s.toString().trim();
-                if (!query.isEmpty()) {
-                    petRepository.searchPets(query).observe(getViewLifecycleOwner(), pets -> {
-                        adapter.setPets(pets);
-                        binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);
-                    });
-                } else {
-                    observePets(); // Reset to category view
+                binding.ivClear.setVisibility(query.isEmpty() ? View.GONE : View.VISIBLE);
+                
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
                 }
+                
+                searchRunnable = () -> {
+                    if (!query.isEmpty()) {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        petRepository.searchPets(query).observe(getViewLifecycleOwner(), pets -> {
+                            binding.progressBar.setVisibility(View.GONE);
+                            adapter.setPets(pets);
+                            binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);
+                        });
+                    } else {
+                        observePets(); // Reset to category view
+                    }
+                };
+                searchHandler.postDelayed(searchRunnable, 300);
             }
         });
     }
 
     private void observePets() {
+        binding.progressBar.setVisibility(View.VISIBLE);
         if (currentCategory.equals("All")) {
             petRepository.getAvailablePets().observe(getViewLifecycleOwner(), pets -> {
+                binding.progressBar.setVisibility(View.GONE);
                 adapter.setPets(pets);
                 binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);
             });
         } else {
             petRepository.getAvailablePetsByType(currentCategory).observe(getViewLifecycleOwner(), pets -> {
+                binding.progressBar.setVisibility(View.GONE);
                 adapter.setPets(pets);
                 binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);
             });

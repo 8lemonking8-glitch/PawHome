@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background & Surface -->
+    <color name="background">#1C1410</color>
+    <color name="surface">#2C2420</color>
+    <color name="surface_variant">#3C3430</color>
+    <color name="on_background">#F5EDE6</color>
+    <color name="on_surface">#F5EDE6</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#F5EDE6</color>
+    <color name="text_secondary">#B8A99E</color>
+    <color name="text_hint">#504843</color>
+
+    <!-- Utility -->
+    <color name="divider">#33FFFFFF</color>
+    <color name="card_background">#2C2420</color>
+
+    <!-- Auth & Layout Colors -->
+    <color name="auth_background">#1C1410</color>
+    <color name="auth_card_bg">#2C2420</color>
+    <color name="tab_stroke">#33FFFFFF</color>
+    <color name="register_link_bg">#1C1410</color>
+    <color name="register_link_stroke">#33FFFFFF</color>
+    
+    <!-- Nav Bar -->
+    <color name="nav_bar_bg">#E62C2420</color>
+    <color name="nav_bar_stroke">#1AFFFFFF</color>
+    
+    <!-- Profile & Home -->
+    <color name="profile_avatar_bg">#1AFFFFFF</color>
+    <color name="home_background">#1C1410</color>
+    
+    <!-- Admin Dashboard -->
+    <color name="admin_card_pets_bg">#4E342E</color>
+    <color name="admin_card_pets_text">#FFCC80</color>
+    <color name="admin_card_available_bg">#2E7D32</color>
+    <color name="admin_card_available_text">#A5D6A7</color>
+    <color name="admin_card_adopted_bg">#C62828</color>
+    <color name="admin_card_adopted_text">#EF9A9A</color>
+    <color name="admin_card_pending_bg">#1565C0</color>
+    <color name="admin_card_pending_text">#90CAF9</color>
+</resources>
