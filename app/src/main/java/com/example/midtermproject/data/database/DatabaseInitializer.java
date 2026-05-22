@@ -32,16 +32,9 @@ public class DatabaseInitializer {
 
             Log.d(TAG, "Seeding database with initial data...");
 
-            // Create admin account with a generated password
-            String adminPassword = generateInitialPassword();
-            Log.i(TAG, "========================================");
-            Log.i(TAG, "  Admin password: " + adminPassword);
-            Log.i(TAG, "  Change after first login!");
-            Log.i(TAG, "========================================");
-
             UserEntity admin = new UserEntity();
             admin.setUsername("admin");
-            admin.setPassword(PasswordUtils.hashPassword(adminPassword));
+            admin.setPassword(PasswordUtils.hashPassword("admin"));
             admin.setNickname("Administrator");
             admin.setEmail("admin@pawhome.com");
             admin.setPhone("1234567890");
@@ -106,16 +99,6 @@ public class DatabaseInitializer {
             db.petDao().insertAll(pets);
             Log.d(TAG, "Database seeded with " + pets.size() + " pets and 1 admin account.");
         });
-    }
-
-    private static String generateInitialPassword() {
-        java.security.SecureRandom rng = new java.security.SecureRandom();
-        String chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-        StringBuilder sb = new StringBuilder(12);
-        for (int i = 0; i < 12; i++) {
-            sb.append(chars.charAt(rng.nextInt(chars.length())));
-        }
-        return sb.toString();
     }
 
     private static PetEntity createPet(String name, String type, String breed, String color,
