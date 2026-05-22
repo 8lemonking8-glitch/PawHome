@@ -66,11 +66,11 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
             binding.tvDetails.setText(pet.getType() + " • " + pet.getBreed());
             binding.tvStatus.setText(pet.getStatus());
             
-            if ("AVAILABLE".equals(pet.getStatus())) {
-                binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
-            } else {
-                binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));
-            }
+            binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
+            int color = "AVAILABLE".equals(pet.getStatus()) ? 
+                itemView.getContext().getColor(R.color.status_available) : 
+                itemView.getContext().getColor(R.color.status_adopted);
+            binding.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
             
             if (pet.getImageResId() != 0) {
                 binding.ivIcon.setImageResource(pet.getImageResId());

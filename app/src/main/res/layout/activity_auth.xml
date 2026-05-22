@@ -24,10 +24,12 @@
         app:shapeAppearanceOverlay="@style/ShapeAppearance.PawHome.Card.TopRounded"
         app:cardElevation="16dp"
         app:cardBackgroundColor="@color/auth_card_bg"
+        android:layout_marginTop="-24dp"
         app:layout_constraintTop_toBottomOf="@id/ivLoginBg"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
+            android:id="@+id/layoutCardContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -64,7 +66,8 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

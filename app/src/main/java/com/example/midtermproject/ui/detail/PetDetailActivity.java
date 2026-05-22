@@ -19,9 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.PetEntity;
+import com.example.midtermproject.data.entity.UserEntity;
 import com.example.midtermproject.data.repository.PetRepository;
+import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.ActivityPetDetailBinding;
 import com.example.midtermproject.util.FavoriteManager;
+import com.example.midtermproject.util.SessionManager;
+import com.example.midtermproject.ui.profile.EditProfileBottomSheet;
+import com.example.midtermproject.data.database.AppDatabase;
 
 public class PetDetailActivity extends AppCompatActivity {
 
@@ -71,14 +76,47 @@ public class PetDetailActivity extends AppCompatActivity {
 
         binding.fabAdopt.setOnClickListener(v -> {
             if (currentPet != null && "AVAILABLE".equals(currentPet.getStatus())) {
-                AdoptionBottomSheet bottomSheet = new AdoptionBottomSheet(petId,
-                    () -> {
-                        Snackbar.make(binding.getRoot(), "Adoption request sent successfully!", Snackbar.LENGTH_SHORT).show();
-                        finish();
-                    },
-                    () -> finish()
-                );
-                bottomSheet.show(getSupportFragmentManager(), "AdoptionBottomSheet");
+                SessionManager sessionManager = new SessionManager(this);
+                long userId = sessionManager.getUserId();
+                UserRepository userRepository = new UserRepository(getApplication());
+                
+                binding.fabAdopt.setEnabled(false);
+                
+                AppDatabase.databaseExecutor.execute(() -> {
+                    UserEntity user = userRepository.getUserByIdSync(userId);
+                    runOnUiThread(() -> {
+                        binding.fabAdopt.setEnabled(true);
+                        if (user != null) {
+                            if (user.isProfileComplete()) {
+                                AdoptionBottomSheet bottomSheet = new AdoptionBottomSheet(petId,
+                                    () -> {
+                                        Snackbar.make(binding.getRoot(), "Adoption request sent successfully!", Snackbar.LENGTH_SHORT).show();
+                                        finish();
+                                    },
+                                    () -> Snackbar.make(binding.getRoot(), "Adoption request canceled", Snackbar.LENGTH_SHORT).show()
+                                );
+                                bottomSheet.show(getSupportFragmentManager(), "AdoptionBottomSheet");
+                            } else {
+                                java.util.List<String> missing = user.getMissingProfileFields();
+                                StringBuilder sb = new StringBuilder("The following Adopter Profile fields need to be completed:\n");
+                                for (String field : missing) {
+                                    sb.append("\n  •  ").append(field);
+                                }
+                                new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    .setTitle("Incomplete Adopter Profile")
+                                    .setMessage(sb.toString())
+                                    .setPositiveButton("Complete Now", (dialog, which) -> {
+                                        EditProfileBottomSheet bottomSheet = new EditProfileBottomSheet(() -> {
+                                            binding.fabAdopt.performClick();
+                                        });
+                                        bottomSheet.show(getSupportFragmentManager(), "EditProfileBottomSheet");
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                            }
+                        }
+                    });
+                });
             } else {
                 Snackbar.make(binding.getRoot(), "Pet is no longer available", Snackbar.LENGTH_SHORT).show();
             }
@@ -145,14 +183,16 @@ public class PetDetailActivity extends AppCompatActivity {
                 binding.tvName.setText(pet.getName());
                 binding.tvBreed.setText(pet.getBreed());
                 binding.tvAge.setText(pet.getAge());
+                setScaledDrawable(binding.tvAge, R.drawable.ic_history);
+
                 binding.tvColor.setText(pet.getColor() != null && !pet.getColor().isEmpty() ? pet.getColor() : "N/A");
+                setScaledDrawable(binding.tvColor, R.drawable.ic_favorite);
+
                 binding.tvGender.setText(pet.getGender());
-                if ("Female".equalsIgnoreCase(pet.getGender())) {
-                    binding.tvGender.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_female, 0, 0, 0);
-                } else {
-                    binding.tvGender.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_male, 0, 0, 0);
-                }
+                setScaledDrawable(binding.tvGender, "Female".equalsIgnoreCase(pet.getGender()) ? R.drawable.ic_female : R.drawable.ic_male);
+
                 binding.tvSize.setText(pet.getSize());
+                setScaledDrawable(binding.tvSize, R.drawable.ic_pets);
                 binding.tvDescription.setText(pet.getDescription());
 
                 binding.collapsingToolbar.setTitle(pet.getName());
@@ -184,5 +224,17 @@ public class PetDetailActivity extends AppCompatActivity {
         boolean isFav = favoriteManager.isFavorite(petId);
         binding.btnFavorite.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         binding.btnFavorite.setColorFilter(isFav ? getColor(R.color.error) : getColor(R.color.text_primary));
+    }
+
+    private void setScaledDrawable(android.widget.TextView textView, int drawableId) {
+        android.graphics.drawable.Drawable drawable = androidx.core.content.ContextCompat.getDrawable(this, drawableId);
+        if (drawable != null) {
+            android.graphics.drawable.Drawable wrappedDrawable = androidx.core.graphics.drawable.DrawableCompat.wrap(drawable).mutate();
+            float density = getResources().getDisplayMetrics().density;
+            int size = (int) (14 * density); // 14dp size, perfect fit for 12sp Poppins text
+            wrappedDrawable.setBounds(0, 0, size, size);
+            androidx.core.graphics.drawable.DrawableCompat.setTint(wrappedDrawable, getColor(R.color.primary));
+            textView.setCompoundDrawablesRelative(wrappedDrawable, null, null, null);
+        }
     }
 }

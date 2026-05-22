@@ -84,8 +84,25 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:gravity="end">
-            
+            android:gravity="center_vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewProfile"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Profile"
+                android:textColor="@color/primary"
+                app:icon="@drawable/ic_person"
+                app:iconTint="@color/primary"
+                app:iconSize="16dp"
+                app:cornerRadius="20dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReject"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -96,7 +113,7 @@
                 app:cornerRadius="20dp"
                 app:strokeColor="@color/error"
                 android:textColor="@color/error" />
-                
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnApprove"
                 style="@style/Widget.Material3.Button"

@@ -84,34 +84,35 @@
             android:paddingEnd="16dp"
             android:paddingBottom="140dp">
             
-            <!-- Contact Info Card -->
+            <!-- Adopter Profile Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAdopterProfile"
                 style="@style/Widget.PawHome.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Contact Information"
+                            android:text="Adopter Profile"
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:fontFamily="@font/poppins" />
-                            
+
                         <ImageView
                             android:id="@+id/btnEditProfile"
                             android:layout_width="24dp"
@@ -119,25 +120,28 @@
                             android:src="@drawable/ic_edit"
                             app:tint="@color/primary" />
                     </LinearLayout>
-                    
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp"
                         android:background="@color/divider" />
-                        
+
+                    <!-- Email -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
-                        
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_email"
                             app:tint="@color/text_hint" />
-                            
+
                         <TextView
                             android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
@@ -146,25 +150,141 @@
                             android:text="Not provided"
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
-                    
+
+                    <!-- Phone -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
-                        
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_phone"
                             app:tint="@color/text_hint" />
-                            
+
                         <TextView
                             android:id="@+id/tvPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Not provided"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <!-- Age & Gender -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_person"
+                            app:tint="@color/text_hint" />
+
+                        <TextView
+                            android:id="@+id/tvAgeGender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Age: -- | Gender: --"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <!-- Address -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_home"
+                            app:tint="@color/text_hint" />
+
+                        <TextView
+                            android:id="@+id/tvAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Home Address: --"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <!-- Housing Condition -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_home"
+                            app:tint="@color/text_hint" />
+
+                        <TextView
+                            android:id="@+id/tvHousing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Housing Status: --"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <!-- Monthly Income -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_favorite"
+                            app:tint="@color/text_hint" />
+
+                        <TextView
+                            android:id="@+id/tvIncome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Monthly Income: --"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <!-- Pet Experience -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_pets"
+                            app:tint="@color/text_hint" />
+
+                        <TextView
+                            android:id="@+id/tvExperience"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Pet Care Experience: --"
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
                 </LinearLayout>

@@ -45,6 +45,13 @@ public class ProfileFragment extends Fragment {
     private AdoptionRepository adoptionRepository;
     private AdoptionHistoryAdapter historyAdapter;
 
+    private void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT);
+        View bottomNav = requireActivity().findViewById(R.id.bottom_nav_card);
+        if (bottomNav != null) snackbar.setAnchorView(bottomNav);
+        snackbar.show();
+    }
+
     private final ActivityResultLauncher<String> pickImageLauncher =
         registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) {
@@ -62,7 +69,19 @@ public class ProfileFragment extends Fragment {
     private void saveAvatarFromUri(Uri uri) {
         try {
             InputStream is = requireContext().getContentResolver().openInputStream(uri);
-            File file = new File(requireContext().getFilesDir(), "avatar_" + sessionManager.getUserId() + ".jpg");
+            long userId = sessionManager.getUserId();
+            File dir = requireContext().getFilesDir();
+            
+            // Delete any existing avatar files for this user to save space
+            File[] existingAvatars = dir.listFiles((d, name) -> name.startsWith("avatar_" + userId));
+            if (existingAvatars != null) {
+                for (File f : existingAvatars) {
+                    f.delete();
+                }
+            }
+
+            // Create a unique filename with the current timestamp to bypass ImageView URI caching
+            File file = new File(dir, "avatar_" + userId + "_" + System.currentTimeMillis() + ".jpg");
             FileOutputStream fos = new FileOutputStream(file);
             byte[] buffer = new byte[1024];
             int len;
@@ -74,20 +93,32 @@ public class ProfileFragment extends Fragment {
             updateAvatarUri(Uri.fromFile(file).toString());
         } catch (Exception e) {
             e.printStackTrace();
-            Snackbar.make(binding.getRoot(), "Failed to load image", Snackbar.LENGTH_SHORT).show();
+            showSnackbar("Failed to load image");
         }
     }
 
     private void saveAvatarFromBitmap(Bitmap bitmap) {
         try {
-            File file = new File(requireContext().getFilesDir(), "avatar_" + sessionManager.getUserId() + ".jpg");
+            long userId = sessionManager.getUserId();
+            File dir = requireContext().getFilesDir();
+            
+            // Delete any existing avatar files for this user to save space
+            File[] existingAvatars = dir.listFiles((d, name) -> name.startsWith("avatar_" + userId));
+            if (existingAvatars != null) {
+                for (File f : existingAvatars) {
+                    f.delete();
+                }
+            }
+
+            // Create a unique filename with the current timestamp to bypass ImageView URI caching
+            File file = new File(dir, "avatar_" + userId + "_" + System.currentTimeMillis() + ".jpg");
             FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.close();
             updateAvatarUri(Uri.fromFile(file).toString());
         } catch (Exception e) {
             e.printStackTrace();
-            Snackbar.make(binding.getRoot(), "Failed to save photo", Snackbar.LENGTH_SHORT).show();
+            showSnackbar("Failed to save photo");
         }
     }
 
@@ -98,8 +129,9 @@ public class ProfileFragment extends Fragment {
                 user.setAvatarUri(uriString);
                 userRepository.update(user);
                 requireActivity().runOnUiThread(() -> {
+                    binding.ivAvatar.setImageURI(null);
                     binding.ivAvatar.setImageURI(Uri.parse(uriString));
-                    Snackbar.make(binding.getRoot(), "Avatar updated", Snackbar.LENGTH_SHORT).show();
+                    showSnackbar("Avatar updated");
                 });
             }
         });
@@ -193,8 +225,15 @@ public class ProfileFragment extends Fragment {
 
                 binding.tvEmail.setText(user.getEmail() != null && !user.getEmail().isEmpty() ? user.getEmail() : "Not provided");
                 binding.tvPhone.setText(user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : "Not provided");
+                
+                binding.tvAgeGender.setText("Age: " + (user.getAge() > 0 ? user.getAge() : "--") + "  |  Gender: " + (user.getGender() != null && !user.getGender().isEmpty() ? user.getGender() : "--"));
+                binding.tvAddress.setText("Home Address: " + (user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Not provided"));
+                binding.tvHousing.setText("Housing Status: " + (user.getHousingCondition() != null && !user.getHousingCondition().isEmpty() ? user.getHousingCondition() : "Not provided"));
+                binding.tvIncome.setText("Monthly Income: " + (user.getMonthlyIncome() != null && !user.getMonthlyIncome().isEmpty() ? user.getMonthlyIncome() : "Not provided"));
+                binding.tvExperience.setText("Pet Care Experience: " + (user.getPetExperience() != null && !user.getPetExperience().isEmpty() ? user.getPetExperience() : "Not provided"));
 
                 if (user.getAvatarUri() != null && !user.getAvatarUri().isEmpty()) {
+                    binding.ivAvatar.setImageURI(null);
                     binding.ivAvatar.setImageURI(Uri.parse(user.getAvatarUri()));
                 } else if (user.getAvatarResId() != 0) {
                     binding.ivAvatar.setImageResource(user.getAvatarResId());

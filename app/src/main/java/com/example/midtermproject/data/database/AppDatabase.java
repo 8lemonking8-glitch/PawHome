@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
         UserEntity.class,
         AdoptionRequestEntity.class
     },
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -57,6 +57,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             "pawhome_database"
                         )
                         .addMigrations(MIGRATION_1_2)
+                        .fallbackToDestructiveMigration()
                         .build();
                 }
             }

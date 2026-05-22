@@ -13,13 +13,18 @@
         <item name="cardCornerRadius">24dp</item>
         <item name="cardElevation">0dp</item>
         <item name="cardBackgroundColor">@color/surface_variant</item>
+        <item name="contentPadding">0dp</item>
     </style>
 
     <!-- ==================== Button Styles ==================== -->
     <style name="Widget.PawHome.Button.Primary" parent="Widget.Material3.Button">
-        <item name="cornerRadius">16dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
         <item name="android:textSize">16sp</item>
         <item name="backgroundTint">@color/primary</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <style name="Widget.PawHome.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
@@ -29,6 +34,8 @@
         <item name="android:textSize">16sp</item>
         <item name="strokeColor">@color/primary</item>
         <item name="android:textColor">@color/primary</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <style name="Widget.PawHome.Button.Text" parent="Widget.Material3.Button.TextButton">
@@ -41,6 +48,8 @@
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
         <item name="backgroundTint">@color/success</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <style name="Widget.PawHome.Button.Danger" parent="Widget.Material3.Button">
@@ -48,6 +57,8 @@
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
         <item name="backgroundTint">@color/error</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <!-- ==================== TextInput Styles ==================== -->

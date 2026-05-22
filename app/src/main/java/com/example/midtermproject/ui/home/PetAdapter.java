@@ -139,11 +139,11 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                 }
             }
             
-            if ("AVAILABLE".equals(pet.getStatus())) {
-                binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge); 
-            } else {
-                binding.tvStatus.setBackgroundColor(itemView.getContext().getColor(R.color.text_hint));
-            }
+            binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
+            int color = "AVAILABLE".equals(pet.getStatus()) ? 
+                itemView.getContext().getColor(R.color.status_available) : 
+                itemView.getContext().getColor(R.color.text_hint);
+            binding.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
             
             // Set initial favorite state
             if (favoriteManager != null) {

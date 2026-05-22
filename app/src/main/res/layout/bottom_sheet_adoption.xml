@@ -16,26 +16,108 @@
         android:layout_marginBottom="16dp" />
 
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/adoption_agreement"
         android:textSize="20sp"
         android:textColor="@color/text_primary"
         android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:fontFamily="@font/poppins"
+        android:visibility="gone"
         android:layout_marginBottom="16dp" />
 
     <ScrollView
+        android:id="@+id/scrollViewAgreement"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@color/surface_variant"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp">
-        <TextView
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_input_rounded"
+        android:padding="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp">
+        
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="By signing this agreement, I acknowledge that I am fully responsible for the care, health, and well-being of the adopted pet. I agree to provide adequate food, water, shelter, and medical care. I understand that PawHome reserves the right to check on the pet's living conditions and may revoke the adoption if the pet is found to be mistreated or neglected."
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
+            android:orientation="vertical">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OFFICIAL ADOPTION COVENANT"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. Guardianship &amp; Care Standards"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The adopter agrees to assume full legal and physical responsibility for the care, nutrition, and medical needs of the animal, maintaining standard health vaccinations."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginBottom="16dp" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2. Home Inspections &amp; Access"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PawHome reserves the right to conduct scheduled check-ins of the living environment to ensure safety, emotional security, and welfare of the pet."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginBottom="16dp" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3. Reclamation Rights"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="In the event of negligence, abandonment, or failure to uphold care standards, PawHome maintains immediate legal rights to reclaim custody without reimbursement."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins"
+                android:lineSpacingExtra="3dp" />
+                
+        </LinearLayout>
     </ScrollView>
 
     <!-- Step 1: Accept / Decline Buttons -->
@@ -51,8 +133,11 @@
             style="@style/Widget.PawHome.Button.Secondary"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:text="@string/decline"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
             android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -60,8 +145,11 @@
             style="@style/Widget.PawHome.Button.Primary"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:text="@string/accept"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -71,21 +159,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginTop="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sign_here"
-            android:textColor="@color/text_primary"
-            android:fontFamily="@font/poppins"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/sign_here"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold" />
+                
+            <TextView
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/clear_signature"
+                android:textColor="@color/primary"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
+                android:padding="4dp" />
+        </RelativeLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:background="@drawable/bg_signature_pad"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -100,22 +210,36 @@
                 android:layout_height="match_parent" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/btnClear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/clear_signature"
-            android:textColor="@color/primary"
-            android:textSize="14sp"
-            android:layout_marginBottom="24dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSubmit"
-            style="@style/Widget.PawHome.Button.Primary"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/confirm" />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSignatureBack"
+                style="@style/Widget.PawHome.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="52dp"
+                android:text="Back"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="12dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                style="@style/Widget.PawHome.Button.Primary"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="52dp"
+                android:text="@string/confirm"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="12dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

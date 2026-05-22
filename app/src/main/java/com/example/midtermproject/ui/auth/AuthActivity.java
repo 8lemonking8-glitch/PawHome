@@ -92,9 +92,9 @@ public class AuthActivity extends AppCompatActivity {
                 }
             }
             
-            // Keep the card's bottom padding constant at systemBars.bottom to ensure a stable layout
+            // Keep the card's inner content layout padding constant at systemBars.bottom to ensure a stable layout
             // height inside the ScrollView, preventing height recalculation jitter/twitching during focus switch.
-            binding.cardForm.setPadding(0, 0, 0, systemBars.bottom);
+            binding.layoutCardContent.setPadding(0, 0, 0, systemBars.bottom);
             
             return windowInsets;
         });

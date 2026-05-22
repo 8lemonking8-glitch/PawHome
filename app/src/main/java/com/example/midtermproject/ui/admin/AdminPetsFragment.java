@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.FragmentAdminPetsBinding;
+import com.example.midtermproject.R;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class AdminPetsFragment extends Fragment {
     private AdminPetAdapter adapter;
     private PetRepository petRepository;
     private List<PetEntity> petsList = new ArrayList<>();
+    private List<PetEntity> allPetsList = new ArrayList<>();
+    private String currentCategory = "All";
+    private String currentSearchQuery = "";
 
     @Nullable
     @Override
@@ -62,10 +66,83 @@ public class AdminPetsFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         petRepository.getAllPets().observe(getViewLifecycleOwner(), pets -> {
             binding.progressBar.setVisibility(View.GONE);
-            petsList = pets;
-            adapter.setPets(pets);
-            binding.layoutEmpty.setVisibility(pets.isEmpty() ? View.VISIBLE : View.GONE);
+            allPetsList = pets != null ? pets : new ArrayList<>();
+            applyFilter();
         });
+
+        setupChips();
+        setupSearch();
+    }
+
+    private void setupChips() {
+        binding.chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) return;
+            int checkedId = checkedIds.get(0);
+
+            if (checkedId == R.id.chipAll) currentCategory = "All";
+            else if (checkedId == R.id.chipDogs) currentCategory = "DOG";
+            else if (checkedId == R.id.chipCats) currentCategory = "CAT";
+            else if (checkedId == R.id.chipBirds) currentCategory = "BIRD";
+
+            applyFilter();
+        });
+    }
+
+    private void setupSearch() {
+        binding.ivClear.setOnClickListener(v -> {
+            binding.etSearch.setText("");
+        });
+
+        binding.etSearch.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                currentSearchQuery = s.toString().trim();
+                binding.ivClear.setVisibility(currentSearchQuery.isEmpty() ? View.GONE : View.VISIBLE);
+                applyFilter();
+            }
+        });
+    }
+
+    private void applyFilter() {
+        List<PetEntity> filteredList = new ArrayList<>();
+        for (PetEntity pet : allPetsList) {
+            // Category filter
+            boolean matchesCategory = false;
+            if ("All".equals(currentCategory)) {
+                matchesCategory = true;
+            } else if ("DOG".equals(currentCategory) && "DOG".equals(pet.getType())) {
+                matchesCategory = true;
+            } else if ("CAT".equals(currentCategory) && "CAT".equals(pet.getType())) {
+                matchesCategory = true;
+            } else if ("BIRD".equals(currentCategory) && "BIRD".equals(pet.getType())) {
+                matchesCategory = true;
+            }
+
+            // Search filter
+            boolean matchesSearch = false;
+            if (currentSearchQuery.isEmpty()) {
+                matchesSearch = true;
+            } else {
+                String query = currentSearchQuery.toLowerCase();
+                String name = pet.getName() != null ? pet.getName().toLowerCase() : "";
+                String breed = pet.getBreed() != null ? pet.getBreed().toLowerCase() : "";
+                if (name.contains(query) || breed.contains(query)) {
+                    matchesSearch = true;
+                }
+            }
+
+            if (matchesCategory && matchesSearch) {
+                filteredList.add(pet);
+            }
+        }
+
+        petsList = filteredList;
+        adapter.setPets(filteredList);
+        binding.layoutEmpty.setVisibility(filteredList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void setupRecyclerView() {

@@ -50,8 +50,20 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         sessionManager = new SessionManager(requireContext());
 
         binding.btnAccept.setOnClickListener(v -> {
+            binding.tvTitle.setText("Digital Signature");
+            binding.tvSubtitle.setText("Please draw your signature below to authorize and submit your adoption request.");
+            binding.tvSubtitle.setVisibility(View.VISIBLE);
+            binding.scrollViewAgreement.setVisibility(View.GONE);
             binding.layoutAgreementButtons.setVisibility(View.GONE);
             binding.layoutSignature.setVisibility(View.VISIBLE);
+        });
+
+        binding.btnSignatureBack.setOnClickListener(v -> {
+            binding.tvTitle.setText(getString(R.string.adoption_agreement));
+            binding.tvSubtitle.setVisibility(View.GONE);
+            binding.scrollViewAgreement.setVisibility(View.VISIBLE);
+            binding.layoutAgreementButtons.setVisibility(View.VISIBLE);
+            binding.layoutSignature.setVisibility(View.GONE);
         });
 
         binding.btnDecline.setOnClickListener(v -> {
@@ -65,6 +77,20 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         binding.btnClear.setOnClickListener(v -> binding.signatureView.clear());
 
         binding.btnSubmit.setOnClickListener(v -> submitAdoption());
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Make the bottom sheet fully expanded by default to display the complete agreement
+        View view = getView();
+        if (view != null) {
+            View parent = (View) view.getParent();
+            com.google.android.material.bottomsheet.BottomSheetBehavior<View> behavior = 
+                com.google.android.material.bottomsheet.BottomSheetBehavior.from(parent);
+            behavior.setState(com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED);
+            behavior.setSkipCollapsed(true);
+        }
     }
 
     private void submitAdoption() {

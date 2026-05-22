@@ -58,6 +58,12 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                 binding.etNickname.setText(user.getNickname());
                 binding.etEmail.setText(user.getEmail());
                 binding.etPhone.setText(user.getPhone());
+                binding.etAge.setText(user.getAge() > 0 ? String.valueOf(user.getAge()) : "");
+                binding.etGender.setText(user.getGender());
+                binding.etAddress.setText(user.getAddress());
+                binding.etHousing.setText(user.getHousingCondition());
+                binding.etIncome.setText(user.getMonthlyIncome());
+                binding.etExperience.setText(user.getPetExperience());
             }
         });
     }
@@ -68,10 +74,22 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         binding.tilNickname.setError(null);
         binding.tilEmail.setError(null);
         binding.tilPhone.setError(null);
+        binding.tilAge.setError(null);
+        binding.tilGender.setError(null);
+        binding.tilAddress.setError(null);
+        binding.tilHousing.setError(null);
+        binding.tilIncome.setError(null);
+        binding.tilExperience.setError(null);
 
         String nickname = binding.etNickname.getText().toString().trim();
         String email = binding.etEmail.getText().toString().trim();
         String phone = binding.etPhone.getText().toString().trim();
+        String ageStr = binding.etAge.getText().toString().trim();
+        String gender = binding.etGender.getText().toString().trim();
+        String address = binding.etAddress.getText().toString().trim();
+        String housing = binding.etHousing.getText().toString().trim();
+        String income = binding.etIncome.getText().toString().trim();
+        String experience = binding.etExperience.getText().toString().trim();
 
         boolean valid = true;
 
@@ -96,6 +114,51 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                 binding.tilPhone.setError("Phone must contain only numbers, +, and -");
                 valid = false;
             }
+        } else {
+            binding.tilPhone.setError("Phone cannot be empty");
+            valid = false;
+        }
+
+        int age = 0;
+        if (ageStr.isEmpty()) {
+            binding.tilAge.setError("Age cannot be empty");
+            valid = false;
+        } else {
+            try {
+                age = Integer.parseInt(ageStr);
+                if (age <= 0 || age > 120) {
+                    binding.tilAge.setError("Invalid age (1-120)");
+                    valid = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.tilAge.setError("Must be a number");
+                valid = false;
+            }
+        }
+
+        if (gender.isEmpty()) {
+            binding.tilGender.setError("Gender cannot be empty");
+            valid = false;
+        }
+
+        if (address.isEmpty()) {
+            binding.tilAddress.setError("Address cannot be empty");
+            valid = false;
+        }
+
+        if (housing.isEmpty()) {
+            binding.tilHousing.setError("Housing status cannot be empty");
+            valid = false;
+        }
+
+        if (income.isEmpty()) {
+            binding.tilIncome.setError("Income cannot be empty");
+            valid = false;
+        }
+
+        if (experience.isEmpty()) {
+            binding.tilExperience.setError("Experience cannot be empty");
+            valid = false;
         }
 
         if (!valid) return;
@@ -103,6 +166,12 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         currentUser.setNickname(nickname);
         currentUser.setEmail(email);
         currentUser.setPhone(phone);
+        currentUser.setAge(age);
+        currentUser.setGender(gender);
+        currentUser.setAddress(address);
+        currentUser.setHousingCondition(housing);
+        currentUser.setMonthlyIncome(income);
+        currentUser.setPetExperience(experience);
 
         binding.btnSave.setEnabled(false);
         

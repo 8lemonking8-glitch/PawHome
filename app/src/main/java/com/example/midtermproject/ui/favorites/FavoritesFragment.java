@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
+import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.databinding.FragmentFavoritesBinding;
@@ -124,14 +125,16 @@ public class FavoritesFragment extends Fragment {
                     adapter.setPets(new ArrayList<>(favoritePets));
                     updateEmptyState();
 
-                    Snackbar.make(binding.getRoot(), "Removed " + pet.getName() + " from favorites", Snackbar.LENGTH_LONG)
+                    Snackbar snackbar = Snackbar.make(binding.getRoot(), "Removed " + pet.getName() + " from favorites", Snackbar.LENGTH_LONG)
                         .setAction("UNDO", v -> {
                             favoriteManager.toggleFavorite(pet.getId());
                             favoritePets.add(position, pet);
                             adapter.setPets(new ArrayList<>(favoritePets));
                             updateEmptyState();
-                        })
-                        .show();
+                        });
+                    View bottomNav = requireActivity().findViewById(R.id.bottom_nav_card);
+                    if (bottomNav != null) snackbar.setAnchorView(bottomNav);
+                    snackbar.show();
                 }
             }
         }).attachToRecyclerView(binding.rvFavorites);
