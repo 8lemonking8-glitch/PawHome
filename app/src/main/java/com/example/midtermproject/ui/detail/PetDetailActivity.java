@@ -84,53 +84,7 @@ public class PetDetailActivity extends AppCompatActivity {
         setupImagePager();
         loadPetDetails();
 
-        binding.fabAdopt.setOnClickListener(v -> {
-            if (currentPet != null && "AVAILABLE".equals(currentPet.getStatus())) {
-                SessionManager sessionManager = new SessionManager(this);
-                long userId = sessionManager.getUserId();
-                UserRepository userRepository = new UserRepository(getApplication());
-                
-                binding.fabAdopt.setEnabled(false);
-                
-                AppDatabase.databaseExecutor.execute(() -> {
-                    UserEntity user = userRepository.getUserByIdSync(userId);
-                    runOnUiThread(() -> {
-                        binding.fabAdopt.setEnabled(true);
-                        if (user != null) {
-                            if (user.isProfileComplete()) {
-                                AdoptionBottomSheet bottomSheet = new AdoptionBottomSheet(petId,
-                                    () -> {
-                                        Snackbar.make(binding.getRoot(), "Adoption request sent successfully!", Snackbar.LENGTH_SHORT).show();
-                                        finish();
-                                    },
-                                    () -> Snackbar.make(binding.getRoot(), "Adoption request canceled", Snackbar.LENGTH_SHORT).show()
-                                );
-                                bottomSheet.show(getSupportFragmentManager(), "AdoptionBottomSheet");
-                            } else {
-                                java.util.List<String> missing = user.getMissingProfileFields();
-                                StringBuilder sb = new StringBuilder("The following Adopter Profile fields need to be completed:\n");
-                                for (String field : missing) {
-                                    sb.append("\n  •  ").append(field);
-                                }
-                                new androidx.appcompat.app.AlertDialog.Builder(this)
-                                    .setTitle("Incomplete Adopter Profile")
-                                    .setMessage(sb.toString())
-                                    .setPositiveButton("Complete Now", (dialog, which) -> {
-                                        EditProfileBottomSheet bottomSheet = new EditProfileBottomSheet(() -> {
-                                            binding.fabAdopt.performClick();
-                                        });
-                                        bottomSheet.show(getSupportFragmentManager(), "EditProfileBottomSheet");
-                                    })
-                                    .setNegativeButton("Cancel", null)
-                                    .show();
-                            }
-                        }
-                    });
-                });
-            } else {
-                Snackbar.make(binding.getRoot(), "Pet is no longer available", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        binding.fabAdopt.setOnClickListener(v -> handleAdoptClick());
 
         binding.btnFavorite.setOnClickListener(v -> {
             favoriteManager.toggleFavorite(petId);
@@ -139,6 +93,56 @@ public class PetDetailActivity extends AppCompatActivity {
         });
 
         postponeEnterTransition();
+    }
+
+    private void handleAdoptClick() {
+        if (currentPet == null || !"AVAILABLE".equals(currentPet.getStatus())) {
+            Snackbar.make(binding.getRoot(), "Pet is no longer available", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        SessionManager sessionManager = new SessionManager(this);
+        long userId = sessionManager.getUserId();
+        UserRepository userRepository = new UserRepository(getApplication());
+        binding.fabAdopt.setEnabled(false);
+
+        new Thread(() -> {
+            UserEntity user = userRepository.getUserByIdSync(userId);
+            runOnUiThread(() -> {
+                binding.fabAdopt.setEnabled(true);
+                if (user == null) return;
+                if (user.isProfileComplete()) {
+                    showAdoptionBottomSheet();
+                } else {
+                    showIncompleteProfileDialog(user);
+                }
+            });
+        }).start();
+    }
+
+    private void showAdoptionBottomSheet() {
+        new AdoptionBottomSheet(petId,
+            () -> {
+                Snackbar.make(binding.getRoot(), "Adoption request sent successfully!", Snackbar.LENGTH_SHORT).show();
+                finish();
+            },
+            () -> Snackbar.make(binding.getRoot(), "Adoption request canceled", Snackbar.LENGTH_SHORT).show()
+        ).show(getSupportFragmentManager(), "AdoptionBottomSheet");
+    }
+
+    private void showIncompleteProfileDialog(UserEntity user) {
+        java.util.List<String> missing = user.getMissingProfileFields();
+        StringBuilder sb = new StringBuilder("Complete the following:\n");
+        for (String field : missing) sb.append("\n  •  ").append(field);
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Incomplete Adopter Profile")
+            .setMessage(sb.toString())
+            .setPositiveButton("Complete Now", (d, w) ->
+                new EditProfileBottomSheet(() -> binding.fabAdopt.performClick())
+                    .show(getSupportFragmentManager(), "EditProfileBottomSheet"))
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     private void setupImagePager() {

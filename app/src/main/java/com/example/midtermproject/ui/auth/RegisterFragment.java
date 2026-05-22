@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -20,9 +19,6 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.FragmentRegisterBinding;
 import com.example.midtermproject.util.SessionManager;
-import com.example.midtermproject.data.database.AppDatabase;
-
-import java.util.concurrent.Executors;
 
 public class RegisterFragment extends Fragment {
 
@@ -78,7 +74,7 @@ public class RegisterFragment extends Fragment {
                     binding.tilUsername.setHelperText(null);
                 } else {
                     usernameCheckRunnable = () -> {
-                        AppDatabase.databaseExecutor.execute(() -> {
+                        new Thread(() -> {
                             boolean exists = userRepository.isUsernameExists(username);
                             android.app.Activity activity = getActivity();
                             if (activity != null) {
@@ -98,7 +94,7 @@ public class RegisterFragment extends Fragment {
                                     }
                                 });
                             }
-                        });
+                        }).start();
                     };
                     mainHandler.postDelayed(usernameCheckRunnable, 300);
                 }
@@ -218,7 +214,7 @@ public class RegisterFragment extends Fragment {
         binding.btnRegister.setText(getString(R.string.loading));
 
         // Attempt registration on background thread
-        AppDatabase.databaseExecutor.execute(() -> {
+        new Thread(() -> {
             long userId = userRepository.register(username, password, username, "");
 
             android.app.Activity activity = getActivity();
@@ -245,7 +241,7 @@ public class RegisterFragment extends Fragment {
                     }
                 });
             }
-        });
+        }).start();
     }
 
     @Override

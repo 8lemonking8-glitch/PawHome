@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,10 +13,7 @@ import com.example.midtermproject.R;
 import com.example.midtermproject.data.entity.UserEntity;
 import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.FragmentLoginBinding;
-import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.util.SessionManager;
-
-import java.util.concurrent.Executors;
 
 public class LoginFragment extends Fragment {
 
@@ -73,7 +68,7 @@ public class LoginFragment extends Fragment {
         binding.btnLogin.setText(getString(R.string.loading));
 
         // Attempt login on background thread
-        AppDatabase.databaseExecutor.execute(() -> {
+        new Thread(() -> {
             UserEntity user = userRepository.login(username, password);
 
             android.app.Activity activity = getActivity();
@@ -113,7 +108,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
             }
-        });
+        }).start();
     }
 
     @Override

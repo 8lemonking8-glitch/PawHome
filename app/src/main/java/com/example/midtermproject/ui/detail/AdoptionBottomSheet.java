@@ -108,7 +108,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         Bitmap signatureBitmap = binding.signatureView.getSignatureBitmap();
         String signaturePath = saveSignatureToFile(signatureBitmap, userId, timestamp);
 
-        AppDatabase.databaseExecutor.execute(() -> {
+        new Thread(() -> {
             long result = adoptionRepository.createRequest(userId, petId, signaturePath, timestamp);
 
             android.app.Activity activity = getActivity();
@@ -131,7 +131,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
                     }
                 });
             }
-        });
+        }).start();
     }
 
     private String saveSignatureToFile(Bitmap bitmap, long userId, long timestamp) {

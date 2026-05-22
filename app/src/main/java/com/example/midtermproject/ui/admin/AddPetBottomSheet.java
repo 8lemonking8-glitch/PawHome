@@ -32,9 +32,9 @@ import android.graphics.Bitmap;
 
 public class AddPetBottomSheet extends BottomSheetDialogFragment {
 
-    private BottomSheetAddPetBinding binding;
-    private PetRepository petRepository;
-    private String selectedImageUri = null;
+    protected BottomSheetAddPetBinding binding;
+    protected PetRepository petRepository;
+    protected String selectedImageUri = null;
 
     private final ActivityResultLauncher<CropImageContractOptions> cropLauncher =
         registerForActivityResult(new CropImageContract(), result -> {
@@ -149,49 +149,69 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
         binding.spinnerSize.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, sizes));
     }
 
-    private void savePet() {
-        String name = binding.etName.getText().toString().trim();
-        String breed = binding.etBreed.getText().toString().trim();
-        String ageStr = binding.etAge.getText().toString().trim();
-        String description = binding.etDescription.getText().toString().trim();
-        String type = binding.spinnerType.getText().toString();
-        String gender = binding.spinnerGender.getText().toString();
-        String size = binding.spinnerSize.getText().toString();
-
-        if (name.isEmpty() || breed.isEmpty() || ageStr.isEmpty() || type.isEmpty() || gender.isEmpty() || size.isEmpty()) {
+    protected boolean validateFields() {
+        if (binding.etName.getText().toString().trim().isEmpty()
+            || binding.etBreed.getText().toString().trim().isEmpty()
+            || binding.etAge.getText().toString().trim().isEmpty()
+            || binding.spinnerType.getText().toString().isEmpty()
+            || binding.spinnerGender.getText().toString().isEmpty()
+            || binding.spinnerSize.getText().toString().isEmpty()) {
             Snackbar.make(requireView(), "Please fill all fields", Snackbar.LENGTH_SHORT).show();
-            return;
+            return false;
         }
+        return true;
+    }
 
-        PetEntity pet = new PetEntity();
-        pet.setName(name);
-        pet.setBreed(breed);
-        pet.setAge(ageStr + " Years");
-        String dbType = "DOG";
-        if ("Cats".equals(type)) dbType = "CAT";
-        else if ("Birds".equals(type)) dbType = "BIRD";
+    protected String resolveDbType() {
+        String type = binding.spinnerType.getText().toString();
+        if ("Cats".equals(type)) return "CAT";
+        if ("Birds".equals(type)) return "BIRD";
+        return "DOG";
+    }
 
+    protected void applyPetFields(PetEntity pet, String dbType) {
+        pet.setName(binding.etName.getText().toString().trim());
+        pet.setBreed(binding.etBreed.getText().toString().trim());
+        pet.setAge(binding.etAge.getText().toString().trim() + " Years");
         pet.setType(dbType);
-        pet.setGender(gender);
-        pet.setSize(size);
-        pet.setDescription(description);
-        pet.setStatus("AVAILABLE");
-        int cardRes;
-        switch (dbType) {
-            case "CAT": cardRes = R.drawable.bg_carousel_cat; break;
-            case "BIRD": cardRes = R.drawable.bg_carousel_bird; break;
-            default: cardRes = R.drawable.bg_carousel_dog; break;
-        }
+        pet.setGender(binding.spinnerGender.getText().toString());
+        pet.setSize(binding.spinnerSize.getText().toString());
+        pet.setDescription(binding.etDescription.getText().toString().trim());
+
+        int cardRes = getCarouselCardRes(dbType);
         if (selectedImageUri != null) {
             pet.setImageResIds("[\"" + selectedImageUri + "\"," + cardRes + "," + cardRes + "]");
             pet.setImageResId(0);
         } else {
-            if ("DOG".equals(dbType)) pet.setImageResId(R.drawable.img_dog);
-            else if ("CAT".equals(dbType)) pet.setImageResId(R.drawable.img_cat);
-            else pet.setImageResId(R.drawable.img_bird);
+            pet.setImageResId(getDefaultImageRes(dbType));
             pet.setImageResIds("[" + pet.getImageResId() + "," + cardRes + "," + cardRes + "]");
         }
+    }
+
+    private int getDefaultImageRes(String dbType) {
+        switch (dbType) {
+            case "CAT": return R.drawable.img_cat;
+            case "BIRD": return R.drawable.img_bird;
+            default: return R.drawable.img_dog;
+        }
+    }
+
+    private int getCarouselCardRes(String dbType) {
+        switch (dbType) {
+            case "CAT": return R.drawable.bg_carousel_cat;
+            case "BIRD": return R.drawable.bg_carousel_bird;
+            default: return R.drawable.bg_carousel_dog;
+        }
+    }
+
+    protected void savePet() {
+        if (!validateFields()) return;
+
+        String dbType = resolveDbType();
+        PetEntity pet = new PetEntity();
+        pet.setStatus("AVAILABLE");
         pet.setCreatedAt(System.currentTimeMillis());
+        applyPetFields(pet, dbType);
 
         petRepository.insert(pet);
         Snackbar.make(requireView(), "Pet Added Successfully", Snackbar.LENGTH_SHORT).show();
