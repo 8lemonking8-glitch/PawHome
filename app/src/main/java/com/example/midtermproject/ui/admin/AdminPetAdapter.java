@@ -12,7 +12,16 @@ import java.util.List;
 
 public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHolder> {
 
+    public interface OnPetActionListener {
+        void onEditClick(PetEntity pet);
+    }
+
     private List<PetEntity> pets = new ArrayList<>();
+    private OnPetActionListener listener;
+
+    public void setOnPetActionListener(OnPetActionListener listener) {
+        this.listener = listener;
+    }
 
     public void setPets(List<PetEntity> pets) {
         this.pets = pets;
@@ -37,12 +46,19 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
         return pets.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemAdminPetCardBinding binding;
 
         public ViewHolder(ItemAdminPetCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onEditClick(pets.get(pos));
+                }
+            });
         }
 
         public void bind(PetEntity pet) {

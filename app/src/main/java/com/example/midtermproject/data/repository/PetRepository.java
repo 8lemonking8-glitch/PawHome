@@ -9,7 +9,8 @@ import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.data.entity.PetEntity;
 
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class PetRepository {
 
@@ -32,6 +33,30 @@ public class PetRepository {
 
     public LiveData<List<PetEntity>> getAvailablePetsByType(String type) {
         return petDao.getAvailablePetsByType(type);
+    }
+
+    public List<PetEntity> getAvailablePetsSync() {
+        try {
+            Future<List<PetEntity>> future = AppDatabase.databaseExecutor.submit(
+                () -> petDao.getAvailablePetsSync()
+            );
+            return future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<PetEntity> getAvailablePetsByTypeSync(String type) {
+        try {
+            Future<List<PetEntity>> future = AppDatabase.databaseExecutor.submit(
+                () -> petDao.getAvailablePetsByTypeSync(type)
+            );
+            return future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public LiveData<List<PetEntity>> getPetsByType(String type) {

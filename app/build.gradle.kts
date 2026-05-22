@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.circleimageview)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
+    implementation(libs.swiperefreshlayout)
 
     // Room
     implementation(libs.room.runtime)

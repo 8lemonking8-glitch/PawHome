@@ -1,10 +1,10 @@
 package com.example.midtermproject.ui.detail;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -17,19 +17,22 @@ import com.example.midtermproject.util.SessionManager;
 import com.example.midtermproject.data.database.AppDatabase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.util.concurrent.Executors;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class AdoptionBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetAdoptionBinding binding;
     private final long petId;
-    private final Runnable onSuccess;
+    private final Runnable onAdopted;
+    private final Runnable onDecline;
     private AdoptionRepository adoptionRepository;
     private SessionManager sessionManager;
 
-    public AdoptionBottomSheet(long petId, Runnable onSuccess) {
+    public AdoptionBottomSheet(long petId, Runnable onAdopted, Runnable onDecline) {
         this.petId = petId;
-        this.onSuccess = onSuccess;
+        this.onAdopted = onAdopted;
+        this.onDecline = onDecline;
     }
 
     @Nullable
@@ -46,8 +49,21 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         adoptionRepository = new AdoptionRepository(requireActivity().getApplication());
         sessionManager = new SessionManager(requireContext());
 
+        binding.btnAccept.setOnClickListener(v -> {
+            binding.layoutAgreementButtons.setVisibility(View.GONE);
+            binding.layoutSignature.setVisibility(View.VISIBLE);
+        });
+
+        binding.btnDecline.setOnClickListener(v -> {
+            Snackbar.make(requireView(), "Adoption declined", Snackbar.LENGTH_SHORT).show();
+            if (onDecline != null) {
+                onDecline.run();
+            }
+            dismiss();
+        });
+
         binding.btnClear.setOnClickListener(v -> binding.signatureView.clear());
-        
+
         binding.btnSubmit.setOnClickListener(v -> submitAdoption());
     }
 
@@ -61,21 +77,20 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
         binding.btnSubmit.setText(getString(R.string.loading));
 
         long userId = sessionManager.getUserId();
-        
-        // In a real app we would convert the signature bitmap to a Base64 string or file.
-        // For this midterm project, we just save a placeholder string indicating it was signed.
         long timestamp = System.currentTimeMillis();
-        String signaturePath = "signature_captured_timestamp_" + timestamp;
+
+        Bitmap signatureBitmap = binding.signatureView.getSignatureBitmap();
+        String signaturePath = saveSignatureToFile(signatureBitmap, userId, timestamp);
 
         AppDatabase.databaseExecutor.execute(() -> {
             long result = adoptionRepository.createRequest(userId, petId, signaturePath, timestamp);
-            
+
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     if (result > 0) {
                         Snackbar.make(requireView(), getString(R.string.adoption_submitted), Snackbar.LENGTH_LONG).show();
-                        if (onSuccess != null) {
-                            onSuccess.run();
+                        if (onAdopted != null) {
+                            onAdopted.run();
                         }
                         dismiss();
                     } else {
@@ -86,5 +101,20 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
                 });
             }
         });
+    }
+
+    private String saveSignatureToFile(Bitmap bitmap, long userId, long timestamp) {
+        try {
+            File dir = new File(requireContext().getFilesDir(), "signatures");
+            if (!dir.exists()) dir.mkdirs();
+            File file = new File(dir, "sig_" + userId + "_" + timestamp + ".png");
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "signature_captured_timestamp_" + timestamp;
+        }
     }
 }

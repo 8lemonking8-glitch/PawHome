@@ -30,6 +30,18 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            getWindow().setStatusBarContrastEnforced(false);
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
+        androidx.core.view.WindowInsetsControllerCompat insetsController = 
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (insetsController != null) {
+            insetsController.setAppearanceLightNavigationBars(true);
+            insetsController.setAppearanceLightStatusBars(false);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             if (binding.adminBottomNavCard != null) {
@@ -87,6 +99,10 @@ public class AdminMainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("activeTabId", activeTabId);
+    }
+
+    public void switchToTab(int itemId) {
+        selectTab(itemId);
     }
 
     private void selectTab(int itemId) {

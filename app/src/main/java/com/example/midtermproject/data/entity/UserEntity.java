@@ -16,6 +16,7 @@ public class UserEntity {
     private String email;
     private String phone;
     private int avatarResId;
+    private String avatarUri;
     private String role;        // USER, ADMIN
     private long createdAt;
 
@@ -43,6 +44,8 @@ public class UserEntity {
     public void setEmail(String email) { this.email = email; }
     public void setPhone(String phone) { this.phone = phone; }
     public void setAvatarResId(int avatarResId) { this.avatarResId = avatarResId; }
+    public String getAvatarUri() { return avatarUri; }
+    public void setAvatarUri(String avatarUri) { this.avatarUri = avatarUri; }
     public void setRole(String role) { this.role = role; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 

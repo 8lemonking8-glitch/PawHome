@@ -70,6 +70,12 @@ public class AdminPetsFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AdminPetAdapter();
+        adapter.setOnPetActionListener(pet -> {
+            EditPetBottomSheet bottomSheet = new EditPetBottomSheet(pet, () -> {
+                // Refresh is handled by LiveData
+            });
+            bottomSheet.show(getChildFragmentManager(), "EditPetBottomSheet");
+        });
         binding.rvPets.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvPets.setAdapter(adapter);
 

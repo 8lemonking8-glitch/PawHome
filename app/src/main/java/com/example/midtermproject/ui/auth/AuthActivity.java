@@ -24,15 +24,17 @@ public class AuthActivity extends AppCompatActivity {
 
     private ActivityAuthBinding binding;
     private SessionManager sessionManager;
+    
+    private int lastImeHeight = 0;
+    private final android.os.Handler insetHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable pendingImeRunnable = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize database with seed data
         DatabaseInitializer.initialize(this);
 
-        // Check if already logged in
         sessionManager = new SessionManager(this);
         if (sessionManager.isLoggedIn()) {
             navigateToMain();
@@ -44,12 +46,46 @@ public class AuthActivity extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(0, 0, 0, insets.bottom);
-
-            return WindowInsetsCompat.CONSUMED;
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+            
+            int newImeHeight = ime.bottom;
+            
+            if (newImeHeight > 0) {
+                // If there's a pending runnable to clear the padding, cancel it because the keyboard is staying/opening
+                if (pendingImeRunnable != null) {
+                    insetHandler.removeCallbacks(pendingImeRunnable);
+                    pendingImeRunnable = null;
+                }
+                
+                // Instantly apply the positive height
+                v.setPadding(0, 0, 0, newImeHeight);
+                lastImeHeight = newImeHeight;
+            } else {
+                // The keyboard is reporting 0 height (closed or switching to system secure keyboard).
+                // We debounce this drop to prevent the card from briefly dropping to the bottom and twitching.
+                if (lastImeHeight > 0) {
+                    if (pendingImeRunnable == null) {
+                        pendingImeRunnable = () -> {
+                            v.setPadding(0, 0, 0, 0);
+                            lastImeHeight = 0;
+                            pendingImeRunnable = null;
+                        };
+                        // 150ms is the sweet spot to completely cover the standard keyboard -> secure keyboard switch
+                        insetHandler.postDelayed(pendingImeRunnable, 150);
+                    }
+                } else {
+                    // Both previous and new heights are 0, make sure padding is 0 without delay
+                    v.setPadding(0, 0, 0, 0);
+                }
+            }
+            
+            // Keep the card's bottom padding constant at systemBars.bottom to ensure a stable layout
+            // height inside the ScrollView, preventing height recalculation jitter/twitching during focus switch.
+            binding.cardForm.setPadding(0, 0, 0, systemBars.bottom);
+            
+            return windowInsets;
         });
-
 
         setupViewPager();
         playEntryAnimations();
@@ -65,14 +101,12 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void playEntryAnimations() {
-        // Fade in background slightly
         binding.ivLoginBg.setAlpha(0f);
         binding.ivLoginBg.animate()
                 .alpha(1f)
                 .setDuration(800)
                 .start();
 
-        // Slide up card
         binding.cardForm.setAlpha(0f);
         binding.cardForm.setTranslationY(100);
         binding.cardForm.animate()
@@ -98,10 +132,8 @@ public class AuthActivity extends AppCompatActivity {
     public void navigateToMain() {
         Intent intent;
         if (sessionManager.isAdmin()) {
-            // Admin user
             intent = new Intent(this, com.example.midtermproject.ui.admin.AdminMainActivity.class);
         } else {
-            // Go to the newly created UserMainActivity
             intent = new Intent(this, com.example.midtermproject.ui.user.UserMainActivity.class);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

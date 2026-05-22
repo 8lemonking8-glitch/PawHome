@@ -116,4 +116,12 @@
     <style name="TextAppearance.PawHome.TabText" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:textSize">14sp</item>
     </style>
+
+    <!-- ==================== Custom Shapes ==================== -->
+    <style name="ShapeAppearance.PawHome.Card.TopRounded" parent="">
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeTopRight">32dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
 </resources>

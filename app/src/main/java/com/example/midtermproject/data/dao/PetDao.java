@@ -35,8 +35,14 @@ public interface PetDao {
     @Query("SELECT * FROM pets WHERE status = 'AVAILABLE' ORDER BY createdAt DESC")
     LiveData<List<PetEntity>> getAvailablePets();
 
+    @Query("SELECT * FROM pets WHERE status = 'AVAILABLE' ORDER BY createdAt DESC")
+    List<PetEntity> getAvailablePetsSync();
+
     @Query("SELECT * FROM pets WHERE type = :type AND status = 'AVAILABLE' ORDER BY createdAt DESC")
     LiveData<List<PetEntity>> getAvailablePetsByType(String type);
+
+    @Query("SELECT * FROM pets WHERE type = :type AND status = 'AVAILABLE' ORDER BY createdAt DESC")
+    List<PetEntity> getAvailablePetsByTypeSync(String type);
 
     @Query("SELECT * FROM pets WHERE type = :type ORDER BY createdAt DESC")
     LiveData<List<PetEntity>> getPetsByType(String type);

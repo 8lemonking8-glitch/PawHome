@@ -34,34 +34,8 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     }
 
     public void setPets(List<PetEntity> newPets) {
-        androidx.recyclerview.widget.DiffUtil.DiffResult diffResult = androidx.recyclerview.widget.DiffUtil.calculateDiff(new androidx.recyclerview.widget.DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return pets.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return newPets.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return pets.get(oldItemPosition).getId() == newPets.get(newItemPosition).getId();
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                PetEntity oldPet = pets.get(oldItemPosition);
-                PetEntity newPet = newPets.get(newItemPosition);
-                return oldPet.getName().equals(newPet.getName()) && 
-                       oldPet.getStatus().equals(newPet.getStatus()) &&
-                       oldPet.getAge().equals(newPet.getAge());
-            }
-        });
-
         this.pets = newPets;
-        diffResult.dispatchUpdatesTo(this);
+        notifyDataSetChanged();
     }
 
     @NonNull

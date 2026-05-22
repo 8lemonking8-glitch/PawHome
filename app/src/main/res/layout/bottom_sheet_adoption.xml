@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/bg_rounded_surface"
     android:padding="24dp">
-    
+
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
@@ -38,49 +38,84 @@
             android:textSize="14sp" />
     </ScrollView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_here"
-        android:textColor="@color/text_primary"
-        android:fontFamily="@font/poppins"
-        android:layout_marginBottom="8dp" />
-
-    <FrameLayout
+    <!-- Step 1: Accept / Decline Buttons -->
+    <LinearLayout
+        android:id="@+id/layoutAgreementButtons"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@drawable/bg_signature_pad"
-        android:layout_marginBottom="8dp">
-        
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_draw"
-            app:tint="@color/divider" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-        <com.example.midtermproject.ui.detail.SignatureView
-            android:id="@+id/signatureView"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDecline"
+            style="@style/Widget.PawHome.Button.Secondary"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/decline"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAccept"
+            style="@style/Widget.PawHome.Button.Primary"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/accept"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Step 2: Signature Area (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/layoutSignature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_here"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/poppins"
+            android:layout_marginBottom="8dp" />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-            
-    </FrameLayout>
+            android:layout_height="160dp"
+            android:background="@drawable/bg_signature_pad"
+            android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/btnClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/clear_signature"
-        android:textColor="@color/primary"
-        android:textSize="14sp"
-        android:layout_marginBottom="24dp" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_draw"
+                app:tint="@color/divider" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSubmit"
-        style="@style/Widget.PawHome.Button.Primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm" />
+            <com.example.midtermproject.ui.detail.SignatureView
+                android:id="@+id/signatureView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/btnClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/clear_signature"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            style="@style/Widget.PawHome.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm" />
+    </LinearLayout>
 
 </LinearLayout>
