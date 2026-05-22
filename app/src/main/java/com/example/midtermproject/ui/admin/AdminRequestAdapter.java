@@ -70,6 +70,22 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             super(binding.getRoot());
             this.binding = binding;
 
+            // Card root → applicant profile
+            binding.getRoot().setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    showApplicantProfile(v.getContext(), requests.get(pos));
+                }
+            });
+
+            // Pet row → pet detail
+            binding.layoutPetRow.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    showPetDetail(v.getContext(), requests.get(pos));
+                }
+            });
+
             binding.btnApprove.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
@@ -81,13 +97,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     onReject.onAction(requests.get(pos).request);
-                }
-            });
-
-            binding.btnViewProfile.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION) {
-                    showApplicantProfile(v.getContext(), requests.get(pos));
                 }
             });
         }
@@ -107,12 +116,10 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
             int color;
             if ("PENDING".equals(request.getStatus())) {
-                binding.btnApprove.setVisibility(View.VISIBLE);
-                binding.btnReject.setVisibility(View.VISIBLE);
+                binding.layoutActions.setVisibility(View.VISIBLE);
                 color = itemView.getContext().getColor(R.color.status_pending);
             } else {
-                binding.btnApprove.setVisibility(View.GONE);
-                binding.btnReject.setVisibility(View.GONE);
+                binding.layoutActions.setVisibility(View.GONE);
                 if ("APPROVED".equals(request.getStatus())) {
                     color = itemView.getContext().getColor(R.color.status_available);
                 } else {
@@ -120,9 +127,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
                 }
             }
             binding.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
-
-            // View Profile button is always visible
-            binding.btnViewProfile.setVisibility(View.VISIBLE);
         }
 
         private void showApplicantProfile(Context context, AdoptionRequestWithDetails details) {
@@ -203,6 +207,71 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
 
             new MaterialAlertDialogBuilder(context)
                     .setTitle("Applicant Profile")
+                    .setView(dialogView)
+                    .setPositiveButton("Close", null)
+                    .show();
+        }
+
+        private void showPetDetail(Context context, AdoptionRequestWithDetails details) {
+            PetEntity pet = details.pet;
+
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pet_detail, null);
+
+            // Pet image — use first image from imageResIds, fallback to imageResId
+            ImageView ivImage = dialogView.findViewById(R.id.ivDialogPetImage);
+            boolean imageSet = false;
+            String imageResIds = pet.getImageResIds();
+            if (imageResIds != null && !imageResIds.isEmpty()) {
+                try {
+                    org.json.JSONArray arr = new org.json.JSONArray(imageResIds);
+                    if (arr.length() > 0) {
+                        ivImage.setImageResource(arr.getInt(0));
+                        imageSet = true;
+                    }
+                } catch (Exception ignored) {}
+            }
+            if (!imageSet && pet.getImageResId() != 0) {
+                ivImage.setImageResource(pet.getImageResId());
+                imageSet = true;
+            }
+            if (imageSet) {
+                ivImage.setPadding(0, 0, 0, 0);
+                androidx.core.widget.ImageViewCompat.setImageTintList(ivImage, null);
+            }
+
+            // Name + status
+            TextView tvName = dialogView.findViewById(R.id.tvDialogPetName);
+            tvName.setText(pet.getName());
+
+            TextView tvStatus = dialogView.findViewById(R.id.tvDialogPetStatus);
+            tvStatus.setText(pet.getStatus());
+            tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
+            int statusColor;
+            if ("AVAILABLE".equals(pet.getStatus())) {
+                statusColor = context.getColor(R.color.status_available);
+            } else if ("ADOPTED".equals(pet.getStatus())) {
+                statusColor = context.getColor(R.color.status_available);
+            } else {
+                statusColor = context.getColor(R.color.status_rejected);
+            }
+            tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(statusColor));
+
+            // Basic info
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetBreed)).setText(
+                pet.getBreed() != null && !pet.getBreed().isEmpty() ? pet.getBreed() : "N/A");
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetAge)).setText(
+                pet.getAge() != null && !pet.getAge().isEmpty() ? pet.getAge() : "N/A");
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetGender)).setText(
+                pet.getGender() != null && !pet.getGender().isEmpty() ? pet.getGender() : "N/A");
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetSize)).setText(
+                pet.getSize() != null && !pet.getSize().isEmpty() ? pet.getSize() : "N/A");
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetColor)).setText(
+                pet.getColor() != null && !pet.getColor().isEmpty() ? pet.getColor() : "N/A");
+            ((TextView) dialogView.findViewById(R.id.tvDialogPetDescription)).setText(
+                pet.getDescription() != null && !pet.getDescription().isEmpty() ? pet.getDescription() : "No description");
+
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle("Pet Detail")
                     .setView(dialogView)
                     .setPositiveButton("Close", null)
                     .show();
