@@ -34,6 +34,13 @@
 
     <style name="Theme.MidTermProject" parent="Base.Theme.MidTermProject" />
 
+    <style name="Theme.MidTermProject.TranslucentDetail" parent="Theme.MidTermProject">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <!-- Crop activity needs an action bar for the done/back buttons -->
     <style name="Theme.CropImage" parent="Base.Theme.MidTermProject">
         <item name="windowActionBar">true</item>

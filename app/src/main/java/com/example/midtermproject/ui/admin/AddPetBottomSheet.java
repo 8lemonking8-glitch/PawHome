@@ -133,7 +133,9 @@ public class AddPetBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        View parent = (View) getView().getParent();
+        View view = getView();
+        if (view == null) return;
+        View parent = (View) view.getParent();
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }

@@ -20,7 +20,12 @@ public class PetImageUtils {
             try {
                 JSONArray array = new JSONArray(pet.getImageResIds());
                 if (array.length() > 0) {
-                    view.setImageURI(Uri.parse(array.getString(0)));
+                    Object first = array.get(0);
+                    if (first instanceof Integer) {
+                        view.setImageResource((Integer) first);
+                    } else {
+                        view.setImageURI(Uri.parse(first.toString()));
+                    }
                     view.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     return true;
                 }

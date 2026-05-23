@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
 import com.example.midtermproject.R;
@@ -92,10 +91,16 @@ public class FavoritesFragment extends Fragment {
         adapter = new PetAdapter((pet, sharedImageView) -> {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
-            
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    requireActivity(), sharedImageView, "pet_image_" + pet.getId());
-                    
+
+            // Use native Shared Element Transition
+            androidx.core.app.ActivityOptionsCompat options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    requireActivity(), sharedImageView, androidx.core.view.ViewCompat.getTransitionName(sharedImageView));
+
+            // Pass image details for immediate loading to prevent blank screens/flickers
+            intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_ID, pet.getImageResId());
+            intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_IDS, pet.getImageResIds());
+            intent.putExtra(PetDetailActivity.EXTRA_PET_TYPE, pet.getType());
+
             startActivity(intent, options.toBundle());
         });
         

@@ -8,11 +8,7 @@ import com.example.midtermproject.data.dao.PetDao;
 import com.example.midtermproject.data.database.AppDatabase;
 import com.example.midtermproject.data.entity.PetEntity;
 
-import android.util.Log;
-
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class PetRepository {
 
@@ -38,33 +34,11 @@ public class PetRepository {
     }
 
     public List<PetEntity> getAvailablePetsSync() {
-        try {
-            Future<List<PetEntity>> future = AppDatabase.databaseExecutor.submit(
-                () -> petDao.getAvailablePetsSync()
-            );
-            return future.get();
-        } catch (ExecutionException e) {
-            Log.e("PetRepository", "Query failed", e);
-            return null;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return null;
-        }
+        return petDao.getAvailablePetsSync();
     }
 
     public List<PetEntity> getAvailablePetsByTypeSync(String type) {
-        try {
-            Future<List<PetEntity>> future = AppDatabase.databaseExecutor.submit(
-                () -> petDao.getAvailablePetsByTypeSync(type)
-            );
-            return future.get();
-        } catch (ExecutionException e) {
-            Log.e("PetRepository", "Query failed", e);
-            return null;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return null;
-        }
+        return petDao.getAvailablePetsByTypeSync(type);
     }
 
     public LiveData<List<PetEntity>> getPetsByType(String type) {

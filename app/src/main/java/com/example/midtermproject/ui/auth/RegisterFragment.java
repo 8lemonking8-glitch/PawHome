@@ -74,7 +74,7 @@ public class RegisterFragment extends Fragment {
                     binding.tilUsername.setHelperText(null);
                 } else {
                     usernameCheckRunnable = () -> {
-                        new Thread(() -> {
+                        com.example.midtermproject.data.database.AppDatabase.databaseExecutor.execute(() -> {
                             boolean exists = userRepository.isUsernameExists(username);
                             android.app.Activity activity = getActivity();
                             if (activity != null) {
@@ -94,7 +94,7 @@ public class RegisterFragment extends Fragment {
                                     }
                                 });
                             }
-                        }).start();
+                        });
                     };
                     mainHandler.postDelayed(usernameCheckRunnable, 300);
                 }
@@ -116,11 +116,13 @@ public class RegisterFragment extends Fragment {
                     binding.tilPassword.setError(null);
                 } else if (password.length() < 6) {
                     binding.tilPassword.setHelperText("Password must be at least 6 characters ❌");
-                    binding.tilPassword.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.error)));
+                    binding.tilPassword.setHelperTextColor(ColorStateList.valueOf(
+                        androidx.core.content.ContextCompat.getColor(requireContext(), R.color.error)));
                     binding.tilPassword.setError(null);
                 } else {
                     binding.tilPassword.setHelperText("Password meets length requirements ✔");
-                    binding.tilPassword.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.success)));
+                    binding.tilPassword.setHelperTextColor(ColorStateList.valueOf(
+                        androidx.core.content.ContextCompat.getColor(requireContext(), R.color.success)));
                     binding.tilPassword.setError(null);
                 }
 
@@ -159,7 +161,8 @@ public class RegisterFragment extends Fragment {
         } else {
             binding.tilConfirmPassword.setError(null);
             binding.tilConfirmPassword.setHelperText("Passwords match ✔");
-            binding.tilConfirmPassword.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.success)));
+            binding.tilConfirmPassword.setHelperTextColor(ColorStateList.valueOf(
+                    androidx.core.content.ContextCompat.getColor(requireContext(), R.color.success)));
         }
     }
 
@@ -213,8 +216,7 @@ public class RegisterFragment extends Fragment {
         binding.btnRegister.setEnabled(false);
         binding.btnRegister.setText(getString(R.string.loading));
 
-        // Attempt registration on background thread
-        new Thread(() -> {
+        com.example.midtermproject.data.database.AppDatabase.databaseExecutor.execute(() -> {
             long userId = userRepository.register(username, password, username, "");
 
             android.app.Activity activity = getActivity();
@@ -241,7 +243,7 @@ public class RegisterFragment extends Fragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     @Override

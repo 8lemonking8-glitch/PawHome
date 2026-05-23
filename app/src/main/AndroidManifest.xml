@@ -28,9 +28,7 @@
             android:name=".ui.admin.AdminMainActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".ui.detail.PetDetailActivity" android:theme="@style/Theme.MidTermProject" />
-
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.detail.PetDetailActivity" />
 
         <activity
             android:name="com.canhub.cropper.CropImageActivity"

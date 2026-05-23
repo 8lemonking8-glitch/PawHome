@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.core.app.ActivityOptionsCompat;
 import android.content.Intent;
 import com.example.midtermproject.R;
 import com.example.midtermproject.data.database.AppDatabase;
@@ -65,16 +64,6 @@ public class HomeFragment extends Fragment {
             binding.headerContainer.getPaddingBottom()
         );
 
-        // Chips row: when collapsed to top, stay below status bar
-        int chipsBasePadding = binding.chipsScrollView.getPaddingTop();
-        int chipsDefaultTop = chipsBasePadding + (statusBarHeight > 0 ? statusBarHeight : 0);
-        binding.chipsScrollView.setPadding(
-            binding.chipsScrollView.getPaddingLeft(),
-            chipsDefaultTop,
-            binding.chipsScrollView.getPaddingRight(),
-            binding.chipsScrollView.getPaddingBottom()
-        );
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             int topInset = insets.top;
@@ -84,12 +73,6 @@ public class HomeFragment extends Fragment {
                     topInset + extraPadding,
                     binding.headerContainer.getPaddingRight(),
                     binding.headerContainer.getPaddingBottom()
-                );
-                binding.chipsScrollView.setPadding(
-                    binding.chipsScrollView.getPaddingLeft(),
-                    chipsBasePadding + topInset,
-                    binding.chipsScrollView.getPaddingRight(),
-                    binding.chipsScrollView.getPaddingBottom()
                 );
             }
             return windowInsets;
@@ -113,9 +96,14 @@ public class HomeFragment extends Fragment {
         adapter = new PetAdapter((pet, sharedImageView) -> {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
+            // Use native Shared Element Transition
+            androidx.core.app.ActivityOptionsCompat options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    requireActivity(), sharedImageView, androidx.core.view.ViewCompat.getTransitionName(sharedImageView));
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    requireActivity(), sharedImageView, "pet_image_" + pet.getId());
+            // Pass image details for immediate loading to prevent blank screens/flickers
+            intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_ID, pet.getImageResId());
+            intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_IDS, pet.getImageResIds());
+            intent.putExtra(PetDetailActivity.EXTRA_PET_TYPE, pet.getType());
 
             startActivity(intent, options.toBundle());
         });

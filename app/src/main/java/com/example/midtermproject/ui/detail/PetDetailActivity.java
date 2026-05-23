@@ -1,18 +1,19 @@
 package com.example.midtermproject.ui.detail;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewOutlineProvider;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.graphics.Insets;
 
-import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,13 +25,17 @@ import com.example.midtermproject.data.repository.PetRepository;
 import com.example.midtermproject.data.repository.UserRepository;
 import com.example.midtermproject.databinding.ActivityPetDetailBinding;
 import com.example.midtermproject.util.FavoriteManager;
+import com.example.midtermproject.util.PetImageUtils;
 import com.example.midtermproject.util.SessionManager;
 import com.example.midtermproject.ui.profile.EditProfileBottomSheet;
-import com.example.midtermproject.data.database.AppDatabase;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class PetDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_PET_ID = "extra_pet_id";
+    public static final String EXTRA_PET_IMAGE_RES_ID = "extra_pet_image_res_id";
+    public static final String EXTRA_PET_IMAGE_RES_IDS = "extra_pet_image_res_ids";
+    public static final String EXTRA_PET_TYPE = "extra_pet_type";
 
     private ActivityPetDetailBinding binding;
     private PetRepository petRepository;
@@ -39,18 +44,13 @@ public class PetDetailActivity extends AppCompatActivity {
     private long petId;
     private PetEntity currentPet;
 
+    private int petImageResId;
+    private String petImageResIds;
+    private String petType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Smooth shared-element transition with corner-radius interpolation
-        com.google.android.material.transition.platform.MaterialContainerTransform transform =
-            new com.google.android.material.transition.platform.MaterialContainerTransform();
-        transform.setDuration(350);
-        transform.setScrimColor(android.graphics.Color.TRANSPARENT);
-        transform.setAllContainerColors(getColor(com.google.android.material.R.attr.colorSurface));
-        getWindow().setSharedElementEnterTransition(transform);
-        getWindow().setSharedElementReturnTransition(transform);
 
         binding = ActivityPetDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -70,18 +70,25 @@ public class PetDetailActivity extends AppCompatActivity {
             return WindowInsetsCompat.CONSUMED;
         });
 
-
         petId = getIntent().getLongExtra(EXTRA_PET_ID, -1);
         if (petId == -1) {
             finish();
             return;
         }
 
+        petImageResId = getIntent().getIntExtra(EXTRA_PET_IMAGE_RES_ID, 0);
+        petImageResIds = getIntent().getStringExtra(EXTRA_PET_IMAGE_RES_IDS);
+        petType = getIntent().getStringExtra(EXTRA_PET_TYPE);
+
         petRepository = new PetRepository(getApplication());
         favoriteManager = new FavoriteManager(this);
 
         setupToolbar();
         setupImagePager();
+
+        // Set transition name for native shared element transition
+        ViewCompat.setTransitionName(binding.vpPetImages, "pet_image_" + petId);
+
         loadPetDetails();
 
         binding.fabAdopt.setOnClickListener(v -> handleAdoptClick());
@@ -91,9 +98,9 @@ public class PetDetailActivity extends AppCompatActivity {
             updateFavoriteIcon();
             binding.btnFavorite.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.scale_bounce));
         });
-
-        postponeEnterTransition();
     }
+
+    // ==================== Adoption Flow ====================
 
     private void handleAdoptClick() {
         if (currentPet == null || !"AVAILABLE".equals(currentPet.getStatus())) {
@@ -106,7 +113,7 @@ public class PetDetailActivity extends AppCompatActivity {
         UserRepository userRepository = new UserRepository(getApplication());
         binding.fabAdopt.setEnabled(false);
 
-        new Thread(() -> {
+        com.example.midtermproject.data.database.AppDatabase.databaseExecutor.execute(() -> {
             UserEntity user = userRepository.getUserByIdSync(userId);
             runOnUiThread(() -> {
                 binding.fabAdopt.setEnabled(true);
@@ -117,7 +124,7 @@ public class PetDetailActivity extends AppCompatActivity {
                     showIncompleteProfileDialog(user);
                 }
             });
-        }).start();
+        });
     }
 
     private void showAdoptionBottomSheet() {
@@ -145,9 +152,15 @@ public class PetDetailActivity extends AppCompatActivity {
             .show();
     }
 
+    // ==================== Setup ====================
+
     private void setupImagePager() {
         imagePagerAdapter = new ImagePagerAdapter();
         binding.vpPetImages.setAdapter(imagePagerAdapter);
+
+        // Pre-populate images and dots from intent immediately before DB loads
+        imagePagerAdapter.setImages(petImageResId, petImageResIds);
+        updateDots(0);
 
         binding.vpPetImages.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
             @Override
@@ -167,10 +180,10 @@ public class PetDetailActivity extends AppCompatActivity {
         binding.dotsIndicator.setVisibility(View.VISIBLE);
 
         float density = getResources().getDisplayMetrics().density;
-        int inactiveSize = (int) (6 * density);
-        int activeWidth = (int) (16 * density);
-        int activeHeight = (int) (6 * density);
-        int dotMargin = (int) (4 * density);
+        int inactiveSize = (int) (8 * density);
+        int activeWidth = (int) (24 * density);
+        int activeHeight = (int) (8 * density);
+        int dotMargin = (int) (6 * density);
 
         for (int i = 0; i < count; i++) {
             View dot = new View(this);
@@ -184,7 +197,7 @@ public class PetDetailActivity extends AppCompatActivity {
                 params.setMargins(dotMargin, 0, dotMargin, 0);
                 dot.setLayoutParams(params);
                 dot.setBackgroundResource(R.drawable.bg_dot);
-                dot.setAlpha(0.4f);
+                dot.setAlpha(0.6f);
             }
             binding.dotsIndicator.addView(dot);
         }
@@ -221,15 +234,6 @@ public class PetDetailActivity extends AppCompatActivity {
                 imagePagerAdapter.setPet(pet);
                 updateDots(0);
 
-                // Set transition name on the first image view
-                binding.vpPetImages.post(() -> {
-                    RecyclerView rv = (RecyclerView) binding.vpPetImages.getChildAt(0);
-                    if (rv != null && rv.getChildAt(0) != null) {
-                        rv.getChildAt(0).setTransitionName("pet_image_" + petId);
-                        startPostponedEnterTransition();
-                    }
-                });
-
                 if (!"AVAILABLE".equals(pet.getStatus())) {
                     binding.fabAdopt.setEnabled(false);
                     binding.fabAdopt.setText(pet.getStatus());
@@ -252,7 +256,7 @@ public class PetDetailActivity extends AppCompatActivity {
         if (drawable != null) {
             android.graphics.drawable.Drawable wrappedDrawable = androidx.core.graphics.drawable.DrawableCompat.wrap(drawable).mutate();
             float density = getResources().getDisplayMetrics().density;
-            int size = (int) (14 * density); // 14dp size, perfect fit for 12sp Poppins text
+            int size = (int) (14 * density);
             wrappedDrawable.setBounds(0, 0, size, size);
             androidx.core.graphics.drawable.DrawableCompat.setTint(wrappedDrawable, getColor(R.color.primary));
             textView.setCompoundDrawablesRelative(wrappedDrawable, null, null, null);

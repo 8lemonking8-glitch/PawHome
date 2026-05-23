@@ -67,8 +67,7 @@ public class LoginFragment extends Fragment {
         binding.btnLogin.setEnabled(false);
         binding.btnLogin.setText(getString(R.string.loading));
 
-        // Attempt login on background thread
-        new Thread(() -> {
+        com.example.midtermproject.data.database.AppDatabase.databaseExecutor.execute(() -> {
             UserEntity user = userRepository.login(username, password);
 
             android.app.Activity activity = getActivity();
@@ -108,7 +107,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     @Override

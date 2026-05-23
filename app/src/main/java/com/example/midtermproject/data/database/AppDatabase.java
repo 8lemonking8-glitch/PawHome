@@ -37,6 +37,19 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE users ADD COLUMN gender TEXT");
+            database.execSQL("ALTER TABLE users ADD COLUMN age INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE users ADD COLUMN address TEXT");
+            database.execSQL("ALTER TABLE users ADD COLUMN housingCondition TEXT");
+            database.execSQL("ALTER TABLE users ADD COLUMN monthlyIncome TEXT");
+            database.execSQL("ALTER TABLE users ADD COLUMN petExperience TEXT");
+            database.execSQL("ALTER TABLE adoption_requests ADD COLUMN signatureTimestamp INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
     private static volatile AppDatabase INSTANCE;
     
     private static final int NUMBER_OF_THREADS = 4;
@@ -56,7 +69,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class,
                             "pawhome_database"
                         )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .fallbackToDestructiveMigration()
                         .build();
                 }

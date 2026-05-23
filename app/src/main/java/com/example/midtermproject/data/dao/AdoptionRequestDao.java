@@ -67,4 +67,7 @@ public interface AdoptionRequestDao {
 
     @Query("UPDATE adoption_requests SET status = :status, reviewedAt = :reviewedAt WHERE id = :requestId")
     void updateRequestStatus(long requestId, String status, long reviewedAt);
+
+    @Query("UPDATE adoption_requests SET status = 'REJECTED', reviewedAt = :reviewedAt WHERE petId = :petId AND status = 'PENDING'")
+    void rejectOtherPendingRequests(long petId, long reviewedAt);
 }

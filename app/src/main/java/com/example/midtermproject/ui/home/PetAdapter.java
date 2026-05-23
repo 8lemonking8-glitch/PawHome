@@ -11,14 +11,11 @@ import com.example.midtermproject.databinding.ItemPetCardBinding;
 import com.example.midtermproject.util.FavoriteManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
 
     private List<PetEntity> pets = new ArrayList<>();
     private final OnPetClickListener listener;
-    private final Random random = new Random();
-    private final List<Integer> heightList = new ArrayList<>();
     private FavoriteManager favoriteManager;
 
     public interface OnPetClickListener {

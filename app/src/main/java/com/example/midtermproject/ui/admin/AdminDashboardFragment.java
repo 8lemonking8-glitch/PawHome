@@ -124,7 +124,7 @@ public class AdminDashboardFragment extends Fragment {
             binding.tvNoActivities.setVisibility(View.GONE);
 
             int shown = 0;
-            for (int i = requests.size() - 1; i >= 0 && shown < 5; i--) {
+            for (int i = 0; i < requests.size() && shown < 5; i++) {
                 AdoptionRequestWithDetails req = requests.get(i);
                 View itemView = createActivityItem(req);
                 if (itemView != null) {
@@ -157,7 +157,7 @@ public class AdminDashboardFragment extends Fragment {
                 (int) (40 * density), (int) (40 * density));
         avatar.setLayoutParams(avatarParams);
         avatar.setBorderWidth((int) (1 * density));
-        avatar.setBorderColor(getResources().getColor(R.color.divider));
+        avatar.setBorderColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.divider));
         switch (petType) {
             case "DOG": avatar.setImageResource(R.drawable.img_dog); break;
             case "CAT": avatar.setImageResource(R.drawable.img_cat); break;
@@ -174,14 +174,14 @@ public class AdminDashboardFragment extends Fragment {
 
         TextView tvTitle = new TextView(requireContext());
         tvTitle.setText(petName + " (" + petBreed + ")");
-        tvTitle.setTextColor(getResources().getColor(R.color.text_primary));
+        tvTitle.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_primary));
         tvTitle.setTextSize(14);
         tvTitle.setTypeface(tvTitle.getTypeface(), android.graphics.Typeface.BOLD);
         textCol.addView(tvTitle);
 
         TextView tvSubtitle = new TextView(requireContext());
         tvSubtitle.setText("Applied by " + username);
-        tvSubtitle.setTextColor(getResources().getColor(R.color.text_secondary));
+        tvSubtitle.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary));
         tvSubtitle.setTextSize(11);
         textCol.addView(tvSubtitle);
 

@@ -33,6 +33,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
+                <!-- Gradient Overlay for better readability -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bg_gradient_bottom" />
+
                 <!-- Dot Indicators -->
                 <LinearLayout
                     android:id="@+id/dotsIndicator"
@@ -48,14 +55,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp" />
             </FrameLayout>
-                
-            <!-- Gradient Overlay for better text readability -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/bg_gradient_bottom"
-                app:layout_collapseMode="parallax" />
+
                 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -73,6 +73,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         
         <LinearLayout
+            android:id="@+id/detailContentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

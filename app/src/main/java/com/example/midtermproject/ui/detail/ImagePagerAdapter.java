@@ -23,10 +23,14 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
     private final List<Object> images = new ArrayList<>();
 
     public void setPet(PetEntity pet) {
+        setImages(pet.getImageResId(), pet.getImageResIds());
+    }
+
+    public void setImages(int fallbackResId, String resIdsJson) {
         images.clear();
-        if (pet.getImageResIds() != null && pet.getImageResIds().length() > 2) {
+        if (resIdsJson != null && resIdsJson.length() > 2) {
             try {
-                JSONArray array = new JSONArray(pet.getImageResIds());
+                JSONArray array = new JSONArray(resIdsJson);
                 for (int i = 0; i < array.length(); i++) {
                     Object val = array.get(i);
                     if (val instanceof String) {
@@ -39,14 +43,21 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
                 Log.w("ImagePagerAdapter", "Failed to parse image list", e);
             }
         }
-        if (images.isEmpty() && pet.getImageResId() != 0) {
-            images.add(pet.getImageResId());
+        if (images.isEmpty() && fallbackResId != 0) {
+            images.add(fallbackResId);
         }
         notifyDataSetChanged();
     }
 
     public int getRealCount() {
         return images.size();
+    }
+
+    public Object getImageAt(int position) {
+        if (position >= 0 && position < images.size()) {
+            return images.get(position);
+        }
+        return null;
     }
 
     @NonNull

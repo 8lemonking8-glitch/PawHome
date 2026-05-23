@@ -17,8 +17,6 @@ import com.example.midtermproject.util.SessionManager;
 import com.example.midtermproject.data.database.AppDatabase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.util.concurrent.Executors;
-
 public class EditProfileBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetEditProfileBinding binding;
@@ -183,7 +181,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                     if (getView() != null) {
                         Snackbar.make(getView(), "Profile updated", Snackbar.LENGTH_SHORT).show();
                     }
-                    sessionManager.createSession(currentUser.getId(), currentUser.getUsername(), currentUser.getRole(), currentUser.getNickname());
+                    sessionManager.updateNickname(currentUser.getNickname());
                     if (onProfileUpdated != null) {
                         onProfileUpdated.run();
                     }
