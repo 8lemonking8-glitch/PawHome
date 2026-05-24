@@ -82,6 +82,11 @@
     <string name="status_pending">Pending</string>
     <string name="status_approved">Approved</string>
     <string name="status_rejected">Rejected</string>
+    <string name="status_archived">Archived</string>
+    <string name="archive_pet">Archive Pet</string>
+    <string name="restore_pet">Restore Pet</string>
+    <string name="archive_confirm">Archive %s? This pet will be hidden from listings.</string>
+    <string name="restore_confirm">Restore %s to available?</string>
 
     <!-- Empty States -->
     <string name="no_pets">No pets found</string>

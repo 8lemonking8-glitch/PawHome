@@ -69,11 +69,14 @@ public class AdminPetAdapter extends RecyclerView.Adapter<AdminPetAdapter.ViewHo
             binding.tvStatus.setBackgroundResource(R.drawable.bg_status_badge);
             int color;
             switch (pet.getStatus()) {
-                case "AVAILABLE":
+                case PetEntity.STATUS_AVAILABLE:
                     color = itemView.getContext().getColor(R.color.status_available);
                     break;
-                case "ADOPTED":
+                case PetEntity.STATUS_ADOPTED:
                     color = itemView.getContext().getColor(R.color.status_adopted);
+                    break;
+                case PetEntity.STATUS_ARCHIVED:
+                    color = itemView.getContext().getColor(R.color.status_archived);
                     break;
                 default:
                     color = itemView.getContext().getColor(R.color.status_rejected);

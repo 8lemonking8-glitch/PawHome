@@ -56,7 +56,7 @@ public interface PetDao {
     @Query("SELECT * FROM pets WHERE status = :status ORDER BY createdAt DESC")
     LiveData<List<PetEntity>> getPetsByStatus(String status);
 
-    @Query("SELECT * FROM pets WHERE name LIKE '%' || :query || '%' OR breed LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM pets WHERE (name LIKE '%' || :query || '%' OR breed LIKE '%' || :query || '%') AND status = 'AVAILABLE'")
     LiveData<List<PetEntity>> searchPets(String query);
 
     @Query("SELECT COUNT(*) FROM pets")

@@ -6,6 +6,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "pets")
 public class PetEntity {
 
+    public static final String STATUS_AVAILABLE = "AVAILABLE";
+    public static final String STATUS_ADOPTED = "ADOPTED";
+    public static final String STATUS_ARCHIVED = "ARCHIVED";
+
     @PrimaryKey(autoGenerate = true)
     private long id;
 
@@ -23,7 +27,7 @@ public class PetEntity {
     private long createdAt;
 
     public PetEntity() {
-        this.status = "AVAILABLE";
+        this.status = STATUS_AVAILABLE;
         this.createdAt = System.currentTimeMillis();
     }
 
@@ -59,6 +63,6 @@ public class PetEntity {
 
     /** Helper to check availability */
     public boolean isAvailable() {
-        return "AVAILABLE".equals(status);
+        return STATUS_AVAILABLE.equals(status);
     }
 }

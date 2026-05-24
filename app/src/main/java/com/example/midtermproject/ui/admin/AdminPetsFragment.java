@@ -60,8 +60,8 @@ public class AdminPetsFragment extends Fragment {
         selectedTypes.add("DOG");
         selectedTypes.add("CAT");
         selectedTypes.add("BIRD");
-        selectedStatuses.add("AVAILABLE");
-        selectedStatuses.add("ADOPTED");
+        selectedStatuses.add(PetEntity.STATUS_AVAILABLE);
+        selectedStatuses.add(PetEntity.STATUS_ADOPTED);
 
         petRepository = new PetRepository(requireActivity().getApplication());
 
@@ -141,15 +141,20 @@ public class AdminPetsFragment extends Fragment {
                 int pos = vh.getAdapterPosition();
                 if (pos == RecyclerView.NO_POSITION) return;
                 PetEntity pet = petsList.get(pos);
+                
+                boolean isArchived = PetEntity.STATUS_ARCHIVED.equals(pet.getStatus());
+                String title = getString(isArchived ? R.string.restore_pet : R.string.archive_pet);
+                String msg = getString(isArchived ? R.string.restore_confirm : R.string.archive_confirm, pet.getName());
+                
                 new AlertDialog.Builder(requireContext())
-                    .setTitle("Archive Pet")
-                    .setMessage("Archive " + pet.getName() + "?")
-                    .setPositiveButton("Archive", (d, w) -> {
-                        pet.setStatus("ARCHIVED");
+                    .setTitle(title)
+                    .setMessage(msg)
+                    .setPositiveButton(title, (d, w) -> {
+                        pet.setStatus(isArchived ? PetEntity.STATUS_AVAILABLE : PetEntity.STATUS_ARCHIVED);
                         petRepository.update(pet);
-                        adapter.notifyItemChanged(pos);
+                        // UI will auto-update via LiveData observer
                     })
-                    .setNegativeButton("Cancel", (d, w) -> adapter.notifyItemChanged(pos))
+                    .setNegativeButton(R.string.cancel, (d, w) -> adapter.notifyItemChanged(pos))
                     .setCancelable(false)
                     .show();
             }

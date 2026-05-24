@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.midtermproject.R;
+import com.example.midtermproject.data.entity.PetEntity;
 import com.example.midtermproject.databinding.BottomSheetAdminFilterBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -50,8 +51,9 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
         binding.chipFilterCat.setChecked(selectedTypes.contains("CAT"));
         binding.chipFilterBird.setChecked(selectedTypes.contains("BIRD"));
 
-        binding.chipFilterAvailable.setChecked(selectedStatuses.contains("AVAILABLE"));
-        binding.chipFilterAdopted.setChecked(selectedStatuses.contains("ADOPTED"));
+        binding.chipFilterAvailable.setChecked(selectedStatuses.contains(PetEntity.STATUS_AVAILABLE));
+        binding.chipFilterAdopted.setChecked(selectedStatuses.contains(PetEntity.STATUS_ADOPTED));
+        binding.chipFilterArchived.setChecked(selectedStatuses.contains(PetEntity.STATUS_ARCHIVED));
 
         // Enforce at least one type selected
         binding.chipGroupType.setOnCheckedStateChangeListener((group, ids) -> {
@@ -83,8 +85,9 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
             if (binding.chipFilterBird.isChecked()) types.add("BIRD");
 
             Set<String> statuses = new HashSet<>();
-            if (binding.chipFilterAvailable.isChecked()) statuses.add("AVAILABLE");
-            if (binding.chipFilterAdopted.isChecked()) statuses.add("ADOPTED");
+            if (binding.chipFilterAvailable.isChecked()) statuses.add(PetEntity.STATUS_AVAILABLE);
+            if (binding.chipFilterAdopted.isChecked()) statuses.add(PetEntity.STATUS_ADOPTED);
+            if (binding.chipFilterArchived.isChecked()) statuses.add(PetEntity.STATUS_ARCHIVED);
 
             listener.onApply(types, statuses);
             dismiss();

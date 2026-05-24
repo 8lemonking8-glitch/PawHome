@@ -46,6 +46,7 @@
     <color name="status_pending">#F5C265</color>
     <color name="status_adopted">#E8734A</color>
     <color name="status_rejected">#E53935</color>
+    <color name="status_archived">#78909C</color>
 
     <!-- Night Mode Colors -->
     <color name="background_dark">#1C1410</color>

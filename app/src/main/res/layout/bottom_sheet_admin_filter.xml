@@ -122,6 +122,16 @@
             app:chipIconVisible="true"
             android:checkable="true" />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFilterArchived"
+            style="@style/Widget.PawHome.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_archived"
+            app:chipIcon="@drawable/ic_history"
+            app:chipIconVisible="true"
+            android:checkable="true" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Apply Button -->
