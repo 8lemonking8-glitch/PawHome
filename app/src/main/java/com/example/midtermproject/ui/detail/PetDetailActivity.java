@@ -86,7 +86,6 @@ public class PetDetailActivity extends AppCompatActivity {
         setupToolbar();
         setupImagePager();
 
-        // Set transition name for native shared element transition
         ViewCompat.setTransitionName(binding.vpPetImages, "pet_image_" + petId);
 
         loadPetDetails();
@@ -99,8 +98,6 @@ public class PetDetailActivity extends AppCompatActivity {
             binding.btnFavorite.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.scale_bounce));
         });
     }
-
-    // ==================== Adoption Flow ====================
 
     private void handleAdoptClick() {
         if (currentPet == null || !"AVAILABLE".equals(currentPet.getStatus())) {
@@ -152,13 +149,10 @@ public class PetDetailActivity extends AppCompatActivity {
             .show();
     }
 
-    // ==================== Setup ====================
-
     private void setupImagePager() {
         imagePagerAdapter = new ImagePagerAdapter();
         binding.vpPetImages.setAdapter(imagePagerAdapter);
 
-        // Pre-populate images and dots from intent immediately before DB loads
         imagePagerAdapter.setImages(petImageResId, petImageResIds);
         updateDots(0);
 

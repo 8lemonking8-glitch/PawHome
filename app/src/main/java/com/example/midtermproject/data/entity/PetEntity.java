@@ -14,16 +14,16 @@ public class PetEntity {
     private long id;
 
     private String name;
-    private String type;        // DOG, CAT, BIRD
+    private String type;        
     private String breed;
     private String color;
-    private String size;        // SMALL, MEDIUM, LARGE
+    private String size;        
     private String age;
-    private String gender;      // MALE, FEMALE
+    private String gender;      
     private String description;
     private int imageResId;
-    private String imageResIds; // JSON array of drawable resource IDs for carousel
-    private String status;      // AVAILABLE, ADOPTED
+    private String imageResIds; 
+    private String status;      
     private long createdAt;
 
     public PetEntity() {
@@ -31,7 +31,6 @@ public class PetEntity {
         this.createdAt = System.currentTimeMillis();
     }
 
-    // Getters
     public long getId() { return id; }
     public String getName() { return name; }
     public String getType() { return type; }
@@ -46,7 +45,6 @@ public class PetEntity {
     public String getStatus() { return status; }
     public long getCreatedAt() { return createdAt; }
 
-    // Setters
     public void setId(long id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setType(String type) { this.type = type; }
@@ -61,7 +59,6 @@ public class PetEntity {
     public void setStatus(String status) { this.status = status; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 
-    /** Helper to check availability */
     public boolean isAvailable() {
         return STATUS_AVAILABLE.equals(status);
     }

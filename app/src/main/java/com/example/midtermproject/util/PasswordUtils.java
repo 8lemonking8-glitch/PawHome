@@ -28,7 +28,6 @@ public class PasswordUtils {
     public static boolean verifyPassword(String password, String storedHash) {
         if (storedHash == null) return false;
 
-        // New format: "salt_hex$hash_hex"
         int sep = storedHash.indexOf(SEPARATOR);
         if (sep > 0) {
             byte[] salt = hexToBytes(storedHash.substring(0, sep));
@@ -36,7 +35,6 @@ public class PasswordUtils {
             return bytesToHex(expectedHash).equals(storedHash.substring(sep + 1));
         }
 
-        // Legacy SHA-256 fallback (no salt)
         String legacyHash = sha256(password);
         return legacyHash.equals(storedHash);
     }

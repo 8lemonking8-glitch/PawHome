@@ -21,11 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Initializes the database with seed data on first launch.
- * Includes sample pets (Dogs, Cats, Birds), a default admin account,
- * demo users with adoption history, and mock avatars / signatures.
- */
 public class DatabaseInitializer {
 
     private static final String TAG = "DatabaseInitializer";
@@ -52,7 +47,6 @@ public class DatabaseInitializer {
                 seedPets(db);
             }
 
-            // Demo data: idempotent — skip if already seeded
             if (db.userDao().getUserByUsername("emma_wilson") != null) {
                 Log.d(TAG, "Demo data already seeded, skipping.");
                 return;
@@ -60,24 +54,19 @@ public class DatabaseInitializer {
 
             Log.d(TAG, "Seeding demo data...");
 
-            // ===== Demo users =====
             long emmaId = seedDemoUsers(context, db);
 
-            // ===== Demo adoption requests =====
             seedDemoRequests(context, db, emmaId);
 
-            // ===== Demo favorites =====
             seedDemoFavorites(context, emmaId);
 
             Log.d(TAG, "Database seeded successfully with demo data.");
         });
     }
 
-    // ==================== Pets ====================
-
     private static void seedPets(AppDatabase db) {
         String[][] petData = {
-            // ===== DOGS (15) =====
+            
             {"Buddy",   "DOG", "Golden Retriever",              "Golden",          "LARGE",  "3 years",   "MALE",   "Buddy was found wandering near a highway during a rainstorm. A kind truck driver brought him to our shelter. Despite his rough start, Buddy is incredibly friendly and loves playing fetch. He's great with kids and other dogs."},
             {"Mochi",   "DOG", "Shiba Inu",                     "Red & White",     "MEDIUM", "2 years",   "MALE",   "Mochi was surrendered by a family that could no longer care for him. He's a spirited and independent Shiba with a goofy personality. He loves walks in the park and will do anything for a treat."},
             {"Luna",    "DOG", "Husky",                          "Gray & White",    "LARGE",  "1.5 years", "FEMALE", "Luna was rescued from an abandoned property where she was left chained outside. She's a beautiful husky with striking blue eyes. She's energetic, playful, and needs an active family."},
@@ -93,7 +82,7 @@ public class DatabaseInitializer {
             {"Duke",    "DOG", "Great Dane",                     "Harlequin",       "LARGE",  "2 years",   "MALE",   "Duke was surrendered when he grew too big for his family's apartment. Don't let his size intimidate you — he's a gentle giant who thinks he's a lap dog. He's well-mannered and walks beautifully on leash."},
             {"Penny",   "DOG", "Pomeranian",                     "Orange Sable",    "SMALL",  "3 years",   "FEMALE", "Penny was found abandoned in a park with severe matting. After grooming and care, she's transformed into a fluffy princess. She's sassy, confident, and loves being the center of attention."},
             {"Rex",     "DOG", "Rottweiler",                     "Black & Mahogany","LARGE",  "3.5 years", "MALE",   "Rex was rescued from a junkyard where he was used as a guard dog. With patience and love, he's become a loyal and gentle companion. He bonds deeply and is fiercely protective of his family."},
-            // ===== CATS (13) =====
+            
             {"Marmalade","CAT","Tabby",                          "Orange",          "MEDIUM", "3 years",   "MALE",   "Marmalade was found hiding behind a restaurant dumpster as a kitten. He's grown into a confident and affectionate cat who loves to curl up on laps and purr loudly. He gets along well with other cats."},
             {"Snow",    "CAT", "Ragdoll",                        "White & Blue",    "LARGE",  "2 years",   "FEMALE", "Snow was found in a cardboard box outside a vet clinic. She's a stunning ragdoll with piercing blue eyes. True to her breed, she's docile and loves being held like a baby."},
             {"Oliver",  "CAT", "British Shorthair",              "Blue Gray",       "MEDIUM", "4 years",   "MALE",   "Oliver was surrendered when his elderly owner moved to a nursing home. He's a calm and dignified gentleman who enjoys quiet company. He'll sit beside you while you read or work."},
@@ -107,7 +96,7 @@ public class DatabaseInitializer {
             {"Daisy",   "CAT", "Scottish Fold",                  "Silver Tabby",    "MEDIUM", "1.5 years", "FEMALE", "Daisy was found abandoned in a rental apartment. With her folded ears and round eyes, she looks like a living teddy bear. She's quiet, sweet, and enjoys perching on windowsills to watch birds."},
             {"Pumpkin", "CAT", "Abyssinian",                     "Ruddy",           "SMALL",  "1 year",    "MALE",   "Pumpkin was rescued from a hoarding case with 40 other cats. He's a sleek, ticked-coat beauty with an adventurous spirit. He loves climbing to the highest point in any room and surveying his kingdom."},
             {"Luna",    "CAT", "Tuxedo",                         "Black & White",   "MEDIUM", "2 years",   "FEMALE", "Luna was born in a library basement and raised by the librarians. She's a dapper tuxedo cat who loves curling up on books and papers. She's litter-trained, well-mannered, and very photogenic."},
-            // ===== BIRDS (8) =====
+            
             {"Rio",     "BIRD","Budgerigar",                     "Green & Yellow",  "SMALL",  "1 year",    "MALE",   "Rio was found in someone's backyard, likely an escaped pet. He's a cheerful little budgie who loves to chirp and sing. He can mimic simple tunes and enjoys sitting on your finger."},
             {"Pearl",   "BIRD","Cockatiel",                      "Gray & Yellow",   "SMALL",  "2 years",   "FEMALE", "Pearl was surrendered by a college student who was moving abroad. She's a gentle cockatiel who loves head scratches and whistling melodies. She's hand-tame and very social."},
             {"Sunny",   "BIRD","Canary",                         "Bright Yellow",   "SMALL",  "1.5 years", "MALE",   "Sunny was rescued from an overcrowded aviary. True to his name, his bright yellow feathers light up any room. He has a beautiful singing voice and brings joy to everyone who hears him."},
@@ -160,10 +149,8 @@ public class DatabaseInitializer {
         return pet;
     }
 
-    // ==================== Demo Users ====================
-
     private static long seedDemoUsers(Context context, AppDatabase db) {
-        // Emma — complete profile, experienced adopter
+        
         UserEntity emma = new UserEntity();
         emma.setUsername("emma_wilson");
         emma.setPassword(PasswordUtils.hashPassword("password123"));
@@ -179,7 +166,6 @@ public class DatabaseInitializer {
         emma.setPetExperience("Has owned dogs for 5 years, previously fostered 2 cats. Completed basic pet training course at Portland Humane Society.");
         emma.setAvatarResId(R.drawable.ic_person);
 
-        // Jack — complete profile, first-time owner
         UserEntity jack = new UserEntity();
         jack.setUsername("jack_chen");
         jack.setPassword(PasswordUtils.hashPassword("password123"));
@@ -195,7 +181,6 @@ public class DatabaseInitializer {
         jack.setPetExperience("First-time pet owner. Completed online pet care course. Has a flexible work-from-home schedule.");
         jack.setAvatarResId(R.drawable.ic_person);
 
-        // Sophie — complete profile, recent grad
         UserEntity sophie = new UserEntity();
         sophie.setUsername("sophie_liu");
         sophie.setPassword(PasswordUtils.hashPassword("password123"));
@@ -211,7 +196,6 @@ public class DatabaseInitializer {
         sophie.setPetExperience("Grew up with a family cat. Looking for a companion pet as a young professional. Researched pet care extensively.");
         sophie.setAvatarResId(R.drawable.ic_person);
 
-        // David — complete profile, experienced with multiple previous adoptions
         UserEntity david = new UserEntity();
         david.setUsername("david_kim");
         david.setPassword(PasswordUtils.hashPassword("password123"));
@@ -232,11 +216,10 @@ public class DatabaseInitializer {
         long sophieId = db.userDao().insert(sophie);
         long davidId = db.userDao().insert(david);
 
-        // Generate distinct colored avatars for each demo user
-        emma.setAvatarUri(generateAvatar(context, emmaId, "E", 0xFFE8734A));     // warm orange
-        jack.setAvatarUri(generateAvatar(context, jackId, "J", 0xFF5CB8A5));     // teal
-        sophie.setAvatarUri(generateAvatar(context, sophieId, "S", 0xFF7C6FBF)); // purple
-        david.setAvatarUri(generateAvatar(context, davidId, "D", 0xFF4A90D9));   // blue
+        emma.setAvatarUri(generateAvatar(context, emmaId, "E", 0xFFE8734A));     
+        jack.setAvatarUri(generateAvatar(context, jackId, "J", 0xFF5CB8A5));     
+        sophie.setAvatarUri(generateAvatar(context, sophieId, "S", 0xFF7C6FBF)); 
+        david.setAvatarUri(generateAvatar(context, davidId, "D", 0xFF4A90D9));   
 
         db.userDao().update(emma);
         db.userDao().update(jack);
@@ -246,8 +229,6 @@ public class DatabaseInitializer {
         Log.d(TAG, "Seeded 4 demo users (emma_wilson, jack_chen, sophie_liu, david_kim).");
         return emmaId;
     }
-
-    // ==================== Demo Adoption Requests ====================
 
     private static void seedDemoRequests(Context context, AppDatabase db, long emmaId) {
         UserEntity jack = db.userDao().getUserByUsername("jack_chen");
@@ -259,73 +240,48 @@ public class DatabaseInitializer {
         long sophieId = sophie.getId();
         long davidId = david.getId();
 
-        // Pet IDs from seed order:
-        //  1=Buddy  2=Mochi  3=Luna(dog)  4=Charlie  5=Coco  6=Max  7=Bella
-        //  8=Rocky  9=Daisy  10=Bear  11=Pepper  12=Rosie  13=Duke  14=Penny  15=Rex
-        //  16=Marmalade  17=Snow  18=Oliver  19=Shadow  20=Willow
-        //  21=Cleo  22=Loki  23=Misty  24=Nala  25=Ziggy  26=Daisy(cat)  27=Pumpkin  28=Luna(cat)
-        //  29=Rio  30=Pearl  31=Sunny  32=Coco(bird)  33=Mango  34=Blue  35=Sky  36=Kiwi
-
         long now = System.currentTimeMillis();
-        long d1 = now - 86400000L;      // 1 day ago
-        long d2 = now - 172800000L;     // 2 days
-        long d3 = now - 259200000L;     // 3 days
-        long d4 = now - 345600000L;     // 4 days
-        long d5 = now - 432000000L;     // 5 days
-        long d6 = now - 518400000L;     // 6 days
-        long d7 = now - 604800000L;     // 7 days
-        long d10 = now - 864000000L;    // 10 days
-        long d14 = now - 1209600000L;   // 14 days
+        long d1 = now - 86400000L;      
+        long d2 = now - 172800000L;     
+        long d3 = now - 259200000L;     
+        long d4 = now - 345600000L;     
+        long d5 = now - 432000000L;     
+        long d6 = now - 518400000L;     
+        long d7 = now - 604800000L;     
+        long d10 = now - 864000000L;    
+        long d14 = now - 1209600000L;   
 
-        // --- Emma's requests ---
-        // 1. Emma → Buddy(id=1): PENDING (today)
         insertRequest(db, context, emmaId, 1, "PENDING", "Emma Wilson", d1, d1, 0);
 
-        // 2. Emma → Mochi(id=2): APPROVED 3d ago → ADOPTED
         insertRequest(db, context, emmaId, 2, "APPROVED", "Emma Wilson", d3, d1, d3);
         db.petDao().updatePetStatus(2, "ADOPTED");
 
-        // 3. Emma → Coco(id=5): APPROVED 10d ago → ADOPTED
         insertRequest(db, context, emmaId, 5, "APPROVED", "Emma Wilson", d10, d7, d10);
         db.petDao().updatePetStatus(5, "ADOPTED");
 
-        // 4. Emma → Bella(id=7): APPROVED 7d ago → ADOPTED
         insertRequest(db, context, emmaId, 7, "APPROVED", "Emma Wilson", d7, d5, d7);
         db.petDao().updatePetStatus(7, "ADOPTED");
 
-        // 5. Emma → Rosie(id=12): PENDING (3d ago)
         insertRequest(db, context, emmaId, 12, "PENDING", "Emma Wilson", d3, d3, 0);
 
-        // --- Jack's requests ---
-        // 6. Jack → Snow(id=17): PENDING (2d ago)
         insertRequest(db, context, jackId, 17, "PENDING", "Jack Chen", d2, d2, 0);
 
-        // 7. Jack → Oliver(id=18): REJECTED (4d ago)
         insertRequest(db, context, jackId, 18, "REJECTED", "Jack Chen", d4, d3, d4);
 
-        // 8. Jack → Max(id=6): REJECTED (5d ago)
         insertRequest(db, context, jackId, 6, "REJECTED", "Jack Chen", d5, d4, d5);
 
-        // 9. Jack → Loki(id=22): APPROVED 14d ago → ADOPTED
         insertRequest(db, context, jackId, 22, "APPROVED", "Jack Chen", d14, d10, d14);
         db.petDao().updatePetStatus(22, "ADOPTED");
 
-        // 10. Jack → Marmalade(id=16): PENDING (1d ago)
         insertRequest(db, context, jackId, 16, "PENDING", "Jack Chen", d1, d1, 0);
 
-        // --- Sophie's requests (incomplete profile) ---
-        // 11. Sophie → Luna dog(id=3): PENDING (today)
         insertRequest(db, context, sophieId, 3, "PENDING", "Sophie Liu", now, now, 0);
 
-        // 12. Sophie → Misty(id=23): PENDING (2d ago)
         insertRequest(db, context, sophieId, 23, "PENDING", "Sophie Liu", d2, d2, 0);
 
-        // --- David's requests ---
-        // 13. David → Pepper(id=11): APPROVED 10d ago → ADOPTED
         insertRequest(db, context, davidId, 11, "APPROVED", "David Kim", d10, d7, d10);
         db.petDao().updatePetStatus(11, "ADOPTED");
 
-        // 14. David → Duke(id=13): PENDING (1d ago)
         insertRequest(db, context, davidId, 13, "PENDING", "David Kim", d1, d1, 0);
 
         Log.d(TAG, "Seeded 14 demo adoption requests (5 PENDING, 5 APPROVED/ADOPTED, 2 REJECTED, 2 PENDING+incomplete).");
@@ -347,13 +303,10 @@ public class DatabaseInitializer {
         db.adoptionRequestDao().insert(req);
     }
 
-    // ==================== Demo Favorites ====================
-
     private static void seedDemoFavorites(Context context, long emmaId) {
         android.content.SharedPreferences prefs = context.getSharedPreferences(
                 "PawHomeFavorites", Context.MODE_PRIVATE);
 
-        // Emma favorited: Mochi(2), Coco(5), Bella(7), Buddy(1), Snow(17)
         java.util.Set<String> emmaFavs = new java.util.HashSet<>();
         emmaFavs.add("2");
         emmaFavs.add("5");
@@ -365,23 +318,15 @@ public class DatabaseInitializer {
         Log.d(TAG, "Seeded 5 favorites for emma_wilson.");
     }
 
-    // ==================== Avatar Generation ====================
-
-    /**
-     * Generates a circular avatar bitmap with a colored background and white initial letter.
-     * Each user gets a distinct color for strong visual differentiation.
-     */
     private static String generateAvatar(Context context, long userId, String initial, int bgColor) {
         int size = 256;
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        // Colored circle background
         Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setColor(bgColor);
         canvas.drawCircle(size / 2f, size / 2f, size / 2f, circlePaint);
 
-        // White initial letter
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(size * 0.45f);
@@ -393,11 +338,10 @@ public class DatabaseInitializer {
         float textY = size / 2f - (textBounds.top + textBounds.bottom) / 2f;
         canvas.drawText(initial, size / 2f, textY, textPaint);
 
-        // Save to file
         FileOutputStream fos = null;
         try {
             File dir = context.getFilesDir();
-            // Clean up old avatars for this user
+            
             File[] old = dir.listFiles((d, name) -> name.startsWith("avatar_" + userId));
             if (old != null) {
                 for (File f : old) f.delete();
@@ -415,13 +359,6 @@ public class DatabaseInitializer {
         }
     }
 
-    // ==================== Signature Generation ====================
-
-    /**
-     * Generates a realistic-looking cursive signature using letterform simulation
-     * with ascender loops, descender tails, pressure effects, and a natural slant.
-     * Deterministic — same name always produces the same signature.
-     */
     private static String generateSignature(Context context, String name, long userId, long timestamp) {
         int width = 720;
         int height = 300;
@@ -431,25 +368,22 @@ public class DatabaseInitializer {
 
         Random rng = new Random(name.hashCode());
 
-        // Ink color with slight warm undertone + per-user variation
         int ink = Color.rgb(
             30 + rng.nextInt(15),
             20 + rng.nextInt(12),
             15 + rng.nextInt(10)
         );
 
-        float slant = 0.25f + rng.nextFloat() * 0.1f; // slight rightward slant
-        float midlineY = height * 0.38f;              // baseline for regular letters
-        float ascenderTop = height * 0.08f;           // top of tall letters
-        float descenderBottom = height * 0.72f;       // bottom of tails
+        float slant = 0.25f + rng.nextFloat() * 0.1f; 
+        float midlineY = height * 0.38f;              
+        float ascenderTop = height * 0.08f;           
+        float descenderBottom = height * 0.72f;       
         float letterW = width / (name.length() * 1.3f + 6f);
 
-        // Build the cursive path — letter by letter
         Path path = new Path();
         float x = 40;
         float y = midlineY + rng.nextFloat() * 10 - 5;
 
-        // Entry stroke
         float ex = x + letterW * 0.4f;
         path.moveTo(x - letterW * 0.5f, y + height * 0.1f);
         path.cubicTo(x - letterW * 0.2f, y - height * 0.05f, x + letterW * 0.15f, y - 3, x, y);
@@ -468,12 +402,11 @@ public class DatabaseInitializer {
                 continue;
             }
 
-            // Character width varies
             float cw = letterW * (0.7f + rng.nextFloat() * 0.6f);
             if (isCapital) cw *= 1.6f;
 
             if (ascender) {
-                // Ascender loop — up and around, then down to baseline
+                
                 float topY = ascenderTop + rng.nextFloat() * height * 0.05f;
                 float cp1x = x + cw * 0.15f + slant * (y - topY);
                 float cp1y = y - (y - topY) * 0.5f;
@@ -482,7 +415,6 @@ public class DatabaseInitializer {
                 float topX = x + cw * 0.5f;
                 path.cubicTo(cp1x, cp1y, cp2x, cp2y, topX, topY);
 
-                // Downstroke back to baseline
                 float downX = x + cw;
                 float downY = midlineY + rng.nextFloat() * 8 - 4;
                 float dcp1x = topX + cw * 0.15f + slant * (topY - downY) * 0.3f;
@@ -493,7 +425,7 @@ public class DatabaseInitializer {
                 x = downX;
                 y = downY;
             } else if (descender) {
-                // Regular part first, then descender tail
+                
                 float midX = x + cw * 0.5f;
                 float midY = midlineY - rng.nextFloat() * height * 0.06f;
                 path.cubicTo(
@@ -502,7 +434,6 @@ public class DatabaseInitializer {
                     midX, midY
                 );
 
-                // Tail loop down
                 float tailBottom = descenderBottom - rng.nextFloat() * height * 0.06f;
                 float tailX = x + cw;
                 float tailY = midlineY + rng.nextFloat() * 4 - 2;
@@ -519,7 +450,7 @@ public class DatabaseInitializer {
                 x = tailX;
                 y = tailY;
             } else {
-                // Regular letter: small undulation
+                
                 float endX = x + cw;
                 float endY = midlineY + rng.nextFloat() * 8 - 4;
                 float midX = x + cw * 0.5f;
@@ -540,14 +471,12 @@ public class DatabaseInitializer {
                 y = endY;
             }
 
-            // Dot for 'i' and 'j'
             if (ch == 'i' || ch == 'j') {
                 float dotX = x - cw * 0.5f;
                 float dotY = midlineY - height * 0.22f + rng.nextFloat() * 4;
                 path.addCircle(dotX, dotY, 2.5f + rng.nextFloat(), Path.Direction.CW);
             }
 
-            // Cross stroke for 't'
             if (ch == 't') {
                 float crossX = x - cw * 0.6f;
                 float crossY = midlineY - height * 0.1f + rng.nextFloat() * 4;
@@ -556,7 +485,6 @@ public class DatabaseInitializer {
             }
         }
 
-        // Exit flourish
         float fx1 = x;
         float fy1 = y;
         float fx2 = x + letterW * 2f + rng.nextFloat() * letterW;
@@ -567,8 +495,6 @@ public class DatabaseInitializer {
             fx2, fy2
         );
 
-        // ---- Render with pressure simulation (3 passes) ----
-        // Pass 1: ink-spread layer (wider, slightly lighter)
         Paint p1 = new Paint(Paint.ANTI_ALIAS_FLAG);
         p1.setStyle(Paint.Style.STROKE);
         p1.setStrokeCap(Paint.Cap.ROUND);
@@ -577,7 +503,6 @@ public class DatabaseInitializer {
         p1.setColor(Color.argb(140, Color.red(ink), Color.green(ink), Color.blue(ink)));
         canvas.drawPath(path, p1);
 
-        // Pass 2: main ink layer
         Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
         p2.setStyle(Paint.Style.STROKE);
         p2.setStrokeCap(Paint.Cap.ROUND);
@@ -586,7 +511,6 @@ public class DatabaseInitializer {
         p2.setColor(Color.argb(210, Color.red(ink), Color.green(ink), Color.blue(ink)));
         canvas.drawPath(path, p2);
 
-        // Pass 3: pen-tip layer (thin, dark, slight offset for texture)
         Paint p3 = new Paint(Paint.ANTI_ALIAS_FLAG);
         p3.setStyle(Paint.Style.STROKE);
         p3.setStrokeCap(Paint.Cap.ROUND);
@@ -595,7 +519,6 @@ public class DatabaseInitializer {
         p3.setColor(ink);
         canvas.drawPath(path, p3);
 
-        // Underline accent (matching the flourish direction)
         Paint uline = new Paint(Paint.ANTI_ALIAS_FLAG);
         uline.setStyle(Paint.Style.STROKE);
         uline.setStrokeCap(Paint.Cap.ROUND);
@@ -616,7 +539,6 @@ public class DatabaseInitializer {
         }
         canvas.drawPath(ulPath, uline);
 
-        // Save
         FileOutputStream fos = null;
         try {
             File dir = new File(context.getFilesDir(), "signatures");

@@ -16,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.35" />
 
-    <!-- Form Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardForm"
         android:layout_width="match_parent"
@@ -34,7 +33,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- TabLayout Container -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +60,6 @@
                     app:tabTextAppearance="@style/TextAppearance.PawHome.TabText" />
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ViewPager2 -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"

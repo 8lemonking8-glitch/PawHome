@@ -33,9 +33,9 @@ public class AdoptionRequestEntity {
 
     private long userId;
     private long petId;
-    private String status;          // PENDING, APPROVED, REJECTED
+    private String status;          
     private boolean agreementAccepted;
-    private String signaturePath;   // File path to signature bitmap
+    private String signaturePath;   
     private long signatureTimestamp;
     private long createdAt;
     private long reviewedAt;
@@ -45,7 +45,6 @@ public class AdoptionRequestEntity {
         this.createdAt = System.currentTimeMillis();
     }
 
-    // Getters
     public long getId() { return id; }
     public long getUserId() { return userId; }
     public long getPetId() { return petId; }
@@ -56,7 +55,6 @@ public class AdoptionRequestEntity {
     public long getCreatedAt() { return createdAt; }
     public long getReviewedAt() { return reviewedAt; }
 
-    // Setters
     public void setId(long id) { this.id = id; }
     public void setUserId(long userId) { this.userId = userId; }
     public void setPetId(long petId) { this.petId = petId; }
@@ -67,7 +65,6 @@ public class AdoptionRequestEntity {
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
     public void setReviewedAt(long reviewedAt) { this.reviewedAt = reviewedAt; }
 
-    /** Check if this request is still pending */
     public boolean isPending() {
         return "PENDING".equals(status);
     }

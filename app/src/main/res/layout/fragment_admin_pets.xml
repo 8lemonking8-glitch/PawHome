@@ -38,7 +38,6 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <!-- Search Bar -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="52dp"
@@ -112,7 +111,6 @@
         android:paddingBottom="140dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Loading State -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -121,7 +119,6 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
         android:layout_width="wrap_content"

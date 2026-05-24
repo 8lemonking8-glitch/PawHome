@@ -67,7 +67,6 @@
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/on_primary" />
 
-                    <!-- Search Bar -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
@@ -120,7 +119,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <!-- Filter Chips -->
         <HorizontalScrollView
             android:id="@+id/chipsScrollView"
             android:layout_width="match_parent"
@@ -182,7 +180,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Pull-to-Refresh + RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"

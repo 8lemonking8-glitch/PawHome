@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Floating Island Bottom Navigation -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/admin_bottom_nav_card"
         android:layout_width="match_parent"

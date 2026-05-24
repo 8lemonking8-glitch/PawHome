@@ -56,12 +56,10 @@ public class AdminMainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-
         binding.navDashboard.setOnClickListener(v -> selectTab(R.id.nav_dashboard));
         binding.navPets.setOnClickListener(v -> selectTab(R.id.nav_pets));
         binding.navRequests.setOnClickListener(v -> selectTab(R.id.nav_requests));
 
-        // Set default fragment
         if (savedInstanceState == null) {
             dashboardFragment = new AdminDashboardFragment();
             petsFragment = new AdminPetsFragment();

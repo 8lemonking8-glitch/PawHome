@@ -56,7 +56,7 @@ public class FavoritesFragment extends Fragment {
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-        int extraPadding = (int) (32 * density); // Generous, gorgeous breathing room (32dp)
+        int extraPadding = (int) (32 * density); 
         int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (64 * density);
         binding.headerContainer.setPadding(
             binding.headerContainer.getPaddingLeft(),
@@ -79,7 +79,6 @@ public class FavoritesFragment extends Fragment {
             return windowInsets;
         });
 
-
         petRepository = new PetRepository(requireActivity().getApplication());
         favoriteManager = new FavoriteManager(requireContext());
 
@@ -92,11 +91,9 @@ public class FavoritesFragment extends Fragment {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
 
-            // Use native Shared Element Transition
             androidx.core.app.ActivityOptionsCompat options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
                     requireActivity(), sharedImageView, androidx.core.view.ViewCompat.getTransitionName(sharedImageView));
 
-            // Pass image details for immediate loading to prevent blank screens/flickers
             intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_ID, pet.getImageResId());
             intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_IDS, pet.getImageResIds());
             intent.putExtra(PetDetailActivity.EXTRA_PET_TYPE, pet.getType());
@@ -111,7 +108,6 @@ public class FavoritesFragment extends Fragment {
         binding.rvFavorites.setLayoutManager(layoutManager);
         binding.rvFavorites.setAdapter(adapter);
 
-        // Swipe to delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -123,8 +119,7 @@ public class FavoritesFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && position < favoritePets.size()) {
                     PetEntity pet = favoritePets.get(position);
-                    
-                    // Remove from favorites immediately
+
                     favoriteManager.toggleFavorite(pet.getId());
                     favoritePets.remove(position);
                     adapter.setPets(new ArrayList<>(favoritePets));

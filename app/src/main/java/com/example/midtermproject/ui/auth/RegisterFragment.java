@@ -167,7 +167,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void attemptRegister() {
-        // Clear previous errors
+        
         binding.tilUsername.setError(null);
         binding.tilPassword.setError(null);
         binding.tilConfirmPassword.setError(null);
@@ -177,7 +177,6 @@ public class RegisterFragment extends Fragment {
         String password = binding.etPassword.getText().toString().trim();
         String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
 
-        // Validation
         boolean valid = true;
 
         if (TextUtils.isEmpty(username)) {
@@ -212,7 +211,6 @@ public class RegisterFragment extends Fragment {
 
         if (!valid) return;
 
-        // Disable button while processing
         binding.btnRegister.setEnabled(false);
         binding.btnRegister.setText(getString(R.string.loading));
 

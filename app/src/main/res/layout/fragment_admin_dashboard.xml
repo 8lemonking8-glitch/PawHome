@@ -78,8 +78,7 @@
                 android:rowCount="3"
                 android:alignmentMode="alignMargins"
                 android:columnOrderPreserved="false">
-                
-                <!-- Total Pets Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -126,8 +125,7 @@
                             android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-                
-                <!-- Available Pets Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -174,8 +172,7 @@
                             android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-                
-                <!-- Pending Requests Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -222,8 +219,7 @@
                             android:alpha="0.8" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-                
-                <!-- Adopted Pets Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -271,7 +267,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Registered Adopters Card -->
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -319,7 +314,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Approved Requests Card -->
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.PawHome.Card"
                     android:layout_width="0dp"
@@ -369,7 +363,6 @@
 
             </GridLayout>
 
-            <!-- Quick Management Panel -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.PawHome.Card"
                 android:layout_width="match_parent"
@@ -444,7 +437,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Recent Activities Section -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.PawHome.Card"
                 android:layout_width="match_parent"

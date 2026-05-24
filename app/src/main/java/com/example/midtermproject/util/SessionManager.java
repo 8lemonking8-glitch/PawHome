@@ -3,10 +3,6 @@ package com.example.midtermproject.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Manages user session using SharedPreferences.
- * Stores login state, user ID, username, and role for session persistence.
- */
 public class SessionManager {
 
     private static final String PREF_NAME = "PawHomeSession";
@@ -24,9 +20,6 @@ public class SessionManager {
         editor = prefs.edit();
     }
 
-    /**
-     * Saves the user session after successful login.
-     */
     public void createSession(long userId, String username, String role, String nickname) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.putLong(KEY_USER_ID, userId);
@@ -36,9 +29,6 @@ public class SessionManager {
         editor.apply();
     }
 
-    /**
-     * Clears the session on logout.
-     */
     public void logout() {
         editor.clear();
         editor.apply();
@@ -68,9 +58,6 @@ public class SessionManager {
         return "ADMIN".equals(getRole());
     }
 
-    /**
-     * Updates the nickname in the session (after profile edit).
-     */
     public void updateNickname(String nickname) {
         editor.putString(KEY_NICKNAME, nickname);
         editor.apply();

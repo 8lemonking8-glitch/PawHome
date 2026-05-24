@@ -41,8 +41,8 @@ public class UserMainActivity extends AppCompatActivity {
         androidx.core.view.WindowInsetsControllerCompat insetsController = 
                 WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         if (insetsController != null) {
-            insetsController.setAppearanceLightNavigationBars(true); // Dark icons for light bottom background
-            insetsController.setAppearanceLightStatusBars(false);    // Light icons for dark gradient top header
+            insetsController.setAppearanceLightNavigationBars(true); 
+            insetsController.setAppearanceLightStatusBars(false);    
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -58,12 +58,10 @@ public class UserMainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-
         binding.navHome.setOnClickListener(v -> selectTab(R.id.nav_home));
         binding.navFavorites.setOnClickListener(v -> selectTab(R.id.nav_favorites));
         binding.navProfile.setOnClickListener(v -> selectTab(R.id.nav_profile));
 
-        // Load default fragments
         if (savedInstanceState == null) {
             homeFragment = new HomeFragment();
             favoritesFragment = new FavoritesFragment();

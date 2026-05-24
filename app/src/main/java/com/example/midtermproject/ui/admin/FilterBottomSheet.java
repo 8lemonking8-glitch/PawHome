@@ -55,7 +55,6 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
         binding.chipFilterAdopted.setChecked(selectedStatuses.contains(PetEntity.STATUS_ADOPTED));
         binding.chipFilterArchived.setChecked(selectedStatuses.contains(PetEntity.STATUS_ARCHIVED));
 
-        // Enforce at least one type selected
         binding.chipGroupType.setOnCheckedStateChangeListener((group, ids) -> {
             if (updatingTypes) return;
             if (ids.isEmpty()) {
@@ -67,7 +66,6 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        // Enforce at least one status selected
         binding.chipGroupStatus.setOnCheckedStateChangeListener((group, ids) -> {
             if (updatingStatuses) return;
             if (ids.isEmpty()) {

@@ -11,13 +11,13 @@ public class UserEntity {
     private long id;
 
     private String username;
-    private String password;    // SHA-256 hashed
+    private String password;    
     private String nickname;
     private String email;
     private String phone;
     private int avatarResId;
     private String avatarUri;
-    private String role;        // USER, ADMIN
+    private String role;        
     private long createdAt;
 
     private String gender;
@@ -32,7 +32,6 @@ public class UserEntity {
         this.createdAt = System.currentTimeMillis();
     }
 
-    // Getters
     public long getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }
@@ -50,7 +49,6 @@ public class UserEntity {
     public String getMonthlyIncome() { return monthlyIncome; }
     public String getPetExperience() { return petExperience; }
 
-    // Setters
     public void setId(long id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
@@ -70,12 +68,10 @@ public class UserEntity {
     public void setMonthlyIncome(String monthlyIncome) { this.monthlyIncome = monthlyIncome; }
     public void setPetExperience(String petExperience) { this.petExperience = petExperience; }
 
-    /** Check if this user has completed their profile details */
     public boolean isProfileComplete() {
         return getMissingProfileFields().isEmpty();
     }
 
-    /** Returns human-readable names of every incomplete Adopter Profile field */
     public java.util.List<String> getMissingProfileFields() {
         java.util.List<String> missing = new java.util.ArrayList<>();
         if (email == null || email.trim().isEmpty()) missing.add("Email");
@@ -89,7 +85,6 @@ public class UserEntity {
         return missing;
     }
 
-    /** Check if this user is an admin */
     public boolean isAdmin() {
         return "ADMIN".equals(role);
     }

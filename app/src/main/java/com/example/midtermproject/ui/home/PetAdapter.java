@@ -46,8 +46,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
         PetEntity pet = pets.get(position);
-        
-        // Apply deterministic random height for staggered grid
+
         int randomHeight = 180 + new java.util.Random(pet.getId()).nextInt(80);
         ViewGroup.LayoutParams layoutParams = holder.binding.ivPetImage.getLayoutParams();
         float density = holder.itemView.getContext().getResources().getDisplayMetrics().density;
@@ -88,11 +87,11 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                 if (pos != RecyclerView.NO_POSITION && favoriteManager != null) {
                     PetEntity pet = pets.get(pos);
                     favoriteManager.toggleFavorite(pet.getId());
-                    // Update visual state locally
+                    
                     boolean isFav = favoriteManager.isFavorite(pet.getId());
                     binding.btnFavorite.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
                     binding.btnFavorite.setColorFilter(isFav ? itemView.getContext().getColor(R.color.error) : itemView.getContext().getColor(R.color.text_primary));
-                    // Bounce Animation
+                    
                     binding.btnFavorite.startAnimation(android.view.animation.AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_bounce));
                 }
             });
@@ -106,10 +105,10 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
             
             if ("Female".equalsIgnoreCase(pet.getGender())) {
                 binding.ivGender.setImageResource(R.drawable.ic_female);
-                binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.error)); // pink-ish
+                binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.error)); 
             } else {
                 binding.ivGender.setImageResource(R.drawable.ic_male);
-                binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.info)); // blue-ish
+                binding.ivGender.setColorFilter(itemView.getContext().getColor(R.color.info)); 
             }
             
             if (!com.example.midtermproject.util.PetImageUtils.loadFirstImage(binding.ivPetImage, pet)) {
@@ -127,8 +126,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
                 itemView.getContext().getColor(R.color.status_available) : 
                 itemView.getContext().getColor(R.color.text_hint);
             binding.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
-            
-            // Set initial favorite state
+
             if (favoriteManager != null) {
                 boolean isFav = favoriteManager.isFavorite(pet.getId());
                 binding.btnFavorite.setImageResource(isFav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);

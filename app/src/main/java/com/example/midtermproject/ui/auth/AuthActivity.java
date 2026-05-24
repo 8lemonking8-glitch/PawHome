@@ -54,8 +54,8 @@ public class AuthActivity extends AppCompatActivity {
         androidx.core.view.WindowInsetsControllerCompat insetsController = 
                 WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         if (insetsController != null) {
-            insetsController.setAppearanceLightNavigationBars(true); // Dark icons for white login card
-            insetsController.setAppearanceLightStatusBars(false);    // Light icons for dark top banner background
+            insetsController.setAppearanceLightNavigationBars(true); 
+            insetsController.setAppearanceLightStatusBars(false);    
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,18 +64,16 @@ public class AuthActivity extends AppCompatActivity {
             int newImeHeight = ime.bottom;
             
             if (newImeHeight > 0) {
-                // If there's a pending runnable to clear the padding, cancel it because the keyboard is staying/opening
+                
                 if (pendingImeRunnable != null) {
                     insetHandler.removeCallbacks(pendingImeRunnable);
                     pendingImeRunnable = null;
                 }
-                
-                // Instantly apply the positive height
+
                 v.setPadding(0, 0, 0, newImeHeight);
                 lastImeHeight = newImeHeight;
             } else {
-                // The keyboard is reporting 0 height (closed or switching to system secure keyboard).
-                // We debounce this drop to prevent the card from briefly dropping to the bottom and twitching.
+
                 if (lastImeHeight > 0) {
                     if (pendingImeRunnable == null) {
                         pendingImeRunnable = () -> {
@@ -83,17 +81,15 @@ public class AuthActivity extends AppCompatActivity {
                             lastImeHeight = 0;
                             pendingImeRunnable = null;
                         };
-                        // 150ms is the sweet spot to completely cover the standard keyboard -> secure keyboard switch
+                        
                         insetHandler.postDelayed(pendingImeRunnable, 150);
                     }
                 } else {
-                    // Both previous and new heights are 0, make sure padding is 0 without delay
+                    
                     v.setPadding(0, 0, 0, 0);
                 }
             }
-            
-            // Keep the card's inner content layout padding constant at systemBars.bottom to ensure a stable layout
-            // height inside the ScrollView, preventing height recalculation jitter/twitching during focus switch.
+
             binding.layoutCardContent.setPadding(0, 0, 0, systemBars.bottom);
             
             return windowInsets;

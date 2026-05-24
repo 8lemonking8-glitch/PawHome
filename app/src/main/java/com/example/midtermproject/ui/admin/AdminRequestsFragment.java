@@ -42,7 +42,6 @@ public class AdminRequestsFragment extends Fragment {
             return windowInsets;
         });
 
-
         adoptionRepository = new AdoptionRepository(requireActivity().getApplication());
 
         setupTabs();
@@ -82,7 +81,7 @@ public class AdminRequestsFragment extends Fragment {
     }
 
     private void loadPendingRequests() {
-        // Remove observers before adding new ones
+        
         adoptionRepository.getAllRequestsWithDetails().removeObservers(getViewLifecycleOwner());
         binding.progressBar.setVisibility(View.VISIBLE);
         adoptionRepository.getPendingRequestsWithDetails().observe(getViewLifecycleOwner(), requests -> {

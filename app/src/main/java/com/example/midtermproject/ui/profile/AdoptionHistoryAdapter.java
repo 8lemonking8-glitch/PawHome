@@ -89,7 +89,6 @@ public class AdoptionHistoryAdapter extends RecyclerView.Adapter<AdoptionHistory
                 binding.tvPetName.setText(pet.getName());
                 binding.tvPetBreed.setText(pet.getBreed());
 
-                // Image Loading
                 if (!com.example.midtermproject.util.PetImageUtils.loadFirstImage(binding.ivPetImage, pet)) {
                     if ("DOG".equals(pet.getType())) {
                         binding.ivPetImage.setBackgroundColor(0xFFE8734A); 
@@ -105,17 +104,15 @@ public class AdoptionHistoryAdapter extends RecyclerView.Adapter<AdoptionHistory
                 binding.ivPetImage.setImageResource(R.drawable.ic_pets);
             }
 
-            // Date
             binding.tvRequestDate.setText("Requested: " + dateFormat.format(new Date(request.getCreatedAt())));
 
-            // Status Badge
             binding.tvStatus.setText(request.getStatus());
             int tintColor;
             if ("PENDING".equals(request.getStatus())) {
                 tintColor = itemView.getContext().getColor(R.color.status_pending);
             } else if ("APPROVED".equals(request.getStatus())) {
                 tintColor = itemView.getContext().getColor(R.color.status_available);
-            } else { // REJECTED
+            } else { 
                 tintColor = itemView.getContext().getColor(R.color.status_rejected);
             }
             ViewCompat.setBackgroundTintList(binding.tvStatus, ColorStateList.valueOf(tintColor));

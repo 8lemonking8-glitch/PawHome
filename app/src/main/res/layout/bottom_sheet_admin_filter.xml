@@ -25,7 +25,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="20dp" />
 
-    <!-- Type Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,7 +80,6 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <!-- Status Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -134,7 +132,6 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <!-- Apply Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
         style="@style/Widget.PawHome.Button.Primary"

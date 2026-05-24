@@ -120,7 +120,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Step 1: Accept / Decline Buttons -->
     <LinearLayout
         android:id="@+id/layoutAgreementButtons"
         android:layout_width="match_parent"
@@ -153,7 +152,6 @@
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
-    <!-- Step 2: Signature Area (initially hidden) -->
     <LinearLayout
         android:id="@+id/layoutSignature"
         android:layout_width="match_parent"

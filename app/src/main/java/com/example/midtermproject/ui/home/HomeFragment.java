@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment {
         int extraPadding = (int) (32 * density);
         int defaultTopPadding = statusBarHeight > 0 ? (statusBarHeight + extraPadding) : (int) (64 * density);
 
-        // Header area: extends into status bar region for edge-to-edge background
         binding.headerContainer.setPadding(
             binding.headerContainer.getPaddingLeft(),
             defaultTopPadding,
@@ -78,7 +77,6 @@ public class HomeFragment extends Fragment {
             return windowInsets;
         });
 
-
         petRepository = new PetRepository(requireActivity().getApplication());
         SessionManager sessionManager = new SessionManager(requireContext());
 
@@ -96,11 +94,10 @@ public class HomeFragment extends Fragment {
         adapter = new PetAdapter((pet, sharedImageView) -> {
             Intent intent = new Intent(requireContext(), PetDetailActivity.class);
             intent.putExtra(PetDetailActivity.EXTRA_PET_ID, pet.getId());
-            // Use native Shared Element Transition
+            
             androidx.core.app.ActivityOptionsCompat options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
                     requireActivity(), sharedImageView, androidx.core.view.ViewCompat.getTransitionName(sharedImageView));
 
-            // Pass image details for immediate loading to prevent blank screens/flickers
             intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_ID, pet.getImageResId());
             intent.putExtra(PetDetailActivity.EXTRA_PET_IMAGE_RES_IDS, pet.getImageResIds());
             intent.putExtra(PetDetailActivity.EXTRA_PET_TYPE, pet.getType());

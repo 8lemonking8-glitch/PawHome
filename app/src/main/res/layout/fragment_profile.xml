@@ -83,8 +83,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingBottom="140dp">
-            
-            <!-- Adopter Profile Card -->
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAdopterProfile"
                 style="@style/Widget.PawHome.Card"
@@ -128,7 +127,6 @@
                         android:layout_marginBottom="12dp"
                         android:background="@color/divider" />
 
-                    <!-- Email -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -151,7 +149,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Phone -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -174,7 +171,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Age & Gender -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -197,7 +193,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Address -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -220,7 +215,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Housing Condition -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -243,7 +237,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Monthly Income -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -266,7 +259,6 @@
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Pet Experience -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -289,8 +281,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            
-            <!-- Adoption History Section Header -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -300,8 +291,7 @@
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:fontFamily="@font/poppins" />
-                
-            <!-- RecyclerView for History -->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAdoptionHistory"
                 android:layout_width="match_parent"
@@ -309,7 +299,6 @@
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone" />
 
-            <!-- Empty State Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEmptyHistory"
                 style="@style/Widget.PawHome.Card.Flat"

@@ -24,8 +24,6 @@ public class AdoptionRepository {
         petDao = db.petDao();
     }
 
-    // ===== Create =====
-
     public long createRequest(long userId, long petId, String signaturePath, long signatureTimestamp) {
         AdoptionRequestEntity existing = adoptionDao.getPendingRequestForPet(userId, petId);
         if (existing != null) {
@@ -41,8 +39,6 @@ public class AdoptionRepository {
         request.setStatus("PENDING");
         return adoptionDao.insert(request);
     }
-
-    // ===== Admin Actions =====
 
     public void approveRequest(long requestId, long petId) {
         AppDatabase.databaseExecutor.execute(() -> {
@@ -60,8 +56,6 @@ public class AdoptionRepository {
             adoptionDao.updateRequestStatus(requestId, "REJECTED", System.currentTimeMillis());
         });
     }
-
-    // ===== Read Operations =====
 
     public LiveData<List<AdoptionRequestEntity>> getAllRequests() {
         return adoptionDao.getAllRequests();

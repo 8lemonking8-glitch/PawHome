@@ -14,7 +14,6 @@
         android:padding="24dp"
         android:paddingTop="32dp">
 
-        <!-- Welcome Text -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +33,6 @@
             android:fontFamily="@font/poppins"
             android:layout_marginBottom="32dp" />
 
-        <!-- Username -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsername"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -63,7 +61,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -90,7 +87,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Confirm Password -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilConfirmPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -117,7 +113,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Register Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegister"
             style="@style/Widget.PawHome.Button.Primary"
@@ -131,7 +126,6 @@
             app:iconGravity="textEnd"
             android:layout_marginBottom="12dp" />
 
-        <!-- Error Message -->
         <TextView
             android:id="@+id/tvError"
             android:layout_width="match_parent"
@@ -143,7 +137,6 @@
             android:visibility="gone"
             android:layout_marginBottom="12dp" />
 
-        <!-- Login Link Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLoginLink"
             android:layout_width="match_parent"

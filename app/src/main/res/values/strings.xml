@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">PawHome</string>
 
-    <!-- Navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_favorites">Favorites</string>
     <string name="nav_profile">Profile</string>
 
-    <!-- Auth -->
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
@@ -29,13 +27,11 @@
     <string name="password_too_short">Password must be at least 6 characters</string>
     <string name="invalid_email">Invalid email format</string>
 
-    <!-- Pet Categories -->
     <string name="category_dogs">Dogs</string>
     <string name="category_cats">Cats</string>
     <string name="category_birds">Birds</string>
     <string name="category_all">All</string>
 
-    <!-- Pet Detail -->
     <string name="pet_detail">Pet Details</string>
     <string name="pet_color">Color</string>
     <string name="pet_size">Size</string>
@@ -46,7 +42,6 @@
     <string name="adopt_now">Adopt Now</string>
     <string name="already_adopted">Already Adopted</string>
 
-    <!-- Adoption Flow -->
     <string name="adoption_agreement">Adoption Agreement</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
@@ -57,7 +52,6 @@
     <string name="adoption_submitted">Adoption request submitted successfully!</string>
     <string name="adoption_pending">Your request is being reviewed</string>
 
-    <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -65,7 +59,6 @@
     <string name="adoption_history">Adoption History</string>
     <string name="settings">Settings</string>
 
-    <!-- Admin -->
     <string name="admin_dashboard">Dashboard</string>
     <string name="admin_pets">Pet Management</string>
     <string name="admin_requests">Adoption Requests</string>
@@ -76,7 +69,6 @@
     <string name="edit_pet">Edit Pet</string>
     <string name="delete_pet">Delete Pet</string>
 
-    <!-- Status -->
     <string name="status_available">Available</string>
     <string name="status_adopted">Adopted</string>
     <string name="status_pending">Pending</string>
@@ -88,13 +80,11 @@
     <string name="archive_confirm">Archive %s? This pet will be hidden from listings.</string>
     <string name="restore_confirm">Restore %s to available?</string>
 
-    <!-- Empty States -->
     <string name="no_pets">No pets found</string>
     <string name="no_favorites">No favorites yet</string>
     <string name="no_requests">No adoption requests</string>
     <string name="no_history">No adoption history</string>
 
-    <!-- General -->
     <string name="search_pets">Search pets…</string>
     <string name="loading">Loading…</string>
     <string name="error_occurred">An error occurred</string>

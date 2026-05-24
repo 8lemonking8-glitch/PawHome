@@ -81,7 +81,6 @@
         android:paddingBottom="140dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Loading State -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -90,7 +89,6 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
         android:layout_width="wrap_content"

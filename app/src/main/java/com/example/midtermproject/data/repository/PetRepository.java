@@ -19,8 +19,6 @@ public class PetRepository {
         petDao = db.petDao();
     }
 
-    // ===== Read Operations =====
-
     public LiveData<List<PetEntity>> getAllPets() {
         return petDao.getAllPets();
     }
@@ -68,8 +66,6 @@ public class PetRepository {
     public LiveData<Integer> getAdoptedPetCount() {
         return petDao.getAdoptedPetCount();
     }
-
-    // ===== Write Operations =====
 
     public void insert(PetEntity pet) {
         AppDatabase.databaseExecutor.execute(() -> petDao.insert(pet));

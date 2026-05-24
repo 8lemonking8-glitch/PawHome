@@ -70,7 +70,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             super(binding.getRoot());
             this.binding = binding;
 
-            // Card root → applicant profile
             binding.getRoot().setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
@@ -78,7 +77,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
                 }
             });
 
-            // Pet row → pet detail
             binding.layoutPetRow.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
@@ -135,7 +133,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
 
             View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_applicant_profile, null);
 
-            // Avatar
             de.hdodenhof.circleimageview.CircleImageView ivAvatar =
                 dialogView.findViewById(R.id.ivDialogAvatar);
             String avatarUri = user.getAvatarUri();
@@ -145,7 +142,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
                 ivAvatar.setImageResource(user.getAvatarResId());
             }
 
-            // Populate user basic info
             TextView tvName = dialogView.findViewById(R.id.tvDialogUserName);
             TextView tvContact = dialogView.findViewById(R.id.tvDialogUserContact);
             String displayName = user.getNickname() != null && !user.getNickname().isEmpty()
@@ -162,7 +158,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             }
             tvContact.setText(contactInfo.length() > 0 ? contactInfo.toString() : "No contact info");
 
-            // Personal details
             TextView tvGender = dialogView.findViewById(R.id.tvDialogGender);
             TextView tvAge = dialogView.findViewById(R.id.tvDialogAge);
             TextView tvAddress = dialogView.findViewById(R.id.tvDialogAddress);
@@ -170,7 +165,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             tvAge.setText(user.getAge() > 0 ? String.valueOf(user.getAge()) : "Not provided");
             tvAddress.setText(user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Not provided");
 
-            // Living conditions
             TextView tvHousing = dialogView.findViewById(R.id.tvDialogHousing);
             TextView tvIncome = dialogView.findViewById(R.id.tvDialogIncome);
             tvHousing.setText(user.getHousingCondition() != null && !user.getHousingCondition().isEmpty()
@@ -178,12 +172,10 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             tvIncome.setText(user.getMonthlyIncome() != null && !user.getMonthlyIncome().isEmpty()
                     ? user.getMonthlyIncome() : "Not provided");
 
-            // Pet experience
             TextView tvPetExp = dialogView.findViewById(R.id.tvDialogPetExperience);
             tvPetExp.setText(user.getPetExperience() != null && !user.getPetExperience().isEmpty()
                     ? user.getPetExperience() : "Not provided");
 
-            // Signature image
             ImageView ivSignature = dialogView.findViewById(R.id.ivDialogSignature);
             TextView tvSignatureDate = dialogView.findViewById(R.id.tvDialogSignatureDate);
 
@@ -217,7 +209,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
 
             View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pet_detail, null);
 
-            // Pet image
             ImageView ivImage = dialogView.findViewById(R.id.ivDialogPetImage);
             boolean imageSet = com.example.midtermproject.util.PetImageUtils.loadFirstImage(ivImage, pet);
             if (imageSet) {
@@ -225,7 +216,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
                 androidx.core.widget.ImageViewCompat.setImageTintList(ivImage, null);
             }
 
-            // Name + status
             TextView tvName = dialogView.findViewById(R.id.tvDialogPetName);
             tvName.setText(pet.getName());
 
@@ -242,7 +232,6 @@ public class AdminRequestAdapter extends RecyclerView.Adapter<AdminRequestAdapte
             }
             tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(statusColor));
 
-            // Basic info
             ((TextView) dialogView.findViewById(R.id.tvDialogPetBreed)).setText(
                 pet.getBreed() != null && !pet.getBreed().isEmpty() ? pet.getBreed() : "N/A");
             ((TextView) dialogView.findViewById(R.id.tvDialogPetAge)).setText(

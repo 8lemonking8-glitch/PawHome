@@ -31,7 +31,7 @@ public class SignatureView extends View {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setDither(true);
-        paint.setColor(0xFF3D2C22); // text_primary color
+        paint.setColor(0xFF3D2C22); 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
@@ -85,8 +85,7 @@ public class SignatureView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        
-        // Prevent scrolling of parent view (like BottomSheet) when drawing
+
         if (getParent() != null) {
             getParent().requestDisallowInterceptTouchEvent(true);
         }

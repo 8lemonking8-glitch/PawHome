@@ -9,7 +9,6 @@ import org.json.JSONArray;
 
 public class PetImageUtils {
 
-    /** Load the first available pet image into the given ImageView. Returns true if successful. */
     public static boolean loadFirstImage(ImageView view, PetEntity pet) {
         if (pet.getImageResId() != 0) {
             view.setImageResource(pet.getImageResId());

@@ -82,7 +82,7 @@ public class AdoptionBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Make the bottom sheet fully expanded by default to display the complete agreement
+        
         View view = getView();
         if (view != null) {
             View parent = (View) view.getParent();

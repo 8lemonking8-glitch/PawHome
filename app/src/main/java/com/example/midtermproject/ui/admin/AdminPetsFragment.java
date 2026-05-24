@@ -56,7 +56,6 @@ public class AdminPetsFragment extends Fragment {
             return windowInsets;
         });
 
-        // Default: all selected
         selectedTypes.add("DOG");
         selectedTypes.add("CAT");
         selectedTypes.add("BIRD");
@@ -152,7 +151,7 @@ public class AdminPetsFragment extends Fragment {
                     .setPositiveButton(title, (d, w) -> {
                         pet.setStatus(isArchived ? PetEntity.STATUS_AVAILABLE : PetEntity.STATUS_ARCHIVED);
                         petRepository.update(pet);
-                        // UI will auto-update via LiveData observer
+                        
                     })
                     .setNegativeButton(R.string.cancel, (d, w) -> adapter.notifyItemChanged(pos))
                     .setCancelable(false)
